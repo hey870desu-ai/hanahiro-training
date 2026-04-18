@@ -1,0 +1,355 @@
+/* ===== リセット & 基本 ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: #faf7f2;
+  color: #4a4a4a;
+  line-height: 1.8;
+  min-height: 100vh;
+}
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: block; }
+
+/* ===== ログイン画面 ===== */
+#login-screen {
+  background: linear-gradient(150deg, #f9e4b7 0%, #f5c16c 30%, #e8a849 60%, #d4944a 100%);
+  display: none; align-items: center; justify-content: center;
+  padding: 20px; min-height: 100vh;
+}
+#login-screen.active { display: flex; }
+.login-container { text-align: center; max-width: 420px; width: 100%; }
+.logo-area { margin-bottom: 20px; }
+.logo-icon {
+  display: inline-block; font-size: 48px; margin-bottom: 8px;
+}
+.logo-area h1 { color: #5a3e1b; font-size: 26px; line-height: 1.3; font-weight: 800; }
+.logo-area h1 span { font-size: 14px; font-weight: 500; color: #7a5c2e; display: block; margin-top: 4px; }
+.login-subtitle {
+  color: #6b4d28; font-size: 14px;
+  margin-bottom: 32px; padding: 0 10px;
+}
+/* 名前入力 */
+.name-input-area { margin-bottom: 24px; }
+.name-input-area input {
+  width: 100%; max-width: 300px; padding: 14px 18px;
+  border: none; border-radius: 14px; font-size: 16px;
+  text-align: center; background: rgba(255,255,255,0.9);
+  outline: none; color: #5a3e1b; font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.name-input-area input::placeholder { color: #c4a870; font-weight: 400; }
+.name-input-area input:focus { background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+.course-select { display: flex; flex-direction: column; gap: 14px; }
+.course-btn {
+  background: #fff; border: none; border-radius: 20px;
+  padding: 22px 20px; cursor: pointer; transition: all 0.2s;
+  text-align: left; display: flex; align-items: center; gap: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+.course-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(0,0,0,0.12); }
+.course-btn:active { transform: translateY(0); }
+.course-icon { font-size: 40px; flex-shrink: 0; }
+.course-label { font-size: 17px; font-weight: 700; color: #5a3e1b; }
+.course-desc { font-size: 12px; color: #8a7a6a; margin-top: 3px; }
+
+/* ===== モーダル ===== */
+.modal {
+  display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4); z-index: 100;
+  align-items: center; justify-content: center; padding: 20px;
+}
+.modal.active { display: flex; }
+.modal-content {
+  background: #fff; border-radius: 20px; padding: 32px;
+  max-width: 360px; width: 100%; text-align: center;
+}
+.modal-content h3 { font-size: 20px; margin-bottom: 8px; color: #5a3e1b; }
+.modal-content p { font-size: 14px; color: #8a7a6a; margin-bottom: 16px; }
+.modal-content input {
+  width: 100%; padding: 12px 16px; border: 2px solid #e0d5c5;
+  border-radius: 12px; font-size: 16px; text-align: center;
+  outline: none; transition: border-color 0.2s; background: #faf7f2;
+}
+.modal-content input:focus { border-color: #e8a849; }
+.modal-buttons { display: flex; gap: 10px; margin-top: 16px; }
+.modal-buttons button { flex: 1; }
+.error-text { color: #d35400; font-size: 13px; margin-top: 8px; min-height: 20px; }
+
+/* ===== ボタン ===== */
+.btn-primary {
+  background: #e8a849; color: #fff; border: none; border-radius: 12px;
+  padding: 12px 24px; font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-primary:hover { background: #d4944a; }
+.btn-primary:disabled { background: #ccc; cursor: default; }
+.btn-secondary {
+  background: #f0ebe3; color: #6b5a48; border: none; border-radius: 12px;
+  padding: 12px 24px; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-secondary:hover { background: #e5ddd0; }
+
+/* ===== ヘッダー ===== */
+.app-header {
+  background: #fff; padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  position: sticky; top: 0; z-index: 50;
+  font-size: 15px; font-weight: 600; color: #5a3e1b;
+}
+.header-left { display: flex; align-items: center; gap: 10px; }
+.header-logo { font-size: 22px; }
+.back-btn, .logout-btn {
+  background: none; border: none; font-size: 15px; color: #e8a849;
+  cursor: pointer; font-weight: 600; padding: 4px 8px;
+}
+
+/* ===== ダッシュボード ===== */
+.dashboard-content { padding: 20px; max-width: 600px; margin: 0 auto; }
+.welcome-card {
+  background: linear-gradient(135deg, #f5c16c, #e8a849);
+  border-radius: 20px; padding: 24px; color: #5a3e1b; margin-bottom: 24px;
+}
+.welcome-card h2 { font-size: 17px; margin-bottom: 14px; color: #fff; }
+.progress-overview { display: flex; align-items: center; gap: 12px; }
+.progress-bar-container {
+  flex: 1; height: 10px; background: rgba(255,255,255,0.4);
+  border-radius: 5px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; background: #fff; border-radius: 5px;
+  transition: width 0.5s ease; width: 0%;
+}
+#overall-progress-text { font-size: 14px; font-weight: 700; min-width: 36px; color: #fff; }
+
+/* ===== モジュールカード ===== */
+.module-list { display: flex; flex-direction: column; gap: 12px; }
+.module-card {
+  background: #fff; border-radius: 16px; padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer;
+  transition: all 0.2s; border-left: 5px solid #e0d5c5;
+}
+.module-card:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+.module-card.completed { border-left-color: #27ae60; }
+.module-card.in-progress { border-left-color: #e8a849; }
+.module-card.locked { border-left-color: #d5cec3; opacity: 0.55; cursor: default; }
+.module-card.locked:hover { transform: none; }
+.module-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.module-number { font-size: 12px; color: #b0a090; font-weight: 600; }
+.module-status { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.status-new { background: #fef3dc; color: #c98a20; }
+.status-progress { background: #fef3dc; color: #e8a849; }
+.status-done { background: #eafaf1; color: #27ae60; }
+.status-locked { background: #f2ede6; color: #b0a090; }
+.module-title { font-size: 16px; font-weight: 700; color: #5a3e1b; margin-bottom: 4px; }
+.module-desc { font-size: 13px; color: #8a7a6a; }
+.module-progress { margin-top: 10px; }
+.module-progress-bar { height: 6px; background: #f0ebe3; border-radius: 3px; overflow: hidden; }
+.module-progress-fill { height: 100%; background: #e8a849; border-radius: 3px; transition: width 0.3s; }
+
+/* ===== レッスン画面 ===== */
+.lesson-content {
+  max-width: 640px; margin: 0 auto; padding: 20px;
+  min-height: calc(100vh - 60px); display: flex; flex-direction: column;
+}
+#lesson-body {
+  flex: 1; background: #fff; border-radius: 16px;
+  padding: 28px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  margin-bottom: 16px;
+}
+#lesson-body h2 {
+  font-size: 20px; color: #5a3e1b; margin-bottom: 16px;
+  padding-bottom: 12px; border-bottom: 2px solid #f0ebe3;
+}
+#lesson-body h3 { font-size: 17px; color: #8a6930; margin: 22px 0 10px; }
+#lesson-body p { margin-bottom: 14px; font-size: 15px; }
+#lesson-body ul, #lesson-body ol { margin: 10px 0 16px 20px; font-size: 15px; }
+#lesson-body li { margin-bottom: 6px; }
+/* 吹き出し風のポイント */
+.key-point {
+  background: #fef8ec; border-left: 4px solid #e8a849;
+  padding: 16px 18px; border-radius: 0 12px 12px 0;
+  margin: 18px 0; font-size: 15px; position: relative;
+}
+.key-point strong { color: #8a6930; }
+/* 事例ボックス */
+.example-box {
+  background: #f0f8f0; border-left: 4px solid #27ae60;
+  padding: 16px 18px; border-radius: 0 12px 12px 0;
+  margin: 18px 0; font-size: 14px;
+}
+.example-box strong { color: #1e8449; }
+/* 考えてみようボックス */
+.think-box {
+  background: #fff5f0; border-left: 4px solid #e67e22;
+  padding: 16px 18px; border-radius: 0 12px 12px 0;
+  margin: 18px 0; font-size: 14px;
+}
+/* 数式ボックス */
+.formula-box {
+  background: #5a3e1b; color: #f9e4b7; padding: 20px;
+  border-radius: 14px; text-align: center; margin: 18px 0;
+  font-size: 20px; font-weight: 700; letter-spacing: 1px;
+}
+.formula-box small { display: block; font-size: 13px; font-weight: 400; opacity: 0.85; margin-top: 6px; }
+/* 会話吹き出し */
+.chat-bubble {
+  background: #fff; border: 2px solid #f0ebe3; border-radius: 16px;
+  padding: 16px 18px; margin: 14px 0; position: relative;
+  font-size: 15px;
+}
+.chat-bubble::before {
+  content: ''; position: absolute; top: -10px; left: 20px;
+  border-left: 10px solid transparent; border-right: 10px solid transparent;
+  border-bottom: 10px solid #f0ebe3;
+}
+.chat-bubble .speaker {
+  font-size: 13px; font-weight: 700; color: #e8a849; margin-bottom: 6px;
+}
+.lesson-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0;
+}
+#page-indicator { font-size: 13px; color: #b0a090; }
+
+/* ===== テスト画面 ===== */
+.quiz-content { max-width: 640px; margin: 0 auto; padding: 20px; }
+#quiz-body { background: #fff; border-radius: 16px; padding: 28px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.quiz-question { margin-bottom: 28px; }
+.quiz-question-text { font-size: 16px; font-weight: 600; color: #5a3e1b; margin-bottom: 14px; }
+.quiz-question-number { font-size: 12px; color: #b0a090; margin-bottom: 6px; font-weight: 600; }
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-option {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border: 2px solid #f0ebe3; border-radius: 12px;
+  cursor: pointer; transition: all 0.2s; font-size: 15px;
+}
+.quiz-option:hover { border-color: #e8a849; background: #fef8ec; }
+.quiz-option.selected { border-color: #e8a849; background: #fef8ec; }
+.quiz-option.correct { border-color: #27ae60; background: #eafaf1; }
+.quiz-option.incorrect { border-color: #e74c3c; background: #fdf0ef; }
+.quiz-option-marker {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid #d5cec3; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700;
+}
+.quiz-option.selected .quiz-option-marker { border-color: #e8a849; background: #e8a849; color: #fff; }
+.quiz-option.correct .quiz-option-marker { border-color: #27ae60; background: #27ae60; color: #fff; }
+.quiz-option.incorrect .quiz-option-marker { border-color: #e74c3c; background: #e74c3c; color: #fff; }
+.quiz-submit-area { text-align: center; margin-top: 24px; }
+.quiz-submit-area button { min-width: 200px; padding: 14px 32px; font-size: 16px; }
+.quiz-explanation {
+  background: #fef8ec; padding: 12px 16px; border-radius: 10px;
+  margin-top: 10px; font-size: 14px; color: #5a3e1b;
+  display: none;
+}
+.quiz-explanation.show { display: block; }
+
+/* ===== 結果画面 ===== */
+.result-content { max-width: 640px; margin: 0 auto; padding: 20px; }
+#result-body { text-align: center; }
+.result-card {
+  background: #fff; border-radius: 20px; padding: 32px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 20px;
+}
+
+/* ===== 図解・ダイアグラム ===== */
+.diagram-box {
+  background: #faf7f2; border: 2px solid #f0ebe3; border-radius: 16px;
+  padding: 20px; margin: 18px 0; text-align: center;
+}
+.diagram-box .diagram-title {
+  font-size: 14px; font-weight: 700; color: #5a3e1b; margin-bottom: 14px;
+}
+.flow-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; flex-wrap: wrap; margin: 10px 0;
+}
+.flow-step {
+  background: #e8a849; color: #fff; padding: 10px 14px;
+  border-radius: 10px; font-size: 13px; font-weight: 600;
+  min-width: 80px; text-align: center;
+}
+.flow-step.alt { background: #27ae60; }
+.flow-step.warn { background: #e67e22; }
+.flow-step.danger { background: #c0392b; }
+.flow-step.gray { background: #b0a090; }
+.flow-arrow { font-size: 20px; color: #d5cec3; flex-shrink: 0; }
+.flow-col {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; margin: 10px 0;
+}
+.flow-col .flow-arrow { transform: rotate(90deg); }
+.stat-row {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  margin: 14px 0;
+}
+.stat-card {
+  background: #fff; border-radius: 12px; padding: 14px 16px;
+  text-align: center; min-width: 110px; flex: 1; max-width: 160px;
+  border: 2px solid #f0ebe3;
+}
+.stat-card .stat-num { font-size: 26px; font-weight: 800; color: #5a3e1b; line-height: 1.2; }
+.stat-card .stat-label { font-size: 12px; color: #8a7a6a; margin-top: 4px; }
+.stat-card.green { border-color: #c8e6c9; }
+.stat-card.green .stat-num { color: #27ae60; }
+.stat-card.yellow { border-color: #fce4b0; }
+.stat-card.yellow .stat-num { color: #e8a849; }
+.stat-card.red { border-color: #f5c6cb; }
+.stat-card.red .stat-num { color: #c0392b; }
+.pyramid {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; margin: 14px 0;
+}
+.pyramid-level {
+  padding: 10px; text-align: center; font-size: 13px; font-weight: 600;
+  color: #fff; border-radius: 8px;
+}
+.pyramid-level:nth-child(1) { width: 50%; background: #5a3e1b; }
+.pyramid-level:nth-child(2) { width: 65%; background: #8a6930; }
+.pyramid-level:nth-child(3) { width: 80%; background: #c9952a; }
+.pyramid-level:nth-child(4) { width: 92%; background: #e8a849; }
+.pyramid-level:nth-child(5) { width: 100%; background: #f5c16c; color: #5a3e1b; }
+.compare-table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px;
+}
+.compare-table th {
+  background: #5a3e1b; color: #f9e4b7; padding: 10px 12px;
+  text-align: left; font-weight: 600;
+}
+.compare-table td { padding: 10px 12px; border-bottom: 1px solid #f0ebe3; }
+.compare-table tr:nth-child(even) td { background: #faf7f2; }
+.compare-table .highlight-cell { background: #fef8ec !important; font-weight: 600; }
+.bar-chart { margin: 14px 0; }
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.bar-label { font-size: 13px; min-width: 80px; text-align: right; color: #6b5a48; }
+.bar-track { flex: 1; height: 28px; background: #f0ebe3; border-radius: 8px; overflow: visible; position: relative; }
+.bar-fill {
+  height: 100%; border-radius: 8px; display: flex;
+  align-items: center; padding-left: 8px; padding-right: 8px;
+  font-size: 11px; font-weight: 700; color: #fff; transition: width 0.5s;
+  white-space: nowrap; overflow: visible; min-width: fit-content;
+}
+.bar-fill.blue { background: #5dade2; }
+.bar-fill.green { background: #27ae60; }
+.bar-fill.yellow { background: #e8a849; }
+.bar-fill.red { background: #c0392b; }
+
+/* ===== レスポンシブ ===== */
+@media (max-width: 480px) {
+  .logo-area h1 { font-size: 22px; }
+  .course-btn { padding: 18px 16px; }
+  .course-icon { font-size: 32px; }
+  .course-label { font-size: 15px; }
+  #lesson-body { padding: 22px 16px; }
+  #lesson-body h2 { font-size: 18px; }
+  .formula-box { font-size: 17px; padding: 16px; }
+  .modal-content { padding: 24px 20px; }
+  .welcome-card { padding: 20px; }
+  .welcome-card h2 { font-size: 15px; }
+  .stat-card { min-width: 90px; padding: 10px 8px; }
+  .stat-card .stat-num { font-size: 22px; }
+  .flow-step { font-size: 12px; padding: 8px 10px; min-width: 65px; }
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>はなひろケア 学びの広場</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- ログイン画面 -->
+    <div id="login-screen" class="screen active">
+      <div class="login-container">
+        <div class="logo-area">
+          <div class="logo-icon">&#x1F33B;</div>
+          <h1>はなひろケア<br><span>学びの広場</span></h1>
+        </div>
+        <p class="login-subtitle">みんなで学ぼう！ 私たちの仕事をもっと楽しく、もっと良くするためのヒント集</p>
+        <div class="name-input-area">
+          <input type="text" id="user-name-input" placeholder="あなたのお名前を入力してね" maxlength="20">
+          <p id="name-error" class="error-text"></p>
+        </div>
+        <div class="course-select">
+          <button class="course-btn" onclick="selectCourse('staff')">
+            <div class="course-icon">&#x1F331;</div>
+            <div>
+              <div class="course-label">みんなの学び</div>
+              <div class="course-desc">全スタッフ向け ─ 仕事のコツと大切な考え方</div>
+            </div>
+          </button>
+          <button class="course-btn" onclick="showPasswordModal()">
+            <div class="course-icon">&#x1F3AF;</div>
+            <div>
+              <div class="course-label">リーダーの学び</div>
+              <div class="course-desc">管理者向け ─ 経営数値とチームづくり</div>
+            </div>
+          </button>
+          <button class="course-btn" onclick="showAdminPasswordModal()" style="border:2px dashed #e0d5c5;background:#faf7f2;">
+            <div class="course-icon">&#x1F4CB;</div>
+            <div>
+              <div class="course-label" style="font-size:14px;color:#8a7a6a;">受講状況を見る</div>
+              <div class="course-desc">管理者用 ─ みんなの進み具合を確認</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- パスワードモーダル -->
+    <div id="password-modal" class="modal">
+      <div class="modal-content">
+        <h3>&#x1F510; リーダーの学び</h3>
+        <p>パスワードを入力してね</p>
+        <input type="password" id="manager-password" placeholder="パスワード" onkeydown="if(event.key==='Enter')checkPassword()">
+        <div class="modal-buttons">
+          <button onclick="closePasswordModal()" class="btn-secondary">もどる</button>
+          <button onclick="checkPassword()" class="btn-primary">はいる</button>
+        </div>
+        <p id="password-error" class="error-text"></p>
+      </div>
+    </div>
+
+    <!-- ダッシュボード -->
+    <div id="dashboard-screen" class="screen">
+      <header class="app-header">
+        <div class="header-left">
+          <span class="header-logo">&#x1F33B;</span>
+          <span id="course-title-header"></span>
+        </div>
+        <button class="logout-btn" onclick="logout()">&#x2190; もどる</button>
+      </header>
+      <div class="dashboard-content">
+        <div class="welcome-card">
+          <h2 id="dashboard-title"></h2>
+          <div class="progress-overview">
+            <div class="progress-bar-container">
+              <div id="overall-progress-bar" class="progress-bar-fill"></div>
+            </div>
+            <span id="overall-progress-text">0%</span>
+          </div>
+        </div>
+        <div id="module-list" class="module-list"></div>
+      </div>
+    </div>
+
+    <!-- 学習画面 -->
+    <div id="lesson-screen" class="screen">
+      <header class="app-header">
+        <button class="back-btn" onclick="backToDashboard()">&#x2190;</button>
+        <span id="lesson-title-header"></span>
+        <span id="lesson-progress-header"></span>
+      </header>
+      <div class="lesson-content">
+        <div id="lesson-body"></div>
+        <div class="lesson-nav">
+          <button id="prev-btn" class="btn-secondary" onclick="prevPage()">&#x2190; まえ</button>
+          <span id="page-indicator"></span>
+          <button id="next-btn" class="btn-primary" onclick="nextPage()">つぎ &#x2192;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- テスト画面 -->
+    <div id="quiz-screen" class="screen">
+      <header class="app-header">
+        <button class="back-btn" onclick="backToDashboard()">&#x2190;</button>
+        <span id="quiz-title-header"></span>
+        <span id="quiz-progress-header"></span>
+      </header>
+      <div class="quiz-content">
+        <div id="quiz-body"></div>
+      </div>
+    </div>
+
+    <!-- テスト結果画面 -->
+    <div id="result-screen" class="screen">
+      <header class="app-header">
+        <button class="back-btn" onclick="backToDashboard()">&#x2190;</button>
+        <span>チェック結果</span>
+        <span></span>
+      </header>
+      <div class="result-content">
+        <div id="result-body"></div>
+      </div>
+    </div>
+
+    <!-- 管理者ダッシュボード画面 -->
+    <div id="admin-screen" class="screen">
+      <header class="app-header">
+        <button class="back-btn" onclick="showScreen('login-screen')">&#x2190;</button>
+        <span>&#x1F4CB; 受講状況</span>
+        <button class="logout-btn" onclick="openAdminDashboard()">&#x1F504; 更新</button>
+      </header>
+      <div class="dashboard-content">
+        <div id="admin-body"></div>
+      </div>
+    </div>
+
+    <!-- 管理者ダッシュボード用パスワードモーダル -->
+    <div id="admin-password-modal" class="modal">
+      <div class="modal-content">
+        <h3>&#x1F4CB; 受講状況</h3>
+        <p>管理者パスワードを入力してね</p>
+        <input type="password" id="admin-password" placeholder="パスワード" onkeydown="if(event.key==='Enter')checkAdminPassword()">
+        <div class="modal-buttons">
+          <button onclick="closeAdminPasswordModal()" class="btn-secondary">もどる</button>
+          <button onclick="checkAdminPassword()" class="btn-primary">ひらく</button>
+        </div>
+        <p id="admin-password-error" class="error-text"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="content-staff.js"></script>
+  <script src="content-manager.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
