@@ -60,25 +60,25 @@ const STAFF_COURSE = {
               「わたしの給料ってどこから出てるの？」
             </div>
 
-            <h3>売上100円の使い道</h3>
-            <p>もし売上が100円入ったとしたら、こんなふうに使われています。</p>
+            <h3>月の売上300万円の使い道</h3>
+            <p>たとえば月の売上が300万円だとしたら、こんなふうに使われています。</p>
             <div class="diagram-box">
-              <div class="diagram-title">&#x1F4CA; 売上100円の内訳</div>
+              <div class="diagram-title">&#x1F4CA; 月商300万円の内訳</div>
               <div class="bar-chart">
-                <div class="bar-row"><div class="bar-label">みんなの給料</div><div class="bar-track"><div class="bar-fill red" style="width:65%">約65円</div></div></div>
-                <div class="bar-row"><div class="bar-label">建物・家賃</div><div class="bar-track"><div class="bar-fill yellow" style="width:12%">約12円</div></div></div>
-                <div class="bar-row"><div class="bar-label">食材・消耗品</div><div class="bar-track"><div class="bar-fill blue" style="width:8%">約8円</div></div></div>
-                <div class="bar-row"><div class="bar-label">車・光熱費</div><div class="bar-track"><div class="bar-fill blue" style="width:8%">約8円</div></div></div>
-                <div class="bar-row"><div class="bar-label">残り（利益）</div><div class="bar-track"><div class="bar-fill green" style="width:7%">約5〜7円</div></div></div>
+                <div class="bar-row"><div class="bar-label">みんなの給料</div><div class="bar-track"><div class="bar-fill red" style="width:65%">約195万円</div></div></div>
+                <div class="bar-row"><div class="bar-label">建物・家賃</div><div class="bar-track"><div class="bar-fill yellow" style="width:12%">約36万円</div></div></div>
+                <div class="bar-row"><div class="bar-label">食材・消耗品</div><div class="bar-track"><div class="bar-fill blue" style="width:8%">約24万円</div></div></div>
+                <div class="bar-row"><div class="bar-label">車・光熱費</div><div class="bar-track"><div class="bar-fill blue" style="width:8%">約24万円</div></div></div>
+                <div class="bar-row"><div class="bar-label">残り（利益）</div><div class="bar-track"><div class="bar-fill green" style="width:7%">約15〜21万円</div></div></div>
               </div>
             </div>
 
-            <p>&#x1F631; <strong>100円のうち、手元に残るのはたった5〜7円</strong>なんです。</p>
+            <p>&#x1F631; <strong>300万円の売上があっても、手元に残る利益は15〜21万円だけ</strong>なんです。</p>
 
             <div class="key-point">
               <strong>&#x1F4A1; だからこそ</strong><br>
-              1,000円のムダ遣いを取り戻すには、<strong>20,000円分の売上</strong>（利用者さん約2人の1日分）が必要。<br>
-              「たった1,000円」が、実はすごく大きいんです。
+              1万円のムダ遣いを取り戻すには、<strong>約20万円分の売上</strong>が必要。<br>
+              「たった1万円」が、実はものすごく大きいんです。
             </div>
           `
         },
@@ -169,9 +169,9 @@ const STAFF_COURSE = {
         { question: 'わたしたちの介護の仕事は、どんな仕事？',
           options: ['お世話をする仕事','利用者さまのより良い毎日を一緒につくる仕事','書類を書く仕事','送迎をする仕事'],
           correct: 1, explanation: '介護はお世話ではなく「利用者さまのより良い毎日を、一緒につくる仕事」です。この意識がサービスの質を変えます。' },
-        { question: 'デイサービスの売上100円のうち、残る利益はどのくらい？',
-          options: ['約30円','約20円','約15円','約5〜7円'],
-          correct: 3, explanation: '利益はわずか5〜7円。だからこそ、一つひとつのお金を大切にする意識が重要です。' },
+        { question: '月商300万円のデイサービスで、手元に残る利益はどのくらい？',
+          options: ['約100万円','約60万円','約40万円','約15〜21万円'],
+          correct: 3, explanation: '300万円の売上があっても利益は15〜21万円程度。だからこそ一つひとつのお金を大切にする意識が重要です。' },
         { question: '「稼働率が高い」ということは、どういう意味？',
           options: ['スタッフが忙しい','たくさんの利用者さまに選ばれている','経費がかかっている','営業日数が多い'],
           correct: 1, explanation: '稼働率が高い＝多くの方に選ばれている証拠。みんなのサービスの質が稼働率をつくっています。' },
