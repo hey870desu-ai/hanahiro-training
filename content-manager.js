@@ -6,11 +6,208 @@ const MANAGER_COURSE = {
   modules: [
 
     // ========================================
-    // モジュール1: 収益の最適化（5ページ・10問）
+    // ステップ1: マネジャーってどんな仕事？（新規追加・5ページ・10問）
+    // ========================================
+    {
+      id: 'mgr-m0',
+      number: 'ステップ 1',
+      title: 'マネジャーってどんな仕事？',
+      description: 'リーダーとマネジャーの違い、管理者に求められる役割を知ろう',
+      lessons: [
+        {
+          title: 'ボスとリーダーのちがい',
+          content: `
+            <h2>&#x1F451; あなたは「ボス」？ それとも「リーダー」？</h2>
+            <p>管理者になったとき、こんなこと思いませんでしたか？</p>
+            <div class="chat-bubble">
+              <div class="speaker">&#x1F4AC; よくある不安</div>
+              「管理者って何をすればいいんだろう…」<br>
+              「指示を出すのが仕事？」<br>
+              「自分がいないと現場が回らない…」
+            </div>
+            <p>まず、とても大事な区別を知りましょう。</p>
+            <div class="diagram-box">
+              <div class="diagram-title">ボス vs リーダー</div>
+              <table class="compare-table">
+                <tr><th>ボス</th><th>リーダー</th></tr>
+                <tr><td>上から指示だけ出す</td><td class="highlight-cell">先頭に立って一緒に動く</td></tr>
+                <tr><td>「やれ」と命令する</td><td class="highlight-cell">「一緒にやろう」と導く</td></tr>
+                <tr><td>恐れで人を動かす</td><td class="highlight-cell">信頼で人を動かす</td></tr>
+                <tr><td>自分の手柄にする</td><td class="highlight-cell">チームの成果を喜ぶ</td></tr>
+                <tr><td>問題が起きたら部下を責める</td><td class="highlight-cell">問題が起きたら自分が責任を取る</td></tr>
+              </table>
+            </div>
+            <div class="key-point">
+              <strong>&#x1F4A1; 大切なこと</strong><br>
+              管理者は「偉い人」じゃない。<strong>チームが成果を出せるように支える人</strong>です。<br><br>
+              見えないところで努力しているのに「ボス」に見られてしまうこともある。だからこそ、意識的に「リーダー」としての振る舞いをすることが大切です。
+            </div>
+          `
+        },
+        {
+          title: 'リーダーシップとマネジメントの違い',
+          content: `
+            <h2>&#x1F3AF; 管理者には2つの力が必要</h2>
+            <p>「リーダーシップ」と「マネジメント」── よく聞く言葉ですが、実は全然違うものなんです。</p>
+            <div class="diagram-box">
+              <div class="diagram-title">リーダーシップ vs マネジメント</div>
+              <table class="compare-table">
+                <tr><th>マネジメント</th><th>リーダーシップ</th></tr>
+                <tr><td>物事を<strong>正しく</strong>行う</td><td class="highlight-cell">物事を正しく行う</td></tr>
+                <tr><td>管理・維持する</td><td class="highlight-cell">革新・発展させる</td></tr>
+                <tr><td>「いつ・どのように」を考える</td><td class="highlight-cell">「何を・なぜ」を考える</td></tr>
+                <tr><td>短期的な視点</td><td class="highlight-cell">長期的なビジョン</td></tr>
+                <tr><td>現状を受け入れる</td><td class="highlight-cell">現状に挑戦する</td></tr>
+                <tr><td>規則通りに行動する</td><td class="highlight-cell">より良い結果のために規則を変える</td></tr>
+              </table>
+            </div>
+            <div class="example-box">
+              <strong>&#x1F3E0; 介護の現場で言うと</strong><br>
+              <strong>マネジメント</strong>：シフト管理、記録の確認、稼働率のチェック、ルールの徹底<br>
+              <strong>リーダーシップ</strong>：「うちの事業所をこんな場所にしたい」というビジョンを示す、新しいケアの方法を提案する、チームの雰囲気をつくる
+            </div>
+            <div class="key-point">
+              <strong>&#x2728; ドラッカーの言葉</strong><br>
+              「マネジメントとは、<strong>物事を正しく行うこと</strong>」<br>
+              「リーダーシップとは、<strong>正しい事を行うこと</strong>」<br><br>
+              管理者には<strong>両方</strong>が必要です。日々のオペレーション管理（マネジメント）をしながら、チームの方向性を示す力（リーダーシップ）を持ちましょう。
+            </div>
+          `
+        },
+        {
+          title: 'マネジャーの8つの仕事',
+          content: `
+            <h2>&#x1F4CB; 「なんとかしてやる」のがマネジャー</h2>
+            <p>マネジメントの父ドラッカーは、マネジメントを<strong>「組織をして成果をあげさせること」</strong>と定義しました。</p>
+            <p>では具体的に、管理者にはどんな仕事があるのでしょうか？</p>
+            <div class="diagram-box">
+              <div class="diagram-title">&#x1F3C6; マネジャーの8つの責任</div>
+              <table class="compare-table">
+                <tr><th>#</th><th>責任</th><th>具体的には</th></tr>
+                <tr><td>1</td><td><strong>業績向上</strong></td><td>目標を決めて、数字を追いかけ、達成に導く</td></tr>
+                <tr><td>2</td><td><strong>業務改善</strong></td><td>もっと良いやり方を考え、仕組みにする</td></tr>
+                <tr><td>3</td><td><strong>稟議提言</strong></td><td>企画や提案を書面にして上に出す</td></tr>
+                <tr><td>4</td><td><strong>神経伝達</strong></td><td>報連相、情報共有、社内の「神経」になる</td></tr>
+                <tr><td>5</td><td><strong>経営代理</strong></td><td>社長の考えを現場に翻訳、現場の声を上に届ける</td></tr>
+                <tr><td>6</td><td><strong>対外渉外</strong></td><td>ケアマネ・行政・地域との関係づくり</td></tr>
+                <tr><td>7</td><td><strong>組織活性</strong></td><td>スタッフのやる気を引き出す、明るい職場をつくる</td></tr>
+                <tr><td>8</td><td><strong>人財育成</strong></td><td>採用、教育、適材適所の配置、評価</td></tr>
+              </table>
+            </div>
+            <div class="think-box">
+              <strong>&#x1F4AD; 自己チェックしてみよう</strong><br>
+              8つの責任を4段階（4:よくできている〜1:全くできていない）で自己評価してみてください。<br>
+              最も低い項目が、あなたの<strong>最大の伸びしろ</strong>です。
+            </div>
+          `
+        },
+        {
+          title: 'フォロワーシップ ─ 管理者にも必要な力',
+          content: `
+            <h2>&#x1F91D; 管理者にもフォロワーシップが必要</h2>
+            <p>「管理者なのにフォロワー？」と思うかもしれません。でも管理者は<strong>経営者のフォロワー</strong>でもあるのです。</p>
+            <div class="diagram-box">
+              <div class="diagram-title">フォロワーシップの3要件</div>
+              <div class="stat-row">
+                <div class="stat-card"><div class="stat-num">&#9312;</div><div class="stat-label"><strong>主体的に<br>貢献する</strong></div></div>
+                <div class="stat-card"><div class="stat-num">&#9313;</div><div class="stat-label"><strong>上司（社長）を<br>助ける</strong></div></div>
+                <div class="stat-card green"><div class="stat-num">&#9314;</div><div class="stat-label"><strong>いつも<br>ポジティブ</strong></div></div>
+              </div>
+            </div>
+            <h3>管理者としてやってはいけないこと</h3>
+            <div class="chat-bubble">
+              <div class="speaker">&#x1F6AB; これは絶対NG</div>
+              ・部下の前で社長や会社の悪口を言う<br>
+              ・問題があっても愚痴だけ言って対策を出さない<br>
+              ・「上が決めたことだから」と投げやりに伝える
+            </div>
+            <div class="example-box">
+              <strong>&#x2705; こうしよう</strong><br>
+              ・問題があれば<strong>対策をセットで社長に提案</strong>する<br>
+              ・会社の方針を<strong>自分の言葉に翻訳</strong>して部下に伝える<br>
+              ・部下に対しては<strong>ポジティブな雰囲気</strong>をつくる責任がある
+            </div>
+            <div class="key-point">
+              <strong>&#x2728; 覚えておこう</strong><br>
+              「リーダーは、いつもポジティブでいる責任がある」<br><br>
+              ネガティブになりそうなとき、会社の良くないところが気になるとき、ぐっとこらえて前向きな方向に導く。それが管理者に求められるスキルです。
+            </div>
+          `
+        },
+        {
+          title: '精鋭集団を目指そう',
+          content: `
+            <h2>&#x1F4AA; どんな職場を目指す？</h2>
+            <p>職場には4つのタイプがあります。あなたの事業所はどこにいますか？</p>
+            <div class="diagram-box">
+              <div class="diagram-title">4つの組織タイプ</div>
+              <table class="compare-table">
+                <tr><th></th><th>仕事のきびしさ 低い</th><th>仕事のきびしさ 高い</th></tr>
+                <tr><td><strong>やる気が高い</strong></td><td>仲良し集団<br>（楽しいけど成長がない）</td><td class="highlight-cell">&#x1F31F; 精鋭集団<br>（目指すべき姿！）</td></tr>
+                <tr><td><strong>やる気が低い</strong></td><td>放置・無気力集団<br>（何も起きない）</td><td>酷使集団<br>（離職が多い）</td></tr>
+              </table>
+            </div>
+            <h3>精鋭集団になるには？</h3>
+            <ol>
+              <li><strong>定期会議</strong>でPDCAを回す（「なあなあ」にしない）</li>
+              <li>課題を<strong>数字で見える化</strong>して共有する</li>
+              <li>次の会議までの<strong>約束（コミットメント）</strong>を明確にする</li>
+              <li>「誰も責任を取らない」状態を<strong>排除</strong>する</li>
+              <li>失敗しても大丈夫という<strong>安心感</strong>をつくる（失敗は上司の責任）</li>
+            </ol>
+            <div class="key-point">
+              <strong>&#x1F4A1; このコースでこれから学ぶこと</strong><br>
+              ステップ2以降では、マネジャーとして必要な<strong>具体的なスキル</strong>を学びます。<br><br>
+              ・お金の仕組み（売上・利益・稼働率）<br>
+              ・経費のかしこい管理<br>
+              ・選ばれる事業所になる集客の仕組み<br>
+              ・チームを強くする組織づくり<br>
+              ・経営者マインド<br><br>
+              まずはこのステップ1で<strong>「管理者とは何か」</strong>の土台をしっかり固めましょう！
+            </div>
+          `
+        }
+      ],
+      quiz: [
+        { question: '「ボス」と「リーダー」の違いで正しいのは？',
+          options: ['ボスは先頭に立って動く','リーダーは恐れで人を動かす','リーダーは信頼で人を動かす','ボスもリーダーも同じ'],
+          correct: 2, explanation: 'リーダーは信頼で人を動かし、ボスは恐れで人を動かすと言われます。管理者は「リーダー」であるべきです。' },
+        { question: 'ドラッカーの定義で「マネジメント」とは？',
+          options: ['正しい事を行うこと','物事を正しく行うこと','部下に指示を出すこと','お金を管理すること'],
+          correct: 1, explanation: '「物事を正しく行うこと」がマネジメント。「正しい事を行うこと」がリーダーシップです。' },
+        { question: 'マネジャーの8つの責任のうち「神経伝達」が指すのは？',
+          options: ['目標設定とKPI管理','報連相・情報共有・社内の神経になること','スタッフのモチベーション向上','ケアマネとの関係づくり'],
+          correct: 1, explanation: '「神経伝達」は組織の中で情報を正確に伝える責任です。報連相やレポーティングが含まれます。' },
+        { question: '「経営代理」の責任とは？',
+          options: ['社長の代わりに出勤すること','社長の考えを現場に翻訳し、現場の声を上に届けること','経費の管理をすること','新しい事業を立ち上げること'],
+          correct: 1, explanation: '経営者と現場の間に立ち、双方の「通訳」をすることが経営代理の責任です。' },
+        { question: '管理者がやってはいけないことは？',
+          options: ['部下に仕事を任せること','部下の前で社長や会社の悪口を言うこと','部下の失敗を自分の責任とすること','チームの目標を設定すること'],
+          correct: 1, explanation: '部下の前で社長や会社の悪口を言うのはフォロワーシップの観点から最悪の行為です。チーム全体のモチベーションが下がります。' },
+        { question: 'フォロワーシップの3要件に含まれないものは？',
+          options: ['主体的に貢献する','上司を助ける','いつもポジティブ','上司の言うことにすべて従う'],
+          correct: 3, explanation: '「すべて従う」のではなく、主体的に考えて行動し、上司を支え、前向きな姿勢を保つことが求められます。' },
+        { question: '「精鋭集団」の特徴はどれ？',
+          options: ['仕事が楽で皆仲良し','仕事はきびしいがやる気も高い','長時間労働が当たり前','上下関係がきびしい'],
+          correct: 1, explanation: '精鋭集団は「きびしさとやる気の両立」がある職場です。ただきびしいだけでは酷使集団になってしまいます。' },
+        { question: '職場を精鋭集団にするためにまず必要なことは？',
+          options: ['給料を上げる','定期会議でPDCAを回し課題を数字で見える化する','スタッフを入れ替える','ルールを厳しくする'],
+          correct: 1, explanation: '定期会議で課題を数字で共有し、約束を明確にして検証することが精鋭集団への第一歩です。' },
+        { question: '介護の現場で「リーダーシップ」にあたるのは？',
+          options: ['シフト管理','記録の確認','「うちの事業所をこんな場所にしたい」というビジョンを示すこと','稼働率のチェック'],
+          correct: 2, explanation: 'ビジョンを示し方向性を決めるのがリーダーシップ。シフト管理や記録確認はマネジメントです。' },
+        { question: '会社の方針に納得いかないとき、管理者がとるべき行動は？',
+          options: ['部下に「上が決めたことだから」と伝える','部下と一緒に会社の愚痴を言う','社長に対策をセットで提案し、部下には自分の言葉で前向きに伝える','黙って従う'],
+          correct: 2, explanation: '問題があれば対策をセットで提案。部下には自分の言葉で前向きに翻訳して伝えるのが管理者の役割です。' }
+      ]
+    },
+
+    // ========================================
+    // ステップ2: うちの事業所のお金の仕組み（旧ステップ1）
     // ========================================
     {
       id: 'mgr-m1',
-      number: 'ステップ 1',
+      number: 'ステップ 2',
       title: 'うちの事業所のお金の仕組み',
       description: '売上・利益・稼働率の関係をつかもう',
       lessons: [
@@ -246,7 +443,7 @@ const MANAGER_COURSE = {
     // ========================================
     {
       id: 'mgr-m2',
-      number: 'ステップ 2',
+      number: 'ステップ 3',
       title: '経費をかしこく管理する',
       description: '損益分岐点と、ムダを減らすコツを学ぼう',
       lessons: [
@@ -400,7 +597,7 @@ const MANAGER_COURSE = {
               急成長に組織がついていけず崩壊するケースが多いのです。
             </div>
             <div class="key-point">
-              <strong>はなひろケアが目指す「絆徳の経営」</strong><br>
+              <strong>はなひろの介護が目指す「絆徳の経営」</strong><br>
               利益と道徳を両立し、スタッフが幸せを実感しながら、ご利用者さまをより良い未来に導く。<br>
               「中小企業と『おでき』は、すぐ潰れる」（稲盛和夫）── 堅実で質の高い経営を。
             </div>
@@ -446,7 +643,7 @@ const MANAGER_COURSE = {
     // ========================================
     {
       id: 'mgr-m3',
-      number: 'ステップ 3',
+      number: 'ステップ 4',
       title: '選ばれる事業所になるには？',
       description: '集客の仕組みとケアマネ営業のコツ',
       lessons: [
@@ -476,7 +673,7 @@ const MANAGER_COURSE = {
           `
         },
         {
-          title: 'はなひろケアの販売プロセス',
+          title: 'はなひろの介護の販売プロセス',
           content: `
             <h2>デイサービスの販売プロセス</h2>
             <div class="diagram-box">
@@ -644,7 +841,7 @@ const MANAGER_COURSE = {
     // ========================================
     {
       id: 'mgr-m4',
-      number: 'ステップ 4',
+      number: 'ステップ 5',
       title: 'チームを強くする',
       description: '管理者の8つの仕事と、いい組織のつくり方',
       lessons: [
@@ -822,7 +1019,7 @@ const MANAGER_COURSE = {
     // ========================================
     {
       id: 'mgr-m5',
-      number: 'ステップ 5',
+      number: 'ステップ 6',
       title: '経営者マインドを身につける',
       description: '5つの責任と、未来から逆算する考え方',
       lessons: [
@@ -971,7 +1168,7 @@ const MANAGER_COURSE = {
               ・笑顔で話しかけることを心がける<br>
               ・美点凝視でネガティブなことを言わない<br>
               ・いるだけで雰囲気がよくなる存在を目指す<br><br>
-              <strong>はなひろケアの経営理念</strong>は、この「絆徳の経営」の実践です。利益と道徳を両立し、スタッフとご利用者さまの幸せを追求し続けましょう。
+              <strong>はなひろの介護の経営理念</strong>は、この「絆徳の経営」の実践です。利益と道徳を両立し、スタッフとご利用者さまの幸せを追求し続けましょう。
             </div>
           `
         }
@@ -1004,7 +1201,7 @@ const MANAGER_COURSE = {
         { question: '「去年と同じ仕事を同じスピードでやっている」のは何を意味しますか？',
           options: ['安定した経営','確実な業務遂行','成長していない証拠','効率的な働き方'],
           correct: 2, explanation: 'タイムリバーサルの観点では、去年と同じペースは「成長していない証拠」です。常に改善し、より短い時間で高い成果を出すことを目指しましょう。' },
-        { question: 'はなひろケアが目指す「絆徳の経営」とは？',
+        { question: 'はなひろの介護が目指す「絆徳の経営」とは？',
           options: ['利益を最優先にする経営','利益と道徳を両立しスタッフと利用者の幸せを追求する経営','コスト削減を徹底する経営','規模拡大を最優先にする経営'],
           correct: 1, explanation: '絆徳の経営は「利益と道徳を両立し、スタッフが幸せを実感しながら、ご利用者さまをより良い未来に導く」経営です。' }
       ]

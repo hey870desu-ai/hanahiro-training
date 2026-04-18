@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>コンテンツ一覧 - はなひろの介護 学びの広場</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #fff; }
+    .review-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    .review-header {
+      text-align: center; padding: 30px 20px; margin-bottom: 30px;
+      background: linear-gradient(135deg, #f5c16c, #e8a849);
+      border-radius: 16px; color: #fff;
+    }
+    .review-header h1 { font-size: 22px; margin-bottom: 8px; }
+    .review-header p { font-size: 14px; opacity: 0.9; }
+    .review-nav {
+      background: #faf7f2; border-radius: 12px; padding: 20px;
+      margin-bottom: 30px; position: sticky; top: 0; z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .review-nav h3 { font-size: 14px; color: #5a3e1b; margin-bottom: 10px; }
+    .review-nav a {
+      display: inline-block; margin: 3px 4px; padding: 6px 12px;
+      background: #fff; border-radius: 8px; font-size: 12px;
+      color: #5a3e1b; text-decoration: none; border: 1px solid #e0d5c5;
+    }
+    .review-nav a:hover { background: #fef8ec; border-color: #e8a849; }
+    .review-nav .nav-section { margin-bottom: 8px; }
+    .review-nav .nav-label { font-size: 11px; color: #8a7a6a; font-weight: 600; margin-right: 6px; }
+    .course-divider {
+      font-size: 20px; font-weight: 800; color: #5a3e1b;
+      padding: 20px 0 10px; border-bottom: 3px solid #e8a849;
+      margin: 40px 0 20px;
+    }
+    .module-divider {
+      font-size: 17px; font-weight: 700; color: #8a6930;
+      padding: 14px 0 8px; border-bottom: 2px solid #f0ebe3;
+      margin: 30px 0 16px;
+    }
+    .page-card {
+      background: #fff; border: 1px solid #f0ebe3; border-radius: 14px;
+      padding: 24px; margin-bottom: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    }
+    .page-label {
+      font-size: 11px; color: #b0a090; font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .quiz-section {
+      background: #faf7f2; border-radius: 12px; padding: 20px;
+      margin-top: 16px;
+    }
+    .quiz-section h4 { font-size: 14px; color: #5a3e1b; margin-bottom: 12px; }
+    .quiz-item { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #f0ebe3; }
+    .quiz-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .quiz-q { font-size: 14px; font-weight: 600; color: #5a3e1b; margin-bottom: 6px; }
+    .quiz-a { font-size: 13px; color: #27ae60; }
+    .quiz-a::before { content: "→ 正解: "; font-weight: 600; }
+    @media print {
+      .review-nav { position: static; }
+      .page-card { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="review-container">
+    <div class="review-header">
+      <h1>&#x1F33B; コンテンツ一覧（社長チェック用）</h1>
+      <p>全ページのレッスン内容とテスト問題＆正解を表示しています</p>
+    </div>
+    <div class="review-nav" id="toc"></div>
+    <div id="content"></div>
+  </div>
+
+  <script src="content-staff.js"></script>
+  <script src="content-manager.js"></script>
+  <script>
+    const courses = [
+      { label: '🌱 みんなの学び（全社員コース）', data: STAFF_COURSE },
+      { label: '🎯 リーダーの学び（管理者コース）', data: MANAGER_COURSE }
+    ];
+
+    let tocHtml = '<h3>&#x1F4D1; 目次（クリックでジャンプ）</h3>';
+    let contentHtml = '';
+    let anchorId = 0;
+
+    courses.forEach((course, ci) => {
+      const cId = 'course-' + ci;
+      contentHtml += `<div class="course-divider" id="${cId}">${course.label}</div>`;
+      tocHtml += `<div class="nav-section"><span class="nav-label">${ci === 0 ? '全社員' : '管理者'}</span>`;
+
+      course.data.modules.forEach((mod, mi) => {
+        const mId = 'mod-' + ci + '-' + mi;
+        contentHtml += `<div class="module-divider" id="${mId}">${mod.number}: ${mod.title}</div>`;
+        contentHtml += `<p style="color:#8a7a6a;font-size:13px;margin-bottom:16px">${mod.description}</p>`;
+        tocHtml += `<a href="#${mId}">${mod.number}</a>`;
+
+        // レッスンページ
+        mod.lessons.forEach((lesson, li) => {
+          contentHtml += `
+            <div class="page-card">
+              <div class="page-label">ページ ${li + 1} / ${mod.lessons.length} ─ ${lesson.title}</div>
+              ${lesson.content}
+            </div>`;
+        });
+
+        // テスト問題
+        if (mod.quiz && mod.quiz.length > 0) {
+          contentHtml += `<div class="quiz-section"><h4>&#x1F4DD; チェックテスト（${mod.quiz.length}問）</h4>`;
+          mod.quiz.forEach((q, qi) => {
+            contentHtml += `
+              <div class="quiz-item">
+                <div class="quiz-q">問${qi + 1}: ${q.question}</div>
+                <div class="quiz-a">${q.options[q.correct]}</div>
+              </div>`;
+          });
+          contentHtml += '</div>';
+        }
+      });
+
+      tocHtml += '</div>';
+    });
+
+    document.getElementById('toc').innerHTML = tocHtml;
+    document.getElementById('content').innerHTML = contentHtml;
+  </script>
+</body>
+</html>

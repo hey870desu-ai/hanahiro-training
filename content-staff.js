@@ -22,7 +22,7 @@ const STAFF_COURSE = {
 
             <div class="chat-bubble">
               <div class="speaker">&#x1F4AC; ちょっと想像してみて</div>
-              もし、はなひろケアがなかったら…<br>
+              もし、はなひろの介護がなかったら…<br>
               ・利用者さまは、一日中家でひとりぼっち？<br>
               ・ご家族は、仕事を辞めないといけない？<br>
               ・体の機能が、どんどん落ちてしまう？
@@ -328,9 +328,9 @@ const STAFF_COURSE = {
             </div>
 
             <div class="example-box">
-              <strong>&#x1F3E0; はなひろケアの場合</strong><br>
+              <strong>&#x1F3E0; はなひろの介護の場合</strong><br>
               <strong>A</strong>：お母さんが家に閉じこもりがち。娘さんは仕事と介護の両立で疲れている。<br>
-              <strong>B</strong>：はなひろケアのデイサービス（あたたかいスタッフ、楽しい活動、リハビリ）<br>
+              <strong>B</strong>：はなひろの介護のデイサービス（あたたかいスタッフ、楽しい活動、リハビリ）<br>
               <strong>C</strong>：お母さんが「今日も楽しかった！」と笑顔に。娘さんも安心して仕事ができる。
             </div>
 
@@ -359,7 +359,7 @@ const STAFF_COURSE = {
             </div>
 
             <div class="example-box">
-              <strong>はなひろケアで考えると</strong><br>
+              <strong>はなひろの介護で考えると</strong><br>
               &#x1F3E0; <strong>基本</strong>：安全な環境、清潔な施設、安心の送迎<br>
               &#x2705; <strong>当たり前</strong>：丁寧な介助、栄養バランスのとれた食事<br>
               &#x1F60A; <strong>あると嬉しい</strong>：個別のリハビリ計画、季節のイベント<br>
@@ -409,7 +409,7 @@ const STAFF_COURSE = {
 
             <div class="key-point">
               <strong>&#x2728; 覚えておこう</strong><br>
-              あなたの毎日のサービスが、<strong>はなひろケアの最高の広告塔</strong>です。<br>
+              あなたの毎日のサービスが、<strong>はなひろの介護の最高の広告塔</strong>です。<br>
               チラシよりSNSより、現場の笑顔が一番伝わります。
             </div>
           `
