@@ -488,7 +488,7 @@ const MANAGER_COURSE = {
                 <div class="bar-row"><div class="bar-label">食材費</div><div class="bar-track"><div class="bar-fill blue" style="width:5%">3〜5%</div></div></div>
                 <div class="bar-row"><div class="bar-label">車両費</div><div class="bar-track"><div class="bar-fill blue" style="width:4%">3〜5%</div></div></div>
                 <div class="bar-row"><div class="bar-label">その他</div><div class="bar-track"><div class="bar-fill blue" style="width:8%">5〜10%</div></div></div>
-                <div class="bar-row"><div class="bar-label">利益</div><div class="bar-track"><div class="bar-fill green" style="width:6%">3〜8%</div></div></div>
+                <div class="bar-row"><div class="bar-label">利益</div><div class="bar-track"><div class="bar-fill green" style="width:4%">3〜5%</div></div></div>
               </div>
             </div>
             <h3>労働分配率の管理</h3>
@@ -565,7 +565,7 @@ const MANAGER_COURSE = {
             </ol>
             <div class="key-point">
               <strong>特に重要な3つ</strong><br>
-              <strong>5番</strong>：売上が300万円、営利5%（15万円）の事業所で10万円の経費削減をすると、利益は15万→25万円で<strong>67%増</strong>。同じ効果を売上増で得るには200万円の売上増が必要。<br><br>
+              <strong>5番</strong>：売上が300万円、営利3%（9万円）の事業所で5万円の経費削減をすると、利益は9万→14万円で<strong>56%増</strong>。同じ効果を売上増で得るには約170万円の売上増が必要。食材・光熱費高騰の今、経費削減の効果はさらに大きい。<br><br>
               <strong>11番</strong>：残業は人件費増だけでなく、疲労→事故→離職のリスクも。業務効率化で残業を減らすことは経費削減であり、スタッフを守ることでもある。<br><br>
               <strong>12番</strong>：数字を見ない経営は、暗闇で車を運転するのと同じ。
             </div>
@@ -614,9 +614,9 @@ const MANAGER_COURSE = {
         { question: '人件費「率」を下げる最良の方法は？',
           options: ['スタッフの給料をカットする','パートの比率を増やす','稼働率を上げて売上を増やす','残業を増やして対応する'],
           correct: 2, explanation: '稼働率を上げて売上を増やせば、同じ人件費でも人件費率は下がります。給料カットはスタッフのモチベーション低下と離職を招きます。' },
-        { question: '月商300万円（営利5%）の事業所で10万円の経費削減をすると、利益はどう変化しますか？',
-          options: ['3%増加','30%増加','67%増加','100%増加'],
-          correct: 2, explanation: '利益15万円→25万円で約67%の増加です。売上で同じ利益増を得るには200万円の売上増が必要なため、経費削減の効果は非常に大きいのです。' },
+        { question: '月商300万円（営利3%）の事業所で5万円の経費削減をすると、利益はどう変化しますか？',
+          options: ['約10%増加','約30%増加','約56%増加','約100%増加'],
+          correct: 2, explanation: '利益9万円→14万円で約56%の増加です。売上で同じ効果を得るには約170万円の売上増が必要。経費削減の効果は非常に大きいのです。' },
         { question: '「固定費を変動費化する」具体例はどれですか？',
           options: ['スタッフの正社員化','自社ビルの購入','清掃業務のアウトソーシング','車両の購入'],
           correct: 2, explanation: '清掃業務のアウトソーシングは、固定費（正社員の人件費）を変動費（外注費、必要時のみ発生）に変える例です。' },

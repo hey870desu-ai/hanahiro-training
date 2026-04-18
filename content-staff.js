@@ -67,17 +67,17 @@ const STAFF_COURSE = {
               <div class="bar-chart">
                 <div class="bar-row"><div class="bar-label">みんなの給料</div><div class="bar-track"><div class="bar-fill red" style="width:65%">約195万円</div></div></div>
                 <div class="bar-row"><div class="bar-label">建物・家賃</div><div class="bar-track"><div class="bar-fill yellow" style="width:12%">約36万円</div></div></div>
-                <div class="bar-row"><div class="bar-label">食材・消耗品</div><div class="bar-track"><div class="bar-fill blue" style="width:8%">約24万円</div></div></div>
-                <div class="bar-row"><div class="bar-label">車・光熱費</div><div class="bar-track"><div class="bar-fill blue" style="width:8%">約24万円</div></div></div>
-                <div class="bar-row"><div class="bar-label">残り（利益）</div><div class="bar-track"><div class="bar-fill green" style="width:7%">約15〜21万円</div></div></div>
+                <div class="bar-row"><div class="bar-label">食材・消耗品</div><div class="bar-track"><div class="bar-fill blue" style="width:10%">約30万円</div></div></div>
+                <div class="bar-row"><div class="bar-label">車・光熱費</div><div class="bar-track"><div class="bar-fill blue" style="width:9%">約27万円</div></div></div>
+                <div class="bar-row"><div class="bar-label">残り（利益）</div><div class="bar-track"><div class="bar-fill green" style="width:4%">約9〜15万円</div></div></div>
               </div>
             </div>
 
-            <p>&#x1F631; <strong>300万円の売上があっても、手元に残る利益は15〜21万円だけ</strong>なんです。</p>
+            <p>&#x1F631; <strong>300万円の売上があっても、手元に残る利益はたった9〜15万円</strong>。食材や光熱費の高騰で、今は利益率3〜5%が現実です。</p>
 
             <div class="key-point">
               <strong>&#x1F4A1; だからこそ</strong><br>
-              1万円のムダ遣いを取り戻すには、<strong>約20万円分の売上</strong>が必要。<br>
+              1万円のムダ遣いを取り戻すには、利益率3%なら<strong>約33万円分の売上</strong>が必要。<br>
               「たった1万円」が、実はものすごく大きいんです。
             </div>
           `
@@ -170,8 +170,8 @@ const STAFF_COURSE = {
           options: ['お世話をする仕事','利用者さまのより良い毎日を一緒につくる仕事','書類を書く仕事','送迎をする仕事'],
           correct: 1, explanation: '介護はお世話ではなく「利用者さまのより良い毎日を、一緒につくる仕事」です。この意識がサービスの質を変えます。' },
         { question: '月商300万円のデイサービスで、手元に残る利益はどのくらい？',
-          options: ['約100万円','約60万円','約40万円','約15〜21万円'],
-          correct: 3, explanation: '300万円の売上があっても利益は15〜21万円程度。だからこそ一つひとつのお金を大切にする意識が重要です。' },
+          options: ['約100万円','約60万円','約30万円','約9〜15万円'],
+          correct: 3, explanation: '食材や光熱費の高騰で、今は利益率3〜5%が現実。300万円の売上でも利益は約9〜15万円です。だからこそ一つひとつのお金を大切に。' },
         { question: '「稼働率が高い」ということは、どういう意味？',
           options: ['スタッフが忙しい','たくさんの利用者さまに選ばれている','経費がかかっている','営業日数が多い'],
           correct: 1, explanation: '稼働率が高い＝多くの方に選ばれている証拠。みんなのサービスの質が稼働率をつくっています。' },
