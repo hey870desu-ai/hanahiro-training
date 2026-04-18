@@ -100,9 +100,30 @@ body {
 }
 .header-left { display: flex; align-items: center; gap: 10px; }
 .header-logo { font-size: 22px; }
-.back-btn, .logout-btn {
+.back-btn, .logout-btn, .print-btn {
   background: none; border: none; font-size: 15px; color: #e8a849;
   cursor: pointer; font-weight: 600; padding: 4px 8px;
+}
+.print-btn { font-size: 20px; }
+.print-btn:hover { color: #c4861f; }
+
+/* ===== 印刷 / PDF保存 ===== */
+@media print {
+  .app-header, .lesson-nav, .logout-btn, .back-btn, .print-btn,
+  #login-screen, #password-modal, #admin-password-modal, .modal,
+  .quiz-submit-area { display: none !important; }
+  body, #app, .screen, .lesson-content {
+    background: #fff !important; padding: 0 !important; margin: 0 !important;
+  }
+  .screen { display: block !important; }
+  #lesson-body { padding: 20px; color: #000; font-size: 12pt; }
+  #lesson-body h2, #lesson-body h3 { color: #1a5276 !important; }
+  .print-section { page-break-before: always; }
+  .print-section:first-child { page-break-before: auto; }
+  .print-cover { page-break-after: always; }
+  .diagram-box, .key-point, .example-box, .chat-bubble {
+    break-inside: avoid;
+  }
 }
 
 /* ===== ダッシュボード ===== */

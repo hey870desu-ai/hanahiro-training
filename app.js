@@ -198,7 +198,6 @@ function showLesson() {
   const lesson = mod.lessons[currentPageIndex];
 
   document.getElementById('lesson-title-header').textContent = mod.title;
-  document.getElementById('lesson-progress-header').textContent = `${currentPageIndex + 1}/${totalPages}`;
   document.getElementById('lesson-body').innerHTML = lesson.content;
   document.getElementById('page-indicator').textContent = `${currentPageIndex + 1} / ${totalPages}`;
 
@@ -325,8 +324,8 @@ function renderQuiz() {
         ${score}点…あとちょっと！
       </p>
       <p style="font-size:14px;color:#8a7a6a;margin-bottom:16px">${correctCount}/${quiz.length}問正解（70点以上で合格だよ）</p>
-      <button class="btn-secondary" onclick="reviewLesson()" style="margin-right:8px">レッスンを見直す \u{1F4D6}</button>
-      <button class="btn-primary" onclick="openQuiz(${currentModuleIndex})">もう一回チャレンジ \u{1F4AA}</button>`;
+      <button type="button" class="btn-secondary" onclick="reviewLesson(); return false;" style="margin-right:8px">テキストに戻る \u{1F4D6}</button>
+      <button type="button" class="btn-primary" onclick="openQuiz(${currentModuleIndex}); return false;">もう一回チャレンジ \u{1F4AA}</button>`;
     }
     html += '</div>';
 
@@ -352,8 +351,42 @@ function submitQuiz() {
   renderQuiz();
 }
 function reviewLesson() {
+  quizSubmitted = false;
+  currentQuizAnswers = [];
   currentPageIndex = 0;
+  showScreen('lesson-screen');
   showLesson();
+}
+
+// --- 現モジュールの全レッスンを印刷 / PDF保存 ---
+function printModule() {
+  const mod = courseData.modules[currentModuleIndex];
+  const body = document.getElementById('lesson-body');
+  const originalHTML = body.innerHTML;
+  const courseName = courseData.title;
+
+  body.innerHTML = `
+    <div class="print-cover">
+      <h1 style="text-align:center;font-size:24px;color:#1a5276;border-bottom:2px solid #1a5276;padding-bottom:12px">${mod.title}</h1>
+      <p style="text-align:center;color:#8a7a6a;margin:8px 0 20px">はなひろラーニング「${courseName}」&nbsp;/&nbsp;${mod.number || ''}</p>
+    </div>
+    ${mod.lessons.map((l, i) => `
+      <section class="print-section">
+        <h2 style="color:#1a5276;border-bottom:1px solid #ccc;padding-bottom:6px;margin-top:28px">ページ${i + 1}：${l.title}</h2>
+        ${l.content}
+      </section>
+    `).join('')}
+  `;
+
+  document.body.classList.add('printing');
+  const restore = () => {
+    body.innerHTML = originalHTML;
+    document.body.classList.remove('printing');
+    window.removeEventListener('afterprint', restore);
+  };
+  window.addEventListener('afterprint', restore);
+  setTimeout(() => { if (document.body.classList.contains('printing')) restore(); }, 60000);
+  window.print();
 }
 
 // --- 管理者ダッシュボード パスワード ---
