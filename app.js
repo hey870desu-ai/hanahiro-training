@@ -1,7 +1,5 @@
 // ===== はなひろの介護 学びの広場 =====
-
-// --- GAS バックエンドURL（デプロイ後にここにURLを設定） ---
-const GAS_URL = '';  // ← GASデプロイ後のURLをここに貼る
+// バックエンド: Firebase (firebase-config.js) / 進捗はFirestoreに同期
 
 // --- 状態管理 ---
 let currentCourse = null;
@@ -33,24 +31,18 @@ function saveModuleProgress(moduleId, progress) {
   saveProgress(moduleId, progress);
 }
 
-// --- GASにデータ送信（バックグラウンド） ---
-function sendToServer(moduleId, moduleName, score, passed) {
-  if (!GAS_URL) return; // URL未設定なら送信しない
-  const payload = {
-    action: 'saveProgress',
-    name: currentUserName,
-    course: currentCourse === 'staff' ? 'みんなの学び' : 'リーダーの学び',
-    moduleId: moduleId,
-    moduleName: moduleName,
-    score: score,
-    passed: passed
-  };
-  fetch(GAS_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  }).catch(err => console.log('送信エラー（オフラインでも問題なし）:', err));
+// --- Firestoreに進捗を同期（バックグラウンド、失敗してもLocalStorageは残る） ---
+function syncProgressToFirestore(moduleId, moduleName, prog) {
+  if (!window.firestore) return;
+  const courseName = currentCourse === 'staff' ? 'みんなの学び' : 'リーダーの学び';
+  window.firestore.saveProgress(currentUserName, moduleId, {
+    moduleName,
+    course: currentCourse,
+    courseName,
+    lessonsRead: prog.lessonsRead || [],
+    quizScore: prog.quizScore ?? null,
+    quizPassed: !!prog.quizPassed
+  }).catch(err => console.log('Firestore同期エラー（オフラインでも問題なし）:', err.message));
 }
 
 // --- 画面切り替え ---
@@ -73,6 +65,9 @@ function selectCourse(type) {
   currentUserName = name;
   currentCourse = type;
   courseData = type === 'staff' ? STAFF_COURSE : MANAGER_COURSE;
+  if (window.firestore) {
+    window.firestore.saveUser(name).catch(err => console.log('ユーザー登録エラー:', err.message));
+  }
   showDashboard();
 }
 
@@ -226,6 +221,8 @@ function markLessonRead(moduleId, pageIndex) {
   if (!prog.lessonsRead.includes(pageIndex)) {
     prog.lessonsRead.push(pageIndex);
     saveModuleProgress(moduleId, prog);
+    const mod = courseData.modules.find(m => m.id === moduleId);
+    if (mod) syncProgressToFirestore(moduleId, mod.title, prog);
   }
 }
 function nextPage() {
@@ -329,12 +326,12 @@ function renderQuiz() {
     }
     html += '</div>';
 
-    // 進捗保存（ローカル + サーバー）
+    // 進捗保存（ローカル + Firestore）
     const prog = getModuleProgress(mod.id);
     prog.quizScore = score;
     if (passed) prog.quizPassed = true;
     saveModuleProgress(mod.id, prog);
-    sendToServer(mod.id, mod.title, score, passed);
+    syncProgressToFirestore(mod.id, mod.title, prog);
   }
 
   document.getElementById('quiz-body').innerHTML = html;
@@ -409,77 +406,77 @@ function checkAdminPassword() {
   }
 }
 
-// --- 管理者ダッシュボード ---
-function openAdminDashboard() {
-  if (!GAS_URL) {
-    document.getElementById('admin-body').innerHTML =
-      '<p style="text-align:center;color:#8a7a6a;padding:40px 20px">GASバックエンドが未設定です。<br>gas-backend.js をデプロイして、<br>app.js の GAS_URL にURLを設定してください。</p>';
-    showScreen('admin-screen');
-    return;
-  }
+// --- 管理者ダッシュボード（Firestoreから読む） ---
+let adminRecordsCache = [];
+
+async function openAdminDashboard() {
   document.getElementById('admin-body').innerHTML =
     '<p style="text-align:center;color:#8a7a6a;padding:40px 20px">\u{1F504} データを読み込んでいます…</p>';
   showScreen('admin-screen');
 
-  fetch(GAS_URL + '?action=getAll')
-    .then(res => res.json())
-    .then(result => {
-      if (result.success) {
-        renderAdminDashboard(result.data);
-      } else {
-        document.getElementById('admin-body').innerHTML =
-          '<p style="text-align:center;color:#c0392b;padding:40px">データ取得に失敗しました: ' + (result.error || '') + '</p>';
-      }
-    })
-    .catch(err => {
-      document.getElementById('admin-body').innerHTML =
-        '<p style="text-align:center;color:#c0392b;padding:40px">通信エラー: ' + err.message + '</p>';
-    });
+  if (!window.firestore) {
+    document.getElementById('admin-body').innerHTML =
+      '<p style="text-align:center;color:#c0392b;padding:40px">Firebaseが未初期化です</p>';
+    return;
+  }
+
+  try {
+    const records = await window.firestore.getAllProgress();
+    adminRecordsCache = records;
+    renderAdminDashboard(records);
+  } catch (err) {
+    document.getElementById('admin-body').innerHTML =
+      '<p style="text-align:center;color:#c0392b;padding:40px">データ取得に失敗しました: ' + err.message + '</p>';
+  }
 }
 
 function renderAdminDashboard(records) {
   if (!records || records.length === 0) {
     document.getElementById('admin-body').innerHTML =
-      '<p style="text-align:center;color:#8a7a6a;padding:40px">まだ受講データがありません。<br>スタッフがテストを受けると、ここに表示されます。</p>';
+      '<p style="text-align:center;color:#8a7a6a;padding:40px">まだ受講データがありません。<br>スタッフがレッスンを読むと、ここに表示されます。</p>';
     return;
   }
 
   // ユーザー×コース別に集計
   const users = {};
   records.forEach(r => {
-    const key = r.name + '|' + r.course;
+    const name = r.userName || r.name;
+    const key = name + '|' + (r.course || 'unknown');
     if (!users[key]) {
-      users[key] = { name: r.name, course: r.course, modules: {}, lastUpdate: r.lastUpdate };
+      users[key] = { name, course: r.course, courseName: r.courseName, modules: {}, lastUpdate: 0 };
     }
+    const lessonCount = Array.isArray(r.lessonsRead) ? r.lessonsRead.length : 0;
     users[key].modules[r.moduleId] = {
       name: r.moduleName,
-      score: r.score,
-      passed: r.passed
+      score: r.quizScore,
+      passed: !!r.quizPassed,
+      lessonsRead: lessonCount
     };
-    if (r.lastUpdate > users[key].lastUpdate) {
-      users[key].lastUpdate = r.lastUpdate;
-    }
+    const ts = r.updatedAt && r.updatedAt.toMillis ? r.updatedAt.toMillis() : 0;
+    if (ts > users[key].lastUpdate) users[key].lastUpdate = ts;
   });
 
-  // みんなの学びとリーダーの学びを分ける
   const staffUsers = [];
   const managerUsers = [];
   Object.values(users).forEach(u => {
-    if (u.course === 'みんなの学び') staffUsers.push(u);
-    else managerUsers.push(u);
+    if (u.course === 'staff') staffUsers.push(u);
+    else if (u.course === 'manager') managerUsers.push(u);
   });
+  staffUsers.sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+  managerUsers.sort((a, b) => a.name.localeCompare(b.name, 'ja'));
 
-  let html = '';
+  let html = `
+    <div style="margin-bottom:16px;text-align:right">
+      <button class="btn-secondary" onclick="exportAdminCSV()" style="padding:8px 16px">\u{1F4E5} CSVダウンロード</button>
+    </div>
+  `;
 
-  // --- みんなの学び ---
   if (staffUsers.length > 0) {
-    html += '<h3 style="color:#5a3e1b;margin-bottom:12px">\u{1F331} みんなの学び</h3>';
+    html += '<h3 style="color:#5a3e1b;margin-bottom:12px">\u{1F331} みんなの学び（' + staffUsers.length + '名）</h3>';
     html += buildAdminTable(staffUsers, STAFF_COURSE.modules);
   }
-
-  // --- リーダーの学び ---
   if (managerUsers.length > 0) {
-    html += '<h3 style="color:#5a3e1b;margin:24px 0 12px">\u{1F3AF} リーダーの学び</h3>';
+    html += '<h3 style="color:#5a3e1b;margin:24px 0 12px">\u{1F3AF} リーダーの学び（' + managerUsers.length + '名）</h3>';
     html += buildAdminTable(managerUsers, MANAGER_COURSE.modules);
   }
 
@@ -489,25 +486,32 @@ function renderAdminDashboard(records) {
 function buildAdminTable(userList, modules) {
   let html = '<div style="overflow-x:auto"><table class="compare-table">';
   html += '<tr><th>名前</th>';
-  modules.forEach((m, i) => {
+  modules.forEach((_m, i) => {
     html += `<th style="font-size:11px;min-width:60px">S${i+1}</th>`;
   });
-  html += '<th>最終</th></tr>';
+  html += '<th>完了率</th><th>最終</th></tr>';
 
   userList.forEach(u => {
+    let passedCount = 0;
     html += `<tr><td style="white-space:nowrap;font-weight:600">${u.name}</td>`;
     modules.forEach(m => {
       const mod = u.modules[m.id];
       if (mod) {
         if (mod.passed) {
+          passedCount++;
           html += `<td class="highlight-cell" style="text-align:center;color:#27ae60;font-weight:700">${mod.score}点</td>`;
-        } else {
+        } else if (mod.score != null) {
           html += `<td style="text-align:center;color:#e67e22">${mod.score}点</td>`;
+        } else {
+          html += `<td style="text-align:center;color:#5dade2;font-size:11px">学習中</td>`;
         }
       } else {
         html += '<td style="text-align:center;color:#ccc">-</td>';
       }
     });
+    const pct = Math.round((passedCount / modules.length) * 100);
+    const pctColor = pct === 100 ? '#27ae60' : pct >= 50 ? '#e8a849' : '#c0392b';
+    html += `<td style="text-align:center;font-weight:700;color:${pctColor}">${pct}%</td>`;
     const d = u.lastUpdate ? new Date(u.lastUpdate) : null;
     const dateStr = d ? `${d.getMonth()+1}/${d.getDate()}` : '-';
     html += `<td style="text-align:center;font-size:12px;color:#8a7a6a">${dateStr}</td>`;
@@ -516,6 +520,40 @@ function buildAdminTable(userList, modules) {
 
   html += '</table></div>';
   return html;
+}
+
+// --- CSVエクスポート ---
+function exportAdminCSV() {
+  if (!adminRecordsCache || adminRecordsCache.length === 0) {
+    alert('データがありません');
+    return;
+  }
+  const header = ['名前', 'コース', 'ステップ', 'スコア', '合格', '読了ページ数', '最終更新'];
+  const rows = adminRecordsCache.map(r => {
+    const d = r.updatedAt && r.updatedAt.toDate ? r.updatedAt.toDate() : null;
+    return [
+      r.userName || r.name || '',
+      r.courseName || r.course || '',
+      r.moduleName || r.moduleId || '',
+      r.quizScore != null ? r.quizScore : '',
+      r.quizPassed ? '合格' : '',
+      Array.isArray(r.lessonsRead) ? r.lessonsRead.length : 0,
+      d ? `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}` : ''
+    ];
+  });
+  const csv = '\uFEFF' + [header, ...rows].map(r =>
+    r.map(cell => '"' + String(cell).replace(/"/g, '""') + '"').join(',')
+  ).join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const now = new Date();
+  a.download = `hanahiro-learning_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 // --- ナビゲーション ---
