@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>はなひろ 組織マップ｜学びの広場</title>
+  <meta property="og:title" content="はなひろ 組織マップ">
+  <meta property="og:description" content="責任を認識し、精鋭集団を目指そう">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      background: #faf7f2;
+      color: #4a4a4a;
+      line-height: 1.7;
+      padding: 0 0 60px;
+    }
+    .header {
+      background: linear-gradient(150deg, #f9e4b7 0%, #f5c16c 30%, #e8a849 60%, #d4944a 100%);
+      color: #5a3e1b;
+      padding: 32px 20px 28px;
+      text-align: center;
+      position: sticky; top: 0; z-index: 10;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    .header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+    .header p { font-size: 13px; color: #6b4d28; }
+    .back-link {
+      position: absolute; top: 18px; left: 18px;
+      color: #5a3e1b; text-decoration: none; font-size: 14px; font-weight: 600;
+      background: rgba(255,255,255,0.6); padding: 6px 12px; border-radius: 20px;
+    }
+    .print-btn {
+      position: absolute; top: 18px; right: 18px;
+      background: rgba(255,255,255,0.7); border: none; padding: 6px 12px;
+      border-radius: 20px; font-size: 16px; cursor: pointer;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+    .intro {
+      background: #fff; border-radius: 16px; padding: 20px 22px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 28px;
+    }
+    .intro h2 { font-size: 16px; color: #5a3e1b; margin-bottom: 8px; }
+    .intro p { font-size: 14px; color: #6b4d28; }
+    .principle-box {
+      background: #fff8ec; border-left: 4px solid #e8a849;
+      padding: 14px 16px; border-radius: 8px; margin-top: 12px;
+      font-size: 13px; color: #6b4d28;
+    }
+    .principle-box strong { color: #5a3e1b; }
+
+    /* 階層セクション */
+    .tier {
+      margin-bottom: 24px; border-radius: 20px; overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    }
+    .tier-header {
+      padding: 16px 22px; color: #fff; display: flex; align-items: center; justify-content: space-between;
+    }
+    .tier-header .t-left { display: flex; align-items: center; gap: 10px; }
+    .tier-header h3 { font-size: 18px; font-weight: 800; }
+    .tier-header .t-icon { font-size: 26px; }
+    .tier-header .t-count {
+      background: rgba(255,255,255,0.3); padding: 3px 10px; border-radius: 12px;
+      font-size: 12px; font-weight: 700;
+    }
+    .tier-body { background: #fff; padding: 18px; display: grid; gap: 12px; }
+
+    /* 役職カード */
+    .role {
+      border: 2px solid; border-radius: 14px; padding: 14px 16px;
+      background: #fff; position: relative;
+    }
+    .role-head {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;
+      margin-bottom: 8px;
+    }
+    .role-name { font-size: 16px; font-weight: 800; color: #333; }
+    .role-person {
+      font-size: 12px; color: #8a7a6a; font-weight: 500; margin-left: 6px;
+    }
+    .badges { display: flex; gap: 4px; flex-wrap: wrap; }
+    .badge {
+      font-size: 10px; padding: 2px 8px; border-radius: 10px;
+      background: #f5ecd9; color: #5a3e1b; font-weight: 700;
+    }
+    .role-row {
+      font-size: 13px; color: #6b4d28; margin-top: 4px; display: flex; gap: 6px;
+    }
+    .role-row .lbl {
+      font-weight: 700; color: #5a3e1b; min-width: 72px; flex-shrink: 0;
+    }
+    .role-row .val { color: #4a4a4a; }
+
+    /* 階層別カラー */
+    .tier-1 .tier-header { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+    .tier-1 .role { border-color: #f5cbc6; }
+    .tier-2 .tier-header { background: linear-gradient(135deg, #d35400, #e67e22); }
+    .tier-2 .role { border-color: #f9d4b5; }
+    .tier-3 .tier-header { background: linear-gradient(135deg, #b7950b, #e8a849); }
+    .tier-3 .role { border-color: #f5dfa1; }
+    .tier-4 .tier-header { background: linear-gradient(135deg, #1e8449, #27ae60); }
+    .tier-4 .role { border-color: #b7e0c4; }
+    .tier-5 .tier-header { background: linear-gradient(135deg, #1a5276, #2e86c1); }
+    .tier-5 .role { border-color: #bcd9ec; }
+
+    /* 責任タグ色 */
+    .resp-tag {
+      display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 8px;
+      margin: 2px 3px 2px 0; font-weight: 700;
+    }
+    .r-業績向上 { background: #fdecea; color: #c0392b; }
+    .r-業務改善 { background: #fdecd8; color: #d35400; }
+    .r-稟議提言 { background: #fdf4d4; color: #b7950b; }
+    .r-神経伝達 { background: #e0f2e3; color: #1e8449; }
+    .r-経営代理 { background: #dceaf4; color: #1a5276; }
+    .r-対外渉外 { background: #ebdef0; color: #6c3483; }
+    .r-組織活性 { background: #fad7de; color: #a93226; }
+    .r-人財育成 { background: #efe0cc; color: #7b4a1d; }
+
+    /* 凡例 */
+    .legend {
+      background: #fff; border-radius: 16px; padding: 18px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 18px;
+    }
+    .legend h4 { font-size: 14px; color: #5a3e1b; margin-bottom: 10px; }
+    .legend-row { font-size: 12px; color: #6b4d28; margin-bottom: 6px; }
+    .legend-row strong { color: #5a3e1b; }
+
+    .footer-msg {
+      text-align: center; color: #8a7a6a; font-size: 13px; margin-top: 24px;
+      line-height: 1.8;
+    }
+    .footer-msg strong { color: #5a3e1b; }
+
+    /* 印刷用 */
+    @media print {
+      .header { position: static; }
+      .back-link, .print-btn { display: none; }
+      body { background: #fff; padding: 0; }
+      .tier { box-shadow: none; page-break-inside: avoid; }
+      .role { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="index.html" class="back-link">&larr; 戻る</a>
+    <button class="print-btn" onclick="window.print()" title="印刷・PDF保存">&#x1F5A8;</button>
+    <h1>&#x1F33B; はなひろ 組織マップ</h1>
+    <p>責任を認識し、精鋭集団を目指そう</p>
+  </div>
+
+  <div class="container">
+    <div class="intro">
+      <h2>&#x1F3AF; このマップの使い方</h2>
+      <p>はなひろの組織は <strong>5つの階層</strong> で構成されています。それぞれの階層には役割と責任があり、お互いを支え合うことで、利用者さまに最高のサービスを届けています。あなたの役割と、となりの役割を知ることで、チームはもっと強くなります。</p>
+      <div class="principle-box">
+        <strong>&#x1F4A1; 仕事の「等価」原則</strong><br>
+        責任・権限・能力の3つは釣り合っている必要があります。階層が上がるほど三角形は大きくなりますが、<strong>バランスは同じ</strong>。バランスが崩れると、組織は機能しません。
+      </div>
+    </div>
+
+    <!-- 役員層 -->
+    <div class="tier tier-1">
+      <div class="tier-header">
+        <div class="t-left"><span class="t-icon">&#x1F451;</span><h3>役員層</h3></div>
+        <span class="t-count">2名</span>
+      </div>
+      <div class="tier-body">
+        <div class="role">
+          <div class="role-head">
+            <div><span class="role-name">代表取締役</span><span class="role-person">塙 啓之</span></div>
+            <div class="badges"><span class="badge">実行</span><span class="badge">結果</span><span class="badge">説明</span><span class="badge">解決</span><span class="badge">決定</span></div>
+          </div>
+          <div class="role-row"><span class="lbl">主な責任</span><span class="val"><span class="resp-tag r-業績向上">業績向上</span><span class="resp-tag r-業務改善">業務改善</span><span class="resp-tag r-稟議提言">稟議提言</span><span class="resp-tag r-神経伝達">神経伝達</span><span class="resp-tag r-経営代理">経営代理</span><span class="resp-tag r-対外渉外">対外渉外</span><span class="resp-tag r-組織活性">組織活性</span><span class="resp-tag r-人財育成">人財育成</span></span></div>
+          <div class="role-row"><span class="lbl">具体業務</span><span class="val">経営理念・ビジョン策定／中長期戦略／最終意思決定／金融機関・行政対応／幹部育成／絆徳経営の実践</span></div>
+          <div class="role-row"><span class="lbl">時間軸</span><span class="val">数ヶ月〜数十年先を見据える</span></div>
+        </div>
+        <div class="role">
+          <div class="role-head">
+            <div><span class="role-name">専務取締役</span><span class="role-person">豊嶋 久美子</span></div>
+            <div class="badges"><span class="badge">実行</span><span class="badge">結果</span><span class="badge">説明</span><span class="badge">解決</span><span class="badge">決定</span></div>
+          </div>
+          <div class="role-row"><span class="lbl">主な責任</span><span class="val"><span class="resp-tag r-業績向上">業績向上</span><span class="resp-tag r-業務改善">業務改善</span><span class="resp-tag r-稟議提言">稟議提言</span><span class="resp-tag r-神経伝達">神経伝達</span><span class="resp-tag r-経営代理">経営代理</span><span class="resp-tag r-対外渉外">対外渉外</span><span class="resp-tag r-組織活性">組織活性</span><span class="resp-tag r-人財育成">人財育成</span></span></div>
+          <div class="role-row"><span class="lbl">具体業務</span><span class="val">代表の補佐・経営代理／現場と経営の橋渡し／全事業の管理監督／管理部門の統括</span></div>
+          <div class="role-row"><span class="lbl">報告先</span><span class="val">代表取締役</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 事業推進マネジャー層 -->
+    <div class="tier tier-2">
+      <div class="tier-header">
+        <div class="t-left"><span class="t-icon">&#x1F680;</span><h3>事業推進マネジャー層</h3></div>
+        <span class="t-count">1役職</span>
+      </div>
+      <div class="tier-body">
+        <div class="role">
+          <div class="role-head">
+            <div><span class="role-name">事業推進マネジャー</span></div>
+            <div class="badges"><span class="badge">実行</span><span class="badge">結果</span><span class="badge">説明</span><span class="badge">解決</span></div>
+          </div>
+          <div class="role-row"><span class="lbl">主な責任</span><span class="val"><span class="resp-tag r-業績向上">業績向上</span><span class="resp-tag r-業務改善">業務改善</span><span class="resp-tag r-稟議提言">稟議提言</span><span class="resp-tag r-神経伝達">神経伝達</span><span class="resp-tag r-経営代理">経営代理</span><span class="resp-tag r-対外渉外">対外渉外</span><span class="resp-tag r-組織活性">組織活性</span><span class="resp-tag r-人財育成">人財育成</span></span></div>
+          <div class="role-row"><span class="lbl">具体業務</span><span class="val">事業所管理者のサポート／業績向上施策の展開／経営と現場の翻訳／稼働率・収益改善／管理者候補の育成</span></div>
+          <div class="role-row"><span class="lbl">報告先</span><span class="val">専務取締役</span></div>
+          <div class="role-row"><span class="lbl">時間軸</span><span class="val">数週間〜数年先</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 管理者層 -->
+    <div class="tier tier-3">
+      <div class="tier-header">
+        <div class="t-left"><span class="t-icon">&#x1F3AF;</span><h3>管理者層</h3></div>
+        <span class="t-count">1役職</span>
+      </div>
+      <div class="tier-body">
+        <div class="role">
+          <div class="role-head">
+            <div><span class="role-name">事業所管理者（通所介護）</span></div>
+            <div class="badges"><span class="badge">実行</span><span class="badge">結果</span><span class="badge">説明</span><span class="badge">解決</span></div>
+          </div>
+          <div class="role-row"><span class="lbl">主な責任</span><span class="val"><span class="resp-tag r-業績向上">業績向上</span><span class="resp-tag r-業務改善">業務改善</span><span class="resp-tag r-稟議提言">稟議提言</span><span class="resp-tag r-神経伝達">神経伝達</span><span class="resp-tag r-組織活性">組織活性</span><span class="resp-tag r-人財育成">人財育成</span></span></div>
+          <div class="role-row"><span class="lbl">具体業務</span><span class="val">事業所運営全般／稼働率管理／スタッフ配置・シフト承認／運営基準遵守／ケアマネ・家族・地域との連携／事業所の文化づくり</span></div>
+          <div class="role-row"><span class="lbl">KPI</span><span class="val">稼働率・収支・利用者満足度・スタッフ定着率・加算取得率</span></div>
+          <div class="role-row"><span class="lbl">時間軸</span><span class="val">数週間〜1年先</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- リーダー層 -->
+    <div class="tier tier-4">
+      <div class="tier-header">
+        <div class="t-left"><span class="t-icon">&#x1F31F;</span><h3>リーダー層</h3></div>
+        <span class="t-count">1役職</span>
+      </div>
+      <div class="tier-body">
+        <div class="role">
+          <div class="role-head">
+            <div><span class="role-name">リーダー</span></div>
+            <div class="badges"><span class="badge">実行</span><span class="badge">結果</span><span class="badge">説明</span></div>
+          </div>
+          <div class="role-row"><span class="lbl">主な責任</span><span class="val"><span class="resp-tag r-業績向上">業績向上</span><span class="resp-tag r-業務改善">業務改善</span><span class="resp-tag r-神経伝達">神経伝達</span><span class="resp-tag r-組織活性">組織活性</span><span class="resp-tag r-人財育成">人財育成</span></span></div>
+          <div class="role-row"><span class="lbl">具体業務</span><span class="val">現場スタッフのリーダー／新人・既存スタッフのOJT／勤務調整・業務分担／ケアの質管理／現場課題の吸い上げと改善提案／明るい雰囲気づくり</span></div>
+          <div class="role-row"><span class="lbl">報告先</span><span class="val">事業所管理者</span></div>
+          <div class="role-row"><span class="lbl">時間軸</span><span class="val">数日〜数ヶ月先</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- スタッフ層 -->
+    <div class="tier tier-5">
+      <div class="tier-header">
+        <div class="t-left"><span class="t-icon">&#x1F331;</span><h3>スタッフ層</h3></div>
+        <span class="t-count">7職種</span>
+      </div>
+      <div class="tier-body">
+        <div class="role">
+          <div class="role-head">
+            <div><span class="role-name">介護職員</span></div>
+            <div class="badges"><span class="badge">実行</span><span class="badge">結果</span></div>
+          </div>
+          <div class="role-row"><span class="lbl">主な責任</span><span class="val"><span class="resp-tag r-業務改善">業務改善</span><span class="resp-tag r-神経伝達">神経伝達</span><span class="resp-tag r-組織活性">組織活性</span></span></div>
+          <div class="role-row"><span class="lbl">具体業務</span><span class="val">食事・入浴・排泄介助／レクリエーション／介護記録／環境整備／ご家族対応／利用者の変化の報告</span></div>
+        </div>
+        <div class="role">
+          <div class="role-head">
+            <div><span class="role-name">看護師</span></div>
+            <div class="badges"><span class="badge">実行</span><span class="badge">結果</span><span class="badge">説明</span></div>
+          </div>
+          <div class="role-row"><span class="lbl">主な責任</span><span class="val"><span class="resp-tag r-業務改善">業務改善</span><span class="resp-tag r-神経伝達">神経伝達</span><span class="resp-tag r-組織活性">組織活性</span><span class="resp-tag r-対外渉外">対外渉外</span></span></div>
+          <div class="role-row"><span class="lbl">具体業務</span><span class="val">健康管理（バイタル・体調確認）／医療的ケア（服薬管理・処置）／医療機関・家族との連携／感染症対策／介護職員への医療的助言</span></div>
+        </div>
+        <div class="role">
+          <div class="role-head">
+            <div><span class="role-name">生活相談員</span></div>
+            <div class="badges"><span class="badge">実行</span><span class="badge">結果</span><span class="badge">説明</span></div>
+          </div>
+          <div class="role-row"><span class="lbl">主な責任</span><span class="val"><span class="resp-tag r-業績向上">業績向上</span><span class="resp-tag r-神経伝達">神経伝達</span><span class="resp-tag r-対外渉外">対外渉外</span><span class="resp-tag r-組織活性">組織活性</span></span></div>
+          <div class="role-row"><span class="lbl">具体業務</span><span class="val">利用者・ご家族の相談対応／契約業務／ケアマネ・地域包括との連携／新規利用者の獲得・見学対応／稼働率向上の営業</span></div>
+          <div class="role-row"><span class="lbl">KPI</span><span class="val">新規利用者数・紹介件数・稼働率</span></div>
+        </div>
+        <div class="role">
+          <div class="role-head">
+            <div><span class="role-name">機能訓練指導員</span></div>
+            <div class="badges"><span class="badge">実行</span><span class="badge">結果</span></div>
+          </div>
+          <div class="role-row"><span class="lbl">主な責任</span><span class="val"><span class="resp-tag r-業務改善">業務改善</span><span class="resp-tag r-神経伝達">神経伝達</span></span></div>
+          <div class="role-row"><span class="lbl">具体業務</span><span class="val">機能訓練計画の作成・実施／個別機能訓練加算の算定支援／身体機能評価／介護職員へのアドバイス</span></div>
+        </div>
+        <div class="role">
+          <div class="role-head">
+            <div><span class="role-name">事務員</span></div>
+            <div class="badges"><span class="badge">実行</span><span class="badge">結果</span></div>
+          </div>
+          <div class="role-row"><span class="lbl">主な責任</span><span class="val"><span class="resp-tag r-業務改善">業務改善</span><span class="resp-tag r-神経伝達">神経伝達</span></span></div>
+          <div class="role-row"><span class="lbl">具体業務</span><span class="val">介護報酬請求／経理・出納／勤怠管理・給与計算の支援／書類管理／電話応対／備品発注</span></div>
+        </div>
+        <div class="role">
+          <div class="role-head">
+            <div><span class="role-name">調理員</span></div>
+            <div class="badges"><span class="badge">実行</span><span class="badge">結果</span></div>
+          </div>
+          <div class="role-row"><span class="lbl">主な責任</span><span class="val"><span class="resp-tag r-業務改善">業務改善</span><span class="resp-tag r-神経伝達">神経伝達</span></span></div>
+          <div class="role-row"><span class="lbl">具体業務</span><span class="val">食事の調理・盛付け／献立作成／衛生管理（HACCP準拠）／食材発注・在庫管理／食事形態の対応</span></div>
+        </div>
+        <div class="role">
+          <div class="role-head">
+            <div><span class="role-name">送迎スタッフ</span></div>
+            <div class="badges"><span class="badge">実行</span><span class="badge">結果</span></div>
+          </div>
+          <div class="role-row"><span class="lbl">主な責任</span><span class="val"><span class="resp-tag r-業務改善">業務改善</span><span class="resp-tag r-神経伝達">神経伝達</span></span></div>
+          <div class="role-row"><span class="lbl">具体業務</span><span class="val">利用者の送迎／送迎ルートの効率化／車両の日常点検・清掃／安全運転／乗降介助／挨拶</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 凡例 -->
+    <div class="legend">
+      <h4>&#x1F3F7; 用語の見方</h4>
+      <div class="legend-row"><strong>責任タグ（8つ）</strong>：<span class="resp-tag r-業績向上">業績向上</span><span class="resp-tag r-業務改善">業務改善</span><span class="resp-tag r-稟議提言">稟議提言</span><span class="resp-tag r-神経伝達">神経伝達</span><span class="resp-tag r-経営代理">経営代理</span><span class="resp-tag r-対外渉外">対外渉外</span><span class="resp-tag r-組織活性">組織活性</span><span class="resp-tag r-人財育成">人財育成</span></div>
+      <div class="legend-row"><strong>5つの責任レベル</strong>：実行 &rarr; 結果 &rarr; 説明 &rarr; 解決 &rarr; 決定（上の階層ほど広範囲を担う）</div>
+      <div class="legend-row" style="margin-top:10px"><strong>&#x1F4A1; ポイント</strong>：階層は「えらい / えらくない」ではありません。それぞれに違う <strong>責任と時間軸</strong> があります。非他責の姿勢（ポジティブに責任を引き受ける姿勢）は、全員に求められます。</div>
+    </div>
+
+    <div class="footer-msg">
+      <strong>バランスが崩れると、組織は機能しない。</strong><br>
+      責任・権限・能力のバランスを整え、精鋭集団を目指そう。<br>
+      ─ はなひろの介護
+    </div>
+  </div>
+</body>
+</html>
