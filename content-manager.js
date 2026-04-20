@@ -966,16 +966,15 @@ const MANAGER_COURSE = {
               </table>
             </div>
             <h3>精鋭集団になるためのステップ</h3>
-            <ol>
-              <li><strong>定期会議</strong>を開催し、PDCAを回す</li>
-              <li>「<strong>課題の認識</strong>」と「<strong>改善の可視化</strong>」を促す</li>
-              <li>コミットメント（約束）を明確にし、実行を検証する</li>
-              <li>「<strong>無責</strong>」（誰も責任を負わない）「<strong>免責</strong>」（責任を免除される）を排除</li>
-              <li>部下を<strong>信じて任せる</strong>（失敗は上司の責任という文化）</li>
-            </ol>
+            <ul>
+              <li><strong>「定期会議」</strong>を開催し、活動のレポーティングによって、自らの役割を果たせているか、成果を出せているかどうかを常にフィードバックし、メンバーの<strong>「成長」</strong>を促す。</li>
+              <li>「定期会議」での部下からの<strong>レポーティング</strong>と、上司からの<strong>フィードバック</strong>によって、「<strong>不足の認識</strong>」や「<strong>盲点の可視化</strong>」をする。</li>
+              <li>一般的に、人は「不足の認識」（課題の認識）がないと、改善の必要性を感じない（ただし、過度で理不尽な追求や、強すぎる営業のツメは逆効果を生むことが多いので注意）。</li>
+              <li>次回の定期会議までに、コミットメントを決め、実行を<strong>「約束」</strong>していくことを繰り返し、「<strong>成長の可能化</strong>」を促す。</li>
+            </ul>
             <div class="key-point">
-              <strong>人財育成の基本</strong><br>
-              「不足の認識」（課題の認識）がなければ、人は改善の必要性を感じません。定期会議でデータに基づくフィードバックを行い、「改善の可視化」と「改善の可能化」を進めましょう。
+              <strong>&#x1F3AF; ポイント</strong><br>
+              自分は<strong>「責任」</strong>を負っていると、全員が自覚することであり、<strong>「課題」</strong>に目を向けて、日々<strong>「対策」</strong>に取り組むことにある。
             </div>
           `
         }
