@@ -1258,7 +1258,7 @@ const MANAGER_COURSE = {
             </div>
             <table class="compare-table">
               <tr><th>責任</th><th>内容</th><th>介護現場での例</th></tr>
-              <tr><td>1. 実行</td><td>やるべきことをやりきる</td><td>ケアプラン通りのサービス提供</td></tr>
+              <tr><td>1. 実行</td><td>やるべきことをやりきる</td><td>担当業務を手順通りに完了する</td></tr>
               <tr><td>2. 結果</td><td>求められる成果を達成</td><td>稼働率目標の達成</td></tr>
               <tr><td>3. 説明</td><td>状況を正直に説明できる</td><td>稼働率が下がった理由を報告</td></tr>
               <tr><td>4. 解決</td><td>問題を解決に導ける</td><td>稼働率改善の対策を立案・実行</td></tr>
@@ -1274,27 +1274,62 @@ const MANAGER_COURSE = {
           title: '欲求の質を高める（円形欲求モデル）',
           content: `
             <h2>仕事の原動力を理解する</h2>
-            <p>人間の行動は、すべてニーズ（欲求）を満たすための行為です（アンソニー・ロビンズ）。</p>
+            <p>人間の行動は、すべてニーズ（欲求）を満たすための行為です（アンソニー・ロビンズ）。<br>
+            原動力を外側のレベルに置くほど、仕事の質も人生の質も上がります。</p>
             <div class="diagram-box">
-              <div class="diagram-title">4つのレベルの欲求</div>
-              <div class="pyramid">
-                <div class="pyramid-level" style="width:45%;background:#27ae60">第四レベル：社会貢献</div>
-                <div class="pyramid-level" style="width:60%;background:#2ecc71;color:#fff">第三レベル：進化成長</div>
-                <div class="pyramid-level" style="width:80%;background:#f39c12;color:#fff">第二レベル：安定/変化/特別感/親密感</div>
-                <div class="pyramid-level" style="width:100%;background:#e74c3c;color:#fff">第一レベル：苦痛回避/本能充足</div>
-              </div>
+              <div class="diagram-title">円形欲求モデル（8つの欲求・4レベル）</div>
+              <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="max-width:360px;width:100%;height:auto;display:block;margin:0 auto">
+                <circle cx="200" cy="200" r="180" fill="#c8eed1" stroke="#27ae60" stroke-width="2"/>
+                <circle cx="200" cy="200" r="145" fill="#e8f6ec" stroke="#27ae60" stroke-width="2"/>
+                <path d="M 200,200 L 90,200 A 110,110 0 0,1 200,90 Z" fill="#ffe4b5"/>
+                <path d="M 200,200 L 200,90 A 110,110 0 0,1 310,200 Z" fill="#ffd08a"/>
+                <path d="M 200,200 L 310,200 A 110,110 0 0,1 200,310 Z" fill="#ffe4b5"/>
+                <path d="M 200,200 L 200,310 A 110,110 0 0,1 90,200 Z" fill="#ffd08a"/>
+                <path d="M 200,145 A 55,55 0 0,0 200,255 Z" fill="#ff8080"/>
+                <path d="M 200,145 A 55,55 0 0,1 200,255 Z" fill="#ffa0a0"/>
+                <text x="200" y="25" text-anchor="middle" font-size="14" font-weight="700" fill="#145a32">⑧ 社会貢献</text>
+                <text x="200" y="40" text-anchor="middle" font-size="10" fill="#145a32">第四レベル（利他的）</text>
+                <text x="200" y="68" text-anchor="middle" font-size="14" font-weight="700" fill="#196f3d">⑦ 進化成長</text>
+                <text x="200" y="82" text-anchor="middle" font-size="10" fill="#196f3d">第三レベル（自己的）</text>
+                <text x="140" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#7d3e02">⑤ 特別感</text>
+                <text x="260" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#7d3e02">⑥ 親密感</text>
+                <text x="200" y="152" text-anchor="middle" font-size="11" fill="#8a4500">&#x2194;</text>
+                <text x="140" y="260" text-anchor="middle" font-size="12" font-weight="700" fill="#7d3e02">&#x2462; 安定</text>
+                <text x="260" y="260" text-anchor="middle" font-size="12" font-weight="700" fill="#7d3e02">&#x2463; 変化</text>
+                <text x="200" y="262" text-anchor="middle" font-size="11" fill="#8a4500">&#x2194;</text>
+                <text x="175" y="197" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">&#x2460;苦痛</text>
+                <text x="175" y="209" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">回避</text>
+                <text x="225" y="197" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">&#x2461;本能</text>
+                <text x="225" y="209" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">充足</text>
+                <text x="200" y="390" text-anchor="middle" font-size="10" fill="#888">中心ほど衝動的／外側ほど利他的</text>
+              </svg>
             </div>
-            <h3>各レベルの仕事の原動力</h3>
-            <ul>
-              <li><strong>第一（衝動的）</strong>：怒られたくない、お金がほしい</li>
-              <li><strong>第二（矛盾的）</strong>：安定したい/変化したい、認められたい/つながりたい</li>
-              <li><strong>第三（自己的）</strong>：自分を高めたい、能力を向上させたい</li>
-              <li><strong>第四（利他的）</strong>：世の中を良くしたい、人の役に立ちたい</li>
-            </ul>
+            <h3>8つの欲求（介護の現場に置き換えて）</h3>
+            <table class="compare-table">
+              <tr><th>レベル</th><th>欲求</th><th>現場での原動力の例</th></tr>
+              <tr><td rowspan="2"><strong>第一<br>衝動的</strong></td><td>&#x2460; 苦痛回避</td><td>怒られたくない／叱られたくないから</td></tr>
+              <tr><td>&#x2461; 本能充足</td><td>給料が欲しい／食べていきたいから</td></tr>
+              <tr><td rowspan="4"><strong>第二<br>矛盾的</strong></td><td>&#x2462; 安定</td><td>いつも通りが安心／変わりたくない</td></tr>
+              <tr><td>&#x2463; 変化</td><td>同じ仕事に飽きる／刺激が欲しい</td></tr>
+              <tr><td>&#x2464; 特別感</td><td>認められたい／評価されたい</td></tr>
+              <tr><td>&#x2465; 親密感</td><td>仲間と一緒にいたい／チームでやりたい</td></tr>
+              <tr><td><strong>第三<br>自己的</strong></td><td>&#x2466; 進化成長</td><td>できなかったことをできるようになりたい／学びたい</td></tr>
+              <tr><td><strong>第四<br>利他的</strong></td><td>&#x2467; 社会貢献</td><td>利用者さまに喜んでほしい／地域の役に立ちたい</td></tr>
+            </table>
+            <div class="example-box">
+              <strong>&#x1F4A1; 「矛盾的」とはどういうこと？</strong><br>
+              第二レベルは、相反する欲求が同時に存在します。<br>
+              ・<strong>安定</strong>したいのに、同じ仕事ばかりだと飽きて<strong>変化</strong>を求める<br>
+              ・<strong>特別</strong>扱いされたいのに、仲間と<strong>同じ</strong>でいたい（親密感）<br>
+              人の心は矛盾している。だからこそ、このレベルの欲求だけで動いていると、ぶれやすく疲れやすい。
+            </div>
             <div class="key-point">
+              <strong>&#x1F4A1; 外側のレベルに原動力を置く</strong><br>
+              第一・第二レベルの欲求は自然なものですが、それだけだと仕事がしんどくなります。<br>
+              ・「叱られたくないから」で動くより「成長したいから」で動く方が楽しい<br>
+              ・「給料のため」だけより「利用者さまの笑顔のため」の方が疲れにくい<br><br>
               <strong>松下幸之助の言葉</strong><br>
-              「世の為、人の為になり、ひいては自分の為になるということをやったら、必ず成就します」<br><br>
-              第一・第二レベルの欲求は自然なもの。しかし仕事の原動力を<strong>第三・第四レベルに置く</strong>ことで、仕事の質も人生の質も向上します。
+              「世の為、人の為になり、ひいては自分の為になるということをやったら、必ず成就します」
             </div>
           `
         },
