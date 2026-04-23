@@ -15,40 +15,73 @@
           <div class="logo-icon">&#x1F33B;</div>
           <h1>はなひろの介護<br><span>学びの広場</span></h1>
         </div>
-        <p class="login-subtitle">みんなで学ぼう！ 私たちの仕事をもっと楽しく、もっと良くするためのヒント集</p>
-        <div class="name-input-area">
-          <input type="text" id="user-name-input" placeholder="あなたのお名前を入力してね" maxlength="20">
-          <p id="name-error" class="error-text"></p>
+
+        <!-- 未認証: LINE経由ログインガイド -->
+        <div id="line-guide" style="display:none">
+          <p class="login-subtitle">受講するには、LINE公式アカウントで<br><strong>「はなひろ」</strong>と送信してください。</p>
+          <div style="background:#faf7f2;border:2px dashed #e0d5c5;border-radius:12px;padding:20px;margin:20px 0;text-align:left;line-height:1.9">
+            <div style="font-weight:600;margin-bottom:8px;color:#5a3e1b;">📱 使い方</div>
+            <ol style="margin:0;padding-left:22px;color:#5a3e1b;font-size:14px;">
+              <li>会社の公式LINEを開く</li>
+              <li>「<strong>はなひろ</strong>」と送信</li>
+              <li>返信のリンクをタップ</li>
+            </ol>
+          </div>
+          <p id="line-guide-error" class="error-text" style="min-height:20px"></p>
+          <div class="course-select">
+            <a class="course-btn" href="org-map.html" style="text-decoration:none;color:inherit;">
+              <div class="course-icon">&#x1F5FA;&#xFE0F;</div>
+              <div>
+                <div class="course-label">組織マップ</div>
+                <div class="course-desc">全員向け ─ ログイン不要で見られます</div>
+              </div>
+            </a>
+            <button class="course-btn" onclick="showAdminPasswordModal()" style="border:2px dashed #e0d5c5;background:#faf7f2;">
+              <div class="course-icon">&#x1F4CB;</div>
+              <div>
+                <div class="course-label" style="font-size:14px;color:#8a7a6a;">受講状況を見る</div>
+                <div class="course-desc">管理者用 ─ みんなの進み具合を確認</div>
+              </div>
+            </button>
+          </div>
         </div>
-        <div class="course-select">
-          <button class="course-btn" onclick="selectCourse('staff')">
-            <div class="course-icon">&#x1F331;</div>
-            <div>
-              <div class="course-label">みんなの学び</div>
-              <div class="course-desc">全スタッフ向け ─ 仕事のコツと大切な考え方</div>
-            </div>
-          </button>
-          <button class="course-btn" onclick="showPasswordModal()">
-            <div class="course-icon">&#x1F3AF;</div>
-            <div>
-              <div class="course-label">リーダーの学び</div>
-              <div class="course-desc">管理者向け ─ 経営数値とチームづくり</div>
-            </div>
-          </button>
-          <a class="course-btn" href="org-map.html" style="text-decoration:none;color:inherit;">
-            <div class="course-icon">&#x1F5FA;&#xFE0F;</div>
-            <div>
-              <div class="course-label">組織マップ</div>
-              <div class="course-desc">全員向け ─ はなひろの組織と役割を知ろう</div>
-            </div>
-          </a>
-          <button class="course-btn" onclick="showAdminPasswordModal()" style="border:2px dashed #e0d5c5;background:#faf7f2;">
-            <div class="course-icon">&#x1F4CB;</div>
-            <div>
-              <div class="course-label" style="font-size:14px;color:#8a7a6a;">受講状況を見る</div>
-              <div class="course-desc">管理者用 ─ みんなの進み具合を確認</div>
-            </div>
-          </button>
+
+        <!-- 認証済: コース選択 -->
+        <div id="course-selector" style="display:none">
+          <p class="login-subtitle"><span id="welcome-user-name"></span>、ようこそ！<br>好きなコースを選んで学びを深めましょう。</p>
+          <div class="course-select">
+            <button class="course-btn" onclick="selectCourse('staff')">
+              <div class="course-icon">&#x1F331;</div>
+              <div>
+                <div class="course-label">みんなの学び</div>
+                <div class="course-desc">全スタッフ向け ─ 仕事のコツと大切な考え方</div>
+              </div>
+            </button>
+            <button class="course-btn" onclick="showPasswordModal()">
+              <div class="course-icon">&#x1F3AF;</div>
+              <div>
+                <div class="course-label">リーダーの学び</div>
+                <div class="course-desc">管理者向け ─ 経営数値とチームづくり</div>
+              </div>
+            </button>
+            <a class="course-btn" href="org-map.html" style="text-decoration:none;color:inherit;">
+              <div class="course-icon">&#x1F5FA;&#xFE0F;</div>
+              <div>
+                <div class="course-label">組織マップ</div>
+                <div class="course-desc">全員向け ─ はなひろの組織と役割を知ろう</div>
+              </div>
+            </a>
+            <button class="course-btn" onclick="showAdminPasswordModal()" style="border:2px dashed #e0d5c5;background:#faf7f2;">
+              <div class="course-icon">&#x1F4CB;</div>
+              <div>
+                <div class="course-label" style="font-size:14px;color:#8a7a6a;">受講状況を見る</div>
+                <div class="course-desc">管理者用 ─ みんなの進み具合を確認</div>
+              </div>
+            </button>
+            <p style="text-align:center;margin-top:16px;font-size:12px;color:#8a7a6a">
+              <a href="#" onclick="clearSession();return false;" style="color:#8a7a6a;text-decoration:underline">別のアカウントでログインし直す</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

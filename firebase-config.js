@@ -1,7 +1,7 @@
 // Firebase SDK (CDN v10) + はなひろラーニング用 Firestore ヘルパー
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore, doc, setDoc, getDocs, collection,
+  getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, limit,
   serverTimestamp, collectionGroup
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -23,28 +23,39 @@ const authReady = signInAnonymously(auth).catch(err => {
   console.warn('[Firebase] 匿名認証失敗:', err.message);
 });
 
-function sanitizeDocId(s) {
-  return String(s).replace(/[\/\\\s]/g, '_').slice(0, 100);
-}
-
 window.firestore = {
   ready: authReady,
 
-  async saveUser(name) {
+  // トークンからユーザーを検索（LINE公式アカウント経由の自動ログイン）
+  async getUserByToken(token) {
     await authReady;
-    const id = sanitizeDocId(name);
-    await setDoc(doc(db, 'users', id), {
-      name,
+    const q = query(collection(db, 'users'), where('authToken', '==', token), limit(1));
+    const snap = await getDocs(q);
+    if (snap.empty) return null;
+    const d = snap.docs[0];
+    return { id: d.id, ...d.data() };
+  },
+
+  // ユーザーIDで直接取得（localStorage再ログイン用）
+  async getUserById(userId) {
+    await authReady;
+    const snap = await getDoc(doc(db, 'users', userId));
+    if (!snap.exists()) return null;
+    return { id: snap.id, ...snap.data() };
+  },
+
+  // 最終ログイン時刻を更新
+  async touchUser(userId) {
+    await authReady;
+    await setDoc(doc(db, 'users', userId), {
       lastLoginAt: serverTimestamp()
     }, { merge: true });
   },
 
-  async saveProgress(name, moduleId, data) {
+  async saveProgress(userId, moduleId, data) {
     await authReady;
-    const id = sanitizeDocId(name);
-    await setDoc(doc(db, 'users', id, 'progress', moduleId), {
+    await setDoc(doc(db, 'users', userId, 'progress', moduleId), {
       ...data,
-      userName: name,
       moduleId,
       updatedAt: serverTimestamp()
     }, { merge: true });
@@ -53,7 +64,10 @@ window.firestore = {
   async getAllProgress() {
     await authReady;
     const snap = await getDocs(collectionGroup(db, 'progress'));
-    return snap.docs.map(d => d.data());
+    return snap.docs.map(d => {
+      const parentPath = d.ref.parent.parent;
+      return { ...d.data(), _userId: parentPath ? parentPath.id : null };
+    });
   },
 
   async getAllUsers() {

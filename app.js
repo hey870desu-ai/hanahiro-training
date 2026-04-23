@@ -9,10 +9,13 @@ let currentPageIndex = 0;
 let currentQuizAnswers = [];
 let quizSubmitted = false;
 let currentUserName = '';
+let currentUserId = ''; // Firestore docId（LINE UID）
+
+const SESSION_STORAGE_KEY = 'hanahiro-training-session';
 
 // --- ストレージ（個人別・ローカル） ---
 function storageKey() {
-  return 'hanahiro-training-' + currentUserName;
+  return 'hanahiro-training-' + (currentUserId || currentUserName);
 }
 function getProgress() {
   const data = localStorage.getItem(storageKey());
@@ -33,12 +36,13 @@ function saveModuleProgress(moduleId, progress) {
 
 // --- Firestoreに進捗を同期（バックグラウンド、失敗してもLocalStorageは残る） ---
 function syncProgressToFirestore(moduleId, moduleName, prog) {
-  if (!window.firestore) return;
+  if (!window.firestore || !currentUserId) return;
   const courseName = currentCourse === 'staff' ? 'みんなの学び' : 'リーダーの学び';
-  window.firestore.saveProgress(currentUserName, moduleId, {
+  window.firestore.saveProgress(currentUserId, moduleId, {
     moduleName,
     course: currentCourse,
     courseName,
+    userName: currentUserName,
     lessonsRead: prog.lessonsRead || [],
     quizScore: prog.quizScore ?? null,
     quizPassed: !!prog.quizPassed
@@ -52,35 +56,89 @@ function showScreen(screenId) {
   window.scrollTo(0, 0);
 }
 
-// --- 名前入力 → コース選択 ---
+// --- 初期化（トークン or localStorage 自動ログイン） ---
+async function initAuth() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
+
+  if (token && window.firestore) {
+    try {
+      const user = await window.firestore.getUserByToken(token);
+      if (user) {
+        currentUserId = user.id;
+        currentUserName = user.name || 'スタッフ';
+        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({
+          userId: user.id, name: user.name
+        }));
+        window.firestore.touchUser(user.id).catch(() => {});
+        window.history.replaceState({}, '', window.location.pathname);
+        showCourseSelector();
+        return;
+      } else {
+        document.getElementById('line-guide-error').textContent =
+          'リンクが無効です。LINEで「はなひろ」と送信して新しいリンクを受け取ってください。';
+      }
+    } catch (e) {
+      console.error('トークン認証エラー:', e);
+    }
+  }
+
+  // localStorage から復元
+  const saved = localStorage.getItem(SESSION_STORAGE_KEY);
+  if (saved) {
+    try {
+      const s = JSON.parse(saved);
+      if (s.userId) {
+        currentUserId = s.userId;
+        currentUserName = s.name || 'スタッフ';
+        showCourseSelector();
+        return;
+      }
+    } catch {}
+  }
+
+  // 認証なし → LINEガイド画面
+  showLineGuide();
+}
+
+function showCourseSelector() {
+  const el = document.getElementById('welcome-user-name');
+  if (el) el.textContent = currentUserName + 'さん';
+  document.getElementById('line-guide').style.display = 'none';
+  document.getElementById('course-selector').style.display = 'block';
+  showScreen('login-screen');
+}
+
+function showLineGuide() {
+  document.getElementById('line-guide').style.display = 'block';
+  document.getElementById('course-selector').style.display = 'none';
+  showScreen('login-screen');
+}
+
+function clearSession() {
+  localStorage.removeItem(SESSION_STORAGE_KEY);
+  currentUserId = '';
+  currentUserName = '';
+  showLineGuide();
+}
+
+// --- コース選択 ---
 function selectCourse(type) {
-  const nameInput = document.getElementById('user-name-input');
-  const name = nameInput.value.trim();
-  if (!name) {
-    document.getElementById('name-error').textContent = 'お名前を入力してね';
-    nameInput.focus();
+  if (!currentUserId) {
+    showLineGuide();
     return;
   }
-  document.getElementById('name-error').textContent = '';
-  currentUserName = name;
   currentCourse = type;
   courseData = type === 'staff' ? STAFF_COURSE : MANAGER_COURSE;
-  if (window.firestore) {
-    window.firestore.saveUser(name).catch(err => console.log('ユーザー登録エラー:', err.message));
-  }
   showDashboard();
 }
 
 // --- パスワード ---
 function showPasswordModal() {
-  const nameInput = document.getElementById('user-name-input');
-  const name = nameInput.value.trim();
-  if (!name) {
-    document.getElementById('name-error').textContent = 'お名前を入力してね';
-    nameInput.focus();
+  if (!currentUserId) {
+    showLineGuide();
     return;
   }
-  document.getElementById('name-error').textContent = '';
   document.getElementById('password-modal').classList.add('active');
   document.getElementById('manager-password').value = '';
   document.getElementById('password-error').textContent = '';
@@ -563,9 +621,15 @@ function backToDashboard() {
 function logout() {
   currentCourse = null;
   courseData = null;
-  currentUserName = '';
-  showScreen('login-screen');
+  showCourseSelector();
 }
+
+// --- 起動時に認証 ---
+window.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('line-guide')) {
+    initAuth();
+  }
+});
 
 // --- 初期化 ---
 document.addEventListener('DOMContentLoaded', () => {
