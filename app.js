@@ -28,7 +28,7 @@ function saveProgress(key, value) {
 }
 function getModuleProgress(moduleId) {
   const data = getProgress();
-  return data[moduleId] || { lessonsRead: [], quizScore: null, quizPassed: false };
+  return data[moduleId] || { lessonsRead: [], quizScore: null, quizPassed: false, passCount: 0, highestScore: null };
 }
 function saveModuleProgress(moduleId, progress) {
   saveProgress(moduleId, progress);
@@ -45,7 +45,9 @@ function syncProgressToFirestore(moduleId, moduleName, prog) {
     userName: currentUserName,
     lessonsRead: prog.lessonsRead || [],
     quizScore: prog.quizScore ?? null,
-    quizPassed: !!prog.quizPassed
+    quizPassed: !!prog.quizPassed,
+    passCount: prog.passCount || 0,
+    highestScore: prog.highestScore ?? null
   }).catch(err => console.log('Firestore同期エラー（オフラインでも問題なし）:', err.message));
 }
 
@@ -195,6 +197,15 @@ function renderModuleList() {
 
     const progressPercent = quizDone ? 100 : Math.round((readCount / (totalLessons + 1)) * 100);
 
+    const passCount = prog.passCount || 0;
+    let badgeHtml = '';
+    if (quizDone && passCount > 0) {
+      const badges = passCount >= 5 ? `\u{1F3C5} \u00D7 ${passCount}回合格` : '\u{1F3C5}'.repeat(passCount);
+      const hs = prog.highestScore ?? prog.quizScore;
+      const scoreLine = hs != null ? `<span style="font-size:11px;color:#8a7a6a;margin-left:8px">最高 ${hs}点</span>` : '';
+      badgeHtml = `<div class="module-badges" style="margin-top:8px;font-size:18px;line-height:1">${badges}${scoreLine}</div>`;
+    }
+
     const card = document.createElement('div');
     card.className = cardClass;
     card.innerHTML = `
@@ -209,6 +220,7 @@ function renderModuleList() {
           <div class="module-progress-fill" style="width:${progressPercent}%"></div>
         </div>
       </div>
+      ${badgeHtml}
     `;
     if (!locked) card.onclick = () => openModule(idx);
     list.appendChild(card);
@@ -263,7 +275,7 @@ function showLesson() {
 
   if (isLastPage) {
     if (prog.quizPassed) {
-      nextBtn.innerHTML = '\u2190 もどる';
+      nextBtn.innerHTML = 'テストに再挑戦 \u{1F4AA}';
     } else {
       nextBtn.innerHTML = 'チェックテストへ \u2192';
     }
@@ -290,12 +302,7 @@ function nextPage() {
     currentPageIndex++;
     showLesson();
   } else {
-    const prog = getModuleProgress(mod.id);
-    if (prog.quizPassed) {
-      backToDashboard();
-    } else {
-      openQuiz(currentModuleIndex);
-    }
+    openQuiz(currentModuleIndex);
   }
 }
 function prevPage() {
@@ -369,11 +376,21 @@ function renderQuiz() {
     const passed = score >= 70;
     html += `<div class="quiz-submit-area" style="margin-top:24px">`;
     if (passed) {
+      const prog = getModuleProgress(mod.id);
+      const newCount = (prog.passCount || 0) + 1;
+      const newHighest = Math.max(prog.highestScore || 0, score);
+      const badgeStr = newCount >= 5 ? `\u{1F3C5} \u00D7 ${newCount}回合格！` : '\u{1F3C5}'.repeat(Math.min(newCount, 5));
+      const highestLine = newCount > 1 ? `<p style="font-size:13px;color:#8a7a6a;margin-top:4px">最高点：${newHighest}点</p>` : '';
       html += `<p style="font-size:22px;font-weight:700;margin-bottom:4px;color:#27ae60">
         \u{1F389} ${score}点！合格おめでとう！
       </p>
-      <p style="font-size:14px;color:#8a7a6a;margin-bottom:16px">${correctCount}/${quiz.length}問正解</p>
-      <button class="btn-primary" onclick="backToDashboard()">つぎのステップへ \u2192</button>`;
+      <p style="font-size:14px;color:#8a7a6a;margin-bottom:4px">${correctCount}/${quiz.length}問正解</p>
+      <p style="font-size:20px;margin:8px 0 4px">${badgeStr}</p>
+      ${highestLine}
+      <div style="margin-top:16px">
+        <button type="button" class="btn-secondary" onclick="openQuiz(${currentModuleIndex}); return false;" style="margin-right:8px">もう一度挑戦 \u{1F4AA}</button>
+        <button class="btn-primary" onclick="backToDashboard()">つぎのステップへ \u2192</button>
+      </div>`;
     } else {
       html += `<p style="font-size:22px;font-weight:700;margin-bottom:4px;color:#e67e22">
         ${score}点…あとちょっと！
@@ -387,7 +404,11 @@ function renderQuiz() {
     // 進捗保存（ローカル + Firestore）
     const prog = getModuleProgress(mod.id);
     prog.quizScore = score;
-    if (passed) prog.quizPassed = true;
+    if (passed) {
+      prog.quizPassed = true;
+      prog.passCount = (prog.passCount || 0) + 1;
+      prog.highestScore = Math.max(prog.highestScore || 0, score);
+    }
     saveModuleProgress(mod.id, prog);
     syncProgressToFirestore(mod.id, mod.title, prog);
   }
@@ -508,6 +529,8 @@ function renderAdminDashboard(records) {
       name: r.moduleName,
       score: r.quizScore,
       passed: !!r.quizPassed,
+      passCount: r.passCount || 0,
+      highestScore: r.highestScore ?? r.quizScore,
       lessonsRead: lessonCount
     };
     const ts = r.updatedAt && r.updatedAt.toMillis ? r.updatedAt.toMillis() : 0;
@@ -557,7 +580,9 @@ function buildAdminTable(userList, modules) {
       if (mod) {
         if (mod.passed) {
           passedCount++;
-          html += `<td class="highlight-cell" style="text-align:center;color:#27ae60;font-weight:700">${mod.score}点</td>`;
+          const hs = mod.highestScore ?? mod.score;
+          const countTag = mod.passCount > 1 ? `<div style="font-size:10px;font-weight:500;color:#8a7a6a">\u{1F3C5}\u00D7${mod.passCount}</div>` : '';
+          html += `<td class="highlight-cell" style="text-align:center;color:#27ae60;font-weight:700">${hs}点${countTag}</td>`;
         } else if (mod.score != null) {
           html += `<td style="text-align:center;color:#e67e22">${mod.score}点</td>`;
         } else {
@@ -586,7 +611,7 @@ function exportAdminCSV() {
     alert('データがありません');
     return;
   }
-  const header = ['名前', 'コース', 'ステップ', 'スコア', '合格', '読了ページ数', '最終更新'];
+  const header = ['名前', 'コース', 'ステップ', '最新スコア', '最高点', '合格回数', '合格', '読了ページ数', '最終更新'];
   const rows = adminRecordsCache.map(r => {
     const d = r.updatedAt && r.updatedAt.toDate ? r.updatedAt.toDate() : null;
     return [
@@ -594,6 +619,8 @@ function exportAdminCSV() {
       r.courseName || r.course || '',
       r.moduleName || r.moduleId || '',
       r.quizScore != null ? r.quizScore : '',
+      r.highestScore != null ? r.highestScore : (r.quizScore != null ? r.quizScore : ''),
+      r.passCount || 0,
       r.quizPassed ? '合格' : '',
       Array.isArray(r.lessonsRead) ? r.lessonsRead.length : 0,
       d ? `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}` : ''
