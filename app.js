@@ -58,10 +58,32 @@ function showScreen(screenId) {
   window.scrollTo(0, 0);
 }
 
+// firebase-config.js（type="module"）のロード完了を待つ
+async function waitForFirestore(timeoutMs = 5000) {
+  if (window.firestore) return true;
+  return new Promise(resolve => {
+    const start = Date.now();
+    const interval = setInterval(() => {
+      if (window.firestore) {
+        clearInterval(interval);
+        resolve(true);
+      } else if (Date.now() - start > timeoutMs) {
+        clearInterval(interval);
+        resolve(false);
+      }
+    }, 50);
+  });
+}
+
 // --- 初期化（トークン or localStorage 自動ログイン） ---
 async function initAuth() {
   const params = new URLSearchParams(window.location.search);
   const token = params.get('token');
+
+  // モジュールが読み込まれるのを待つ
+  if (token) {
+    await waitForFirestore();
+  }
 
   if (token && window.firestore) {
     try {
