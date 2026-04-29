@@ -9,393 +9,699 @@
   <title>会社概要｜株式会社はなひろ</title>
   <meta property="og:title" content="株式会社はなひろ 会社概要">
   <meta property="og:description" content="豊かなシルバーライフの創造から、日本中に夢と元気を。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --ink: #1f2933;
+      --ink-soft: #4a5260;
+      --ink-mute: #8b8e95;
+      --gold: #b88835;
+      --gold-soft: #d6b072;
+      --gold-pale: #f4ead6;
+      --paper: #fbf9f4;
+      --line: #e3dccc;
+      --line-soft: #f0eadb;
+    }
+
+    html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
-      background: #faf7f2;
-      color: #4a4a4a;
-      line-height: 1.7;
-      padding: 0 0 60px;
-    }
-    .header {
-      background: linear-gradient(150deg, #f9e4b7 0%, #f5c16c 30%, #e8a849 60%, #d4944a 100%);
-      color: #5a3e1b;
-      padding: 32px 20px 28px;
-      text-align: center;
-      position: sticky; top: 0; z-index: 10;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
-    .header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
-    .header p { font-size: 13px; color: #6b4d28; }
-    .back-link {
-      position: absolute; top: 18px; left: 18px;
-      color: #5a3e1b; text-decoration: none; font-size: 14px; font-weight: 600;
-      background: rgba(255,255,255,0.6); padding: 6px 12px; border-radius: 20px;
-    }
-    .print-btn {
-      position: absolute; top: 18px; right: 18px;
-      background: rgba(255,255,255,0.7); border: none; padding: 6px 12px;
-      border-radius: 20px; font-size: 16px; cursor: pointer;
-    }
-    .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
-
-    /* ロゴブロック */
-    .logo-block {
-      text-align: center;
-      padding: 16px 16px 24px;
-    }
-    .company-logo {
-      max-width: 360px;
-      width: 85%;
-      height: auto;
-      display: inline-block;
+      font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.85;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+      padding: 0 0 80px;
     }
 
-    /* Hero */
-    .hero {
-      background: linear-gradient(135deg, #f5c16c, #e8a849, #c4861f);
+    /* ヘッダーバー */
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      padding: 14px 20px;
+      position: sticky; top: 0; z-index: 50;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .topbar .crumb {
+      font-family: 'Cormorant Garamond', 'Noto Serif JP', serif;
+      font-size: 14px;
+      letter-spacing: 0.15em;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+    }
+    .topbar a, .topbar button {
+      color: var(--ink-soft);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      background: transparent;
+      border: 1px solid var(--line);
+      padding: 6px 14px;
+      border-radius: 22px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .topbar a:hover, .topbar button:hover {
+      background: var(--ink);
       color: #fff;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-      margin-bottom: 28px;
+      border-color: var(--ink);
+    }
+
+    /* コンテナ */
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 56px 24px;
+    }
+
+    /* ロゴ・タイトル */
+    .brand-block {
       text-align: center;
+      padding: 0 0 48px;
     }
-    .hero-photo {
-      width: 100%;
-      max-height: 320px;
-      object-fit: cover;
-      display: block;
-      background: #f0d9a8;
+    .brand-block .logo {
+      max-width: 320px;
+      width: 75%;
+      height: auto;
     }
-    .hero-body {
-      padding: 28px 24px;
+    .brand-block .doc-title {
+      margin-top: 36px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      letter-spacing: 0.18em;
+      color: var(--ink);
+      font-weight: 500;
+    }
+    .brand-block .doc-sub {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 15px;
+      color: var(--ink-mute);
+      letter-spacing: 0.3em;
+      margin-top: 8px;
+    }
+    .brand-block .gold-line {
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+      margin: 28px auto 0;
+    }
+
+    /* ヒーロー */
+    .hero {
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 56px 40px;
+      margin-bottom: 56px;
+      text-align: center;
+      position: relative;
+    }
+    .hero::before, .hero::after {
+      content: "";
+      position: absolute;
+      width: 36px; height: 36px;
+      border: 1px solid var(--gold);
+    }
+    .hero::before {
+      top: 14px; left: 14px;
+      border-right: none; border-bottom: none;
+    }
+    .hero::after {
+      bottom: 14px; right: 14px;
+      border-left: none; border-top: none;
     }
     .hero-eyebrow {
-      font-size: 11px; letter-spacing: 4px; opacity: 0.9; margin-bottom: 8px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      margin-bottom: 8px;
     }
-    .hero h2 {
-      font-size: 22px; font-weight: 800; margin-bottom: 14px;
+    .hero-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 36px;
+      letter-spacing: 0.05em;
     }
     .hero-mission {
-      background: rgba(255,255,255,0.18);
-      border-radius: 12px;
-      padding: 16px 18px;
-      margin-bottom: 12px;
+      margin-bottom: 28px;
     }
-    .hero-mission .label {
-      font-size: 11px; opacity: 0.85; margin-bottom: 4px;
+    .hero-mission:last-child { margin-bottom: 0; }
+    .hero-mission .ml {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .hero-mission .mj {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 13px;
+      color: var(--ink-soft);
+      letter-spacing: 0.15em;
+      margin-bottom: 10px;
     }
     .hero-mission .text {
-      font-size: 14px; font-weight: 700; line-height: 1.7;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.85;
+      color: var(--ink);
+      letter-spacing: 0.04em;
     }
-    .hero-footer {
-      background: #fff;
-      padding: 16px 22px;
+    .hero-credo-bottom {
+      margin-top: 40px;
+      padding-top: 28px;
+      border-top: 1px solid var(--line-soft);
       font-size: 13px;
-      color: #6b4d28;
-      line-height: 1.8;
-      text-align: left;
+      color: var(--ink-soft);
+      line-height: 2;
     }
 
-    /* Section common */
-    .section {
-      background: #fff;
-      border-radius: 18px;
-      padding: 24px 22px;
-      margin-bottom: 22px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    /* セクション共通 */
+    section.block {
+      margin-bottom: 64px;
     }
-    .section h3 {
-      font-size: 18px;
-      color: #5a3e1b;
-      font-weight: 800;
-      margin-bottom: 14px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #f0d9a8;
-      display: flex; align-items: center; gap: 8px;
+    .sec-head {
+      display: flex; align-items: baseline;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
     }
-    .section h3 .icon { font-size: 22px; }
+    .sec-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+    }
+    .sec-title-block {
+      flex: 1;
+    }
+    .sec-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .sec-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.06em;
+    }
 
     /* CREDO */
     .credo-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 18px;
     }
-    @media (min-width: 640px) {
-      .credo-grid { grid-template-columns: 1fr 1fr; }
+    @media (min-width: 700px) {
+      .credo-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
     }
     .credo-card {
-      border: 2px solid #f0d9a8;
-      border-radius: 14px;
-      padding: 16px 18px;
-      background: #fff8ec;
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 28px 28px;
+      position: relative;
+    }
+    .credo-card .ck-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      margin-bottom: 4px;
     }
     .credo-card h4 {
-      font-size: 14px;
-      color: #c4861f;
-      font-weight: 700;
-      margin-bottom: 10px;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 18px;
+      letter-spacing: 0.06em;
     }
-    .credo-card ul {
-      list-style: none; padding: 0; margin: 0;
-    }
+    .credo-card ul { list-style: none; padding: 0; margin: 0; }
     .credo-card li {
-      font-size: 13px; color: #5a3e1b; padding: 4px 0;
-      line-height: 1.6;
+      font-size: 14px;
+      color: var(--ink-soft);
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--line-soft);
+      letter-spacing: 0.04em;
     }
+    .credo-card li:last-child { border-bottom: none; }
     .credo-card li::before {
-      content: "「"; color: #e8a849;
-    }
-    .credo-card li::after {
-      content: "」"; color: #e8a849;
+      content: "—";
+      color: var(--gold);
+      margin-right: 10px;
     }
 
-    /* Profile table */
+    /* プロフィール表 */
     .profile-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 14px;
+      background: #fff;
+      border: 1px solid var(--line);
     }
-    .profile-table tr {
-      border-bottom: 1px solid #f0e6d6;
-    }
+    .profile-table tr { border-bottom: 1px solid var(--line-soft); }
     .profile-table tr:last-child { border-bottom: none; }
     .profile-table th {
-      width: 130px;
+      width: 150px;
       text-align: left;
-      padding: 12px 0;
-      color: #6b4d28;
-      font-weight: 600;
+      padding: 16px 20px;
+      background: #fdfaf2;
+      color: var(--ink-soft);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.08em;
       vertical-align: top;
+      border-right: 1px solid var(--line-soft);
     }
     .profile-table td {
-      padding: 12px 0;
-      color: #4a4a4a;
-      line-height: 1.7;
-    }
-
-    /* Office cards */
-    .office-card {
-      border: 1px solid #f0d9a8;
-      border-radius: 14px;
-      padding: 18px 20px;
-      margin-bottom: 14px;
-      background: #fff;
-    }
-    .office-card.upcoming {
-      border-style: dashed;
-      background: #fdf8ed;
-    }
-    .office-card .office-name {
-      font-size: 16px; font-weight: 800; color: #5a3e1b;
-      margin-bottom: 4px;
-    }
-    .office-card .office-sub {
-      font-size: 11px; color: #8a7a6a; margin-bottom: 10px;
-    }
-    .office-card .badge-upcoming {
-      display: inline-block;
-      background: #e8a849; color: #fff;
-      font-size: 11px; font-weight: 700;
-      padding: 2px 8px; border-radius: 10px;
-      margin-left: 6px;
-    }
-    .office-photo {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      background: #f5e6c8;
-    }
-    .office-row {
-      display: flex; flex-wrap: wrap; gap: 6px;
-      font-size: 13px; padding: 4px 0;
-    }
-    .office-row .lbl {
-      min-width: 80px; color: #8a7a6a; font-weight: 600;
-    }
-    .office-row .val {
-      flex: 1; color: #4a4a4a;
-    }
-
-    /* History timeline */
-    .timeline {
-      position: relative;
-      padding-left: 28px;
-    }
-    .timeline::before {
-      content: "";
-      position: absolute;
-      left: 8px; top: 6px; bottom: 6px;
-      width: 2px;
-      background: linear-gradient(to bottom, #e8a849, #f5c16c);
-    }
-    .timeline-item {
-      position: relative;
-      padding: 8px 0 12px;
-    }
-    .timeline-item::before {
-      content: "";
-      position: absolute;
-      left: -25px; top: 12px;
-      width: 11px; height: 11px;
-      border-radius: 50%;
-      background: #e8a849;
-      border: 2px solid #fff;
-      box-shadow: 0 0 0 2px #f0d9a8;
-    }
-    .timeline-date {
-      font-size: 12px;
-      font-weight: 700;
-      color: #c4861f;
-      margin-bottom: 2px;
-    }
-    .timeline-text {
-      font-size: 14px;
-      color: #4a4a4a;
-      line-height: 1.6;
-    }
-    .timeline-text .deprecated {
-      font-size: 11px;
-      color: #8a7a6a;
-      margin-left: 6px;
-    }
-
-    /* Related */
-    .related-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-    .related-item {
-      display: flex; gap: 12px; align-items: flex-start;
-      padding: 10px 12px;
-      background: #fff8ec;
-      border-radius: 10px;
-      font-size: 13px;
-      color: #5a3e1b;
-      line-height: 1.6;
-    }
-    .related-item .ico {
-      font-size: 20px; flex-shrink: 0;
-    }
-
-    /* Contact */
-    .contact-box {
-      background: linear-gradient(135deg, #fff8ec, #faf2dc);
-      border-radius: 14px;
-      padding: 18px 20px;
-      text-align: center;
-    }
-    .contact-box .label {
-      font-size: 12px; color: #8a7a6a; margin-bottom: 4px;
-    }
-    .contact-box .tel {
-      font-size: 24px; font-weight: 800; color: #c4861f;
-      letter-spacing: 1px;
-    }
-    .contact-box .mail {
-      font-size: 14px; color: #5a3e1b; margin-top: 6px;
-    }
-    .contact-box a {
-      color: #c4861f; text-decoration: none; font-weight: 700;
-    }
-
-    /* Footer */
-    .footer-msg {
-      text-align: center;
-      font-size: 13px;
-      color: #8a7a6a;
-      margin-top: 30px;
-      padding: 20px;
+      padding: 16px 20px;
+      color: var(--ink);
       line-height: 1.8;
     }
 
-    /* Print */
+    /* 事業所カード */
+    .office-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .office-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 26px 28px;
+      position: relative;
+    }
+    .office-card.upcoming {
+      background: #fdfaf2;
+      border: 1px solid var(--gold-soft);
+    }
+    .office-card .office-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .office-card .office-name {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+      letter-spacing: 0.04em;
+    }
+    .office-card .office-name .badge-upcoming {
+      display: inline-block;
+      background: var(--gold);
+      color: #fff;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+      border-radius: 2px;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    .office-card .office-sub {
+      font-size: 12px;
+      color: var(--ink-mute);
+      margin-bottom: 18px;
+      letter-spacing: 0.06em;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .office-photo {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      margin-bottom: 18px;
+      background: var(--gold-pale);
+    }
+    .office-row {
+      display: flex; gap: 12px;
+      font-size: 13px;
+      padding: 6px 0;
+      align-items: baseline;
+    }
+    .office-row .lbl {
+      min-width: 90px;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .office-row .val {
+      flex: 1;
+      color: var(--ink);
+    }
+
+    /* 沿革タイムライン */
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+      border-left: 1px solid var(--line);
+    }
+    .timeline-item {
+      position: relative;
+      padding: 0 0 24px;
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -36px; top: 9px;
+      width: 8px; height: 8px;
+      background: var(--gold);
+    }
+    .timeline-item.future::before {
+      background: #fff;
+      border: 1px solid var(--gold);
+    }
+    .timeline-date {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+    .timeline-text {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.7;
+    }
+    .timeline-text .deprecated {
+      font-size: 11px;
+      color: var(--ink-mute);
+      margin-left: 8px;
+      font-style: italic;
+    }
+
+    /* CARE DESIGN WORKS（DX事業） */
+    .cdw-banner {
+      background: linear-gradient(135deg, #1f2933 0%, #2c3742 100%);
+      color: #fff;
+      padding: 44px 36px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cdw-banner::before {
+      content: "";
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(184,136,53,0.25), transparent 70%);
+    }
+    .cdw-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 0.4em;
+      color: var(--gold-soft);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .cdw-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+    }
+    .cdw-jp {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 14px;
+      color: var(--gold-soft);
+      letter-spacing: 0.18em;
+      margin-bottom: 22px;
+    }
+    .cdw-text {
+      font-size: 14px;
+      color: #d8dde4;
+      line-height: 2;
+      letter-spacing: 0.04em;
+      max-width: 640px;
+    }
+
+    /* プロダクトカード */
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    @media (min-width: 700px) {
+      .product-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .product-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card .pc-tag {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .product-card h4 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 12px;
+      letter-spacing: 0.04em;
+    }
+    .product-card .pc-desc {
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.85;
+      margin-bottom: 18px;
+      flex: 1;
+    }
+    .product-card .pc-link {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid var(--gold);
+      padding-bottom: 4px;
+      align-self: flex-start;
+      transition: all 0.2s;
+    }
+    .product-card .pc-link:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    /* 関連事業 */
+    .related-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 700px) {
+      .related-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .related-item {
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 18px 22px;
+      font-size: 13px;
+      color: var(--ink);
+      line-height: 1.75;
+    }
+    .related-item strong {
+      display: block;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+      letter-spacing: 0.04em;
+    }
+    .related-item .desc { color: var(--ink-soft); font-size: 12px; }
+
+    /* お問い合わせ */
+    .contact-block {
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .contact-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .contact-block .tel {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: 0.08em;
+      margin: 8px 0 4px;
+    }
+    .contact-block .mail-line a {
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      border-bottom: 1px solid var(--gold);
+      padding-bottom: 2px;
+    }
+    .contact-block .addr {
+      margin-top: 18px;
+      font-size: 12px;
+      color: var(--ink-soft);
+      line-height: 1.9;
+    }
+
+    /* フッター */
+    .doc-footer {
+      text-align: center;
+      margin-top: 80px;
+      padding: 32px 0;
+      border-top: 1px solid var(--line);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      color: var(--ink-mute);
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+    }
+    .doc-footer .copyright {
+      margin-top: 6px;
+      font-family: 'Noto Sans JP', sans-serif;
+      letter-spacing: 0.06em;
+      font-size: 11px;
+    }
+
+    /* 印刷 */
     @media print {
-      body { background: #fff; padding: 0; }
-      .header { position: static; box-shadow: none; }
-      .back-link, .print-btn { display: none !important; }
-      .section { box-shadow: none; border: 1px solid #e0d5c5; page-break-inside: avoid; }
-      .hero { box-shadow: none; }
+      body { background: #fff; padding: 0; font-size: 11pt; }
+      .topbar { display: none; }
+      .container { padding: 24px; max-width: 100%; }
+      section.block, .hero, .cdw-banner, .credo-card, .office-card, .product-card, .related-item, .contact-block {
+        box-shadow: none;
+        page-break-inside: avoid;
+      }
+      .hero { padding: 30px; }
+      .cdw-banner { background: #1f2933 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .timeline-item { page-break-inside: avoid; }
-      .office-card { page-break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+      .pc-link { display: none; }
     }
   </style>
 </head>
 <body>
-  <header class="header">
-    <a href="index.html" class="back-link">&#x2190; もどる</a>
-    <button class="print-btn" onclick="window.print()" title="印刷 / PDF保存">&#x1F5A8;&#xFE0F; 印刷</button>
-    <h1>&#x1F33B; 会社概要</h1>
-    <p>株式会社はなひろ</p>
-  </header>
+  <div class="topbar">
+    <a href="index.html">&#x2190; もどる</a>
+    <span class="crumb">Corporate Profile</span>
+    <button onclick="window.print()" title="印刷 / PDF保存">PRINT</button>
+  </div>
 
   <div class="container">
 
-    <!-- ロゴ -->
-    <div class="logo-block">
-      <img src="photos/hanahiro_logpth_.png" alt="はなひろ HANAHIRO" class="company-logo">
+    <!-- ロゴ＋ドキュメントタイトル -->
+    <div class="brand-block">
+      <img src="photos/hanahiro_logpth_.png" alt="HANAHIRO" class="logo">
+      <div class="doc-title">CORPORATE PROFILE</div>
+      <div class="doc-sub">会 社 概 要</div>
+      <div class="gold-line"></div>
     </div>
 
     <!-- ヒーロー：理念 -->
     <div class="hero">
-      <!-- 写真を入れたい場合: photos/hero.jpg を追加して下のコメントを外してください -->
-      <!-- <img class="hero-photo" src="photos/hero.jpg" alt="はなひろ"> -->
-      <div class="hero-body">
-        <div class="hero-eyebrow">OUR PHILOSOPHY</div>
-        <h2>はなひろの想い</h2>
+      <div class="hero-eyebrow">OUR PHILOSOPHY</div>
+      <h2 class="hero-title">私たちの想い</h2>
 
-        <div class="hero-mission">
-          <div class="label">経営理念</div>
-          <div class="text">地域と共に育ち、貢献する。<br>情熱を持ってこの仕事を愛し、関わる人全てに感謝と感動を。</div>
-        </div>
-
-        <div class="hero-mission">
-          <div class="label">使命感</div>
-          <div class="text">豊かなシルバーライフの創造から、<br>日本中に夢と元気を。</div>
-        </div>
-
-        <div class="hero-mission">
-          <div class="label">志</div>
-          <div class="text">憧れの職業ナンバーワンを目指して。</div>
-        </div>
+      <div class="hero-mission">
+        <div class="ml">Mission</div>
+        <div class="mj">経営理念</div>
+        <div class="text">地域と共に育ち、貢献する。<br>情熱を持ってこの仕事を愛し、<br>関わる人全てに感謝と感動を。</div>
       </div>
-      <div class="hero-footer">
-        はなひろは、「<strong>みんなの会社</strong>」です。CREDO（行動指針）はメンバーたちの手で作られました。一人ひとりが自分ごととして仕事に向き合い、会社に愛着を持ち、共に成長していく ─ そんな会社を目指しています。
+
+      <div class="hero-mission">
+        <div class="ml">Vision</div>
+        <div class="mj">使命感</div>
+        <div class="text">豊かなシルバーライフの創造から、<br>日本中に夢と元気を。</div>
+      </div>
+
+      <div class="hero-mission">
+        <div class="ml">Aspiration</div>
+        <div class="mj">志</div>
+        <div class="text">憧れの職業ナンバーワンを目指して。</div>
+      </div>
+
+      <div class="hero-credo-bottom">
+        はなひろは「みんなの会社」です。CREDO（行動指針）はメンバーたちの手で作られました。<br>
+        一人ひとりが自分ごととして仕事に向き合い、共に成長していく ─ そんな会社を目指しています。
       </div>
     </div>
 
-    <!-- CREDO -->
-    <div class="section">
-      <h3><span class="icon">&#x1F91D;</span>Our CREDO（私たちの約束）</h3>
+    <!-- 01 CREDO -->
+    <section class="block">
+      <div class="sec-head">
+        <div class="sec-num">01</div>
+        <div class="sec-title-block">
+          <div class="sec-eyebrow">Our Credo</div>
+          <div class="sec-title">私たちの約束</div>
+        </div>
+      </div>
       <div class="credo-grid">
         <div class="credo-card">
+          <div class="ck-eyebrow">FOR OUR FELLOWS</div>
           <h4>仲間との約束</h4>
           <ul>
-            <li>日々、心を磨き続けます！</li>
-            <li>今日も最高の日にします！</li>
+            <li>日々、心を磨き続けます</li>
+            <li>今日も最高の日にします</li>
             <li>大切な仲間だからこそ伝えます</li>
           </ul>
         </div>
         <div class="credo-card">
+          <div class="ck-eyebrow">FOR OUR CUSTOMERS</div>
           <h4>お客様との約束</h4>
           <ul>
-            <li>最高の笑顔でお迎えします！</li>
-            <li>敬意を持って心から寄り添います！</li>
-            <li>今日も最幸の日にします！</li>
+            <li>最高の笑顔でお迎えします</li>
+            <li>敬意を持って心から寄り添います</li>
+            <li>今日も最幸の日にします</li>
           </ul>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- 会社概要 -->
-    <div class="section">
-      <h3><span class="icon">&#x1F3E2;</span>会社概要</h3>
+    <!-- 02 会社概要 -->
+    <section class="block">
+      <div class="sec-head">
+        <div class="sec-num">02</div>
+        <div class="sec-title-block">
+          <div class="sec-eyebrow">Company Profile</div>
+          <div class="sec-title">会社概要</div>
+        </div>
+      </div>
       <table class="profile-table">
         <tr><th>法人名</th><td>株式会社はなひろ</td></tr>
         <tr><th>法人番号</th><td>6380001023295</td></tr>
@@ -406,167 +712,226 @@
         <tr><th>本社所在地</th><td>〒962-0015<br>福島県須賀川市日向町22 サンディアスB102号室</td></tr>
         <tr><th>従業員数</th><td>32名</td></tr>
         <tr><th>事業内容</th><td>
-          ・地域密着型通所介護／デイサービス<br>
-          ・リハビリ専門デイサービス<br>
-          ・自費訪問リハビリ<br>
-          ・かいご相談窓口<br>
-          ・介護福祉ポータルサイト「福ひろば」運営
+          地域密着型通所介護／リハビリ専門デイサービス／自費訪問リハビリ／<br>
+          かいご相談窓口／介護福祉ポータルサイト「福ひろば」運営／<br>
+          DX推進事業 CARE DESIGN WORKS（自社プロダクト開発・提供）
         </td></tr>
-        <tr><th>HP</th><td><a href="https://www.hana-hiro.com/" style="color:#c4861f">https://www.hana-hiro.com/</a></td></tr>
+        <tr><th>HP</th><td><a href="https://www.hana-hiro.com/" style="color:var(--gold)">https://www.hana-hiro.com/</a></td></tr>
       </table>
-    </div>
+    </section>
 
-    <!-- 事業所一覧 -->
-    <div class="section">
-      <h3><span class="icon">&#x1F4CD;</span>事業所一覧</h3>
+    <!-- 03 事業所一覧 -->
+    <section class="block">
+      <div class="sec-head">
+        <div class="sec-num">03</div>
+        <div class="sec-title-block">
+          <div class="sec-eyebrow">Our Locations</div>
+          <div class="sec-title">事業所一覧</div>
+        </div>
+      </div>
+      <div class="office-grid">
 
-      <!-- 1. 賀庄 -->
-      <div class="office-card">
-        <!-- 写真：photos/poem-kasho.jpg -->
-        <!-- <img class="office-photo" src="photos/poem-kasho.jpg" alt="デイサービスセンターポエム郡山賀庄"> -->
-        <div class="office-name">デイサービスセンターポエム郡山賀庄</div>
-        <div class="office-sub">介護保険事業所番号：0770305233</div>
-        <div class="office-row"><span class="lbl">サービス</span><span class="val">地域密着型通所介護（定員10名）</span></div>
-        <div class="office-row"><span class="lbl">所在地</span><span class="val">〒963-8844 郡山市賀庄153-5</span></div>
-        <div class="office-row"><span class="lbl">TEL</span><span class="val">024-973-8701</span></div>
-        <div class="office-row"><span class="lbl">FAX</span><span class="val">024-973-8702</span></div>
-        <div class="office-row"><span class="lbl">Mail</span><span class="val">poem02@hana-hiro.com</span></div>
+        <div class="office-card">
+          <!-- 写真：photos/poem-kasho.jpg -->
+          <!-- <img class="office-photo" src="photos/poem-kasho.jpg" alt="デイサービスセンターポエム郡山賀庄"> -->
+          <div class="office-number">No. 01</div>
+          <div class="office-name">デイサービスセンターポエム郡山賀庄</div>
+          <div class="office-sub">介護保険事業所番号　0770305233</div>
+          <div class="office-row"><span class="lbl">Service</span><span class="val">地域密着型通所介護（定員10名）</span></div>
+          <div class="office-row"><span class="lbl">Address</span><span class="val">〒963-8844 郡山市賀庄153-5</span></div>
+          <div class="office-row"><span class="lbl">Tel</span><span class="val">024-973-8701</span></div>
+          <div class="office-row"><span class="lbl">Fax</span><span class="val">024-973-8702</span></div>
+          <div class="office-row"><span class="lbl">Mail</span><span class="val">poem02@hana-hiro.com</span></div>
+        </div>
+
+        <div class="office-card">
+          <!-- 写真：photos/poem-kaisei.jpg -->
+          <!-- <img class="office-photo" src="photos/poem-kaisei.jpg" alt="リハビリ専門デイサービス ポエム開成"> -->
+          <div class="office-number">No. 02</div>
+          <div class="office-name">リハビリ専門デイサービス ポエム開成</div>
+          <div class="office-sub">介護保険事業所番号　0790300834</div>
+          <div class="office-row"><span class="lbl">Service</span><span class="val">リハビリ専門デイサービス（定員18名）</span></div>
+          <div class="office-row"><span class="lbl">Address</span><span class="val">〒963-8852 郡山市台新1-31-3 サンパレス國分1-東号室</span></div>
+          <div class="office-row"><span class="lbl">Tel</span><span class="val">024-983-5951</span></div>
+          <div class="office-row"><span class="lbl">Fax</span><span class="val">024-983-5952</span></div>
+          <div class="office-row"><span class="lbl">Mail</span><span class="val">poem03@hana-hiro.com</span></div>
+        </div>
+
+        <div class="office-card">
+          <!-- 写真：photos/tateyama-sou.jpg -->
+          <!-- <img class="office-photo" src="photos/tateyama-sou.jpg" alt="矢祭町デイサービスセンター舘山荘"> -->
+          <div class="office-number">No. 03</div>
+          <div class="office-name">矢祭町デイサービスセンター舘山荘</div>
+          <div class="office-sub">介護保険事業所番号　0792900060</div>
+          <div class="office-row"><span class="lbl">Service</span><span class="val">地域密着型通所介護（定員18名）</span></div>
+          <div class="office-row"><span class="lbl">Address</span><span class="val">〒963-5118 福島県東白川郡矢祭町大字東舘字舘3-1</span></div>
+          <div class="office-row"><span class="lbl">Tel/Fax</span><span class="val">0247-46-3186</span></div>
+          <div class="office-row"><span class="lbl">Mail</span><span class="val">tateyamasou@hana-hiro.com</span></div>
+        </div>
+
+        <div class="office-card upcoming">
+          <!-- 写真：photos/poem-asaka.jpg -->
+          <!-- <img class="office-photo" src="photos/poem-asaka.jpg" alt="poem de riha 安積店"> -->
+          <div class="office-number">No. 04</div>
+          <div class="office-name">poem de riha 安積店<span class="badge-upcoming">2026.06 OPEN</span></div>
+          <div class="office-sub">リハビリ専門デイサービス（ポエム開成と同形態）</div>
+          <div class="office-row"><span class="lbl">Address</span><span class="val">郡山市安積町笹川字四角担3-1</span></div>
+          <div class="office-row"><span class="lbl">Tel</span><span class="val">090-7068-5817（本部電話開設までの暫定）</span></div>
+          <div class="office-row"><span class="lbl">Mail</span><span class="val">toyoshima@hana-hiro.com</span></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 04 CARE DESIGN WORKS -->
+    <section class="block">
+      <div class="sec-head">
+        <div class="sec-num">04</div>
+        <div class="sec-title-block">
+          <div class="sec-eyebrow">DX Division</div>
+          <div class="sec-title">DX推進事業</div>
+        </div>
       </div>
 
-      <!-- 2. 開成 -->
-      <div class="office-card">
-        <!-- 写真：photos/poem-kaisei.jpg -->
-        <!-- <img class="office-photo" src="photos/poem-kaisei.jpg" alt="リハビリ専門デイサービス ポエム開成"> -->
-        <div class="office-name">リハビリ専門デイサービス ポエム開成</div>
-        <div class="office-sub">介護保険事業所番号：0790300834</div>
-        <div class="office-row"><span class="lbl">サービス</span><span class="val">リハビリ専門デイサービス（定員18名）</span></div>
-        <div class="office-row"><span class="lbl">所在地</span><span class="val">〒963-8852 郡山市台新1-31-3 サンパレス國分1-東号室</span></div>
-        <div class="office-row"><span class="lbl">TEL</span><span class="val">024-983-5951</span></div>
-        <div class="office-row"><span class="lbl">FAX</span><span class="val">024-983-5952</span></div>
-        <div class="office-row"><span class="lbl">Mail</span><span class="val">poem03@hana-hiro.com</span></div>
+      <div class="cdw-banner">
+        <div class="cdw-eyebrow">SINCE OCTOBER 2025</div>
+        <div class="cdw-title">CARE DESIGN WORKS</div>
+        <div class="cdw-jp">介護現場のためのDX推進事業</div>
+        <div class="cdw-text">
+          介護・福祉の現場で20年以上にわたり積み上げてきた知見をもとに、現場の負担を減らし、人と人が向き合う時間を増やすためのSaaSプロダクトを自社開発・提供しています。テクノロジーで現場を支え、業界全体の質を底上げすることをミッションに掲げています。
+        </div>
       </div>
 
-      <!-- 3. 舘山荘 -->
-      <div class="office-card">
-        <!-- 写真：photos/tateyama-sou.jpg -->
-        <!-- <img class="office-photo" src="photos/tateyama-sou.jpg" alt="矢祭町デイサービスセンター舘山荘"> -->
-        <div class="office-name">矢祭町デイサービスセンター舘山荘</div>
-        <div class="office-sub">介護保険事業所番号：0792900060</div>
-        <div class="office-row"><span class="lbl">サービス</span><span class="val">地域密着型通所介護（定員18名）</span></div>
-        <div class="office-row"><span class="lbl">所在地</span><span class="val">〒963-5118 福島県東白川郡矢祭町大字東舘字舘3-1</span></div>
-        <div class="office-row"><span class="lbl">TEL/FAX</span><span class="val">0247-46-3186</span></div>
-        <div class="office-row"><span class="lbl">Mail</span><span class="val">tateyamasou@hana-hiro.com</span></div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="pc-tag">PRODUCT 01</div>
+          <h4>絆太郎（ばんたろう）</h4>
+          <div class="pc-desc">
+            介護事業所のための勤怠管理・シフト作成SaaS。AIが各スタッフの希望を考慮した最適なシフトを自動生成し、LINE連携で打刻や申請も完結。「人と向き合う時間を大切にしたい」現場の想いを技術で支えます。
+          </div>
+          <a href="https://kintai-saas-v1.vercel.app/lp.html" class="pc-link" target="_blank" rel="noopener">View Service &nbsp;&rarr;</a>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-tag">PRODUCT 02</div>
+          <h4>福ひろばラーニング</h4>
+          <div class="pc-desc">
+            介護・障がい福祉事業所向けのeラーニングSaaS。法定研修から現場実務まで体系化されたカリキュラムを提供し、限られた時間で効率よく学べる環境を整えます。マルチテナント対応でテナントごとの運用が可能。
+          </div>
+          <a href="https://learning.hana-hiro.com/demo" class="pc-link" target="_blank" rel="noopener">View Service &nbsp;&rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 沿革 -->
+    <section class="block">
+      <div class="sec-head">
+        <div class="sec-num">05</div>
+        <div class="sec-title-block">
+          <div class="sec-eyebrow">Our History</div>
+          <div class="sec-title">沿革</div>
+        </div>
       </div>
 
-      <!-- 4. poem de riha 安積店 -->
-      <div class="office-card upcoming">
-        <!-- 写真：photos/poem-asaka.jpg -->
-        <!-- <img class="office-photo" src="photos/poem-asaka.jpg" alt="poem de riha 安積店"> -->
-        <div class="office-name">poem de riha 安積店<span class="badge-upcoming">2026年6月開設予定</span></div>
-        <div class="office-sub">リハビリ専門デイサービス（ポエム開成と同形態）</div>
-        <div class="office-row"><span class="lbl">所在地</span><span class="val">郡山市安積町笹川字四角担3-1</span></div>
-        <div class="office-row"><span class="lbl">TEL</span><span class="val">090-7068-5817（本部電話開設までの暫定）</span></div>
-        <div class="office-row"><span class="lbl">Mail</span><span class="val">toyoshima@hana-hiro.com</span></div>
-      </div>
-    </div>
-
-    <!-- 沿革 -->
-    <div class="section">
-      <h3><span class="icon">&#x1F4DC;</span>沿革</h3>
       <div class="timeline">
         <div class="timeline-item">
-          <div class="timeline-date">平成25年（2013年）9月</div>
-          <div class="timeline-text">株式会社はなひろ 設立／代表取締役 塙啓之 就任</div>
+          <div class="timeline-date">2013.09 ／ 平成25年9月</div>
+          <div class="timeline-text">株式会社はなひろ 設立 ／ 代表取締役 塙啓之 就任</div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-date">平成25年（2013年）12月</div>
-          <div class="timeline-text">郡山市内にデイサービスセンターポエム 開設<span class="deprecated">※現在は譲渡</span></div>
+          <div class="timeline-date">2013.12 ／ 平成25年12月</div>
+          <div class="timeline-text">郡山市内にデイサービスセンターポエム 開設<span class="deprecated">※ 現在は譲渡</span></div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-date">平成27年（2015年）3月</div>
-          <div class="timeline-text">ポエム かいご相談室（居宅介護支援事業所）開設<span class="deprecated">※現在は譲渡</span></div>
+          <div class="timeline-date">2015.03 ／ 平成27年3月</div>
+          <div class="timeline-text">ポエム かいご相談室（居宅介護支援事業所）開設<span class="deprecated">※ 現在は譲渡</span></div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-date">平成28年（2016年）6月</div>
+          <div class="timeline-date">2016.06 ／ 平成28年6月</div>
           <div class="timeline-text">デイサービスセンターポエム郡山賀庄 開設</div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-date">平成29年（2017年）10月</div>
+          <div class="timeline-date">2017.10 ／ 平成29年10月</div>
           <div class="timeline-text">介護福祉ポータルサイト「福ひろば in 郡山」を郡山市と協働開設</div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-date">平成30年（2018年）6月</div>
-          <div class="timeline-text">介護保険外サービス 訪問リハビリ「re:Life Koriyama（リライフ郡山）」開設</div>
+          <div class="timeline-date">2018.06 ／ 平成30年6月</div>
+          <div class="timeline-text">介護保険外サービス 訪問リハビリ「re:Life Koriyama」開設</div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-date">平成30年（2018年）11月</div>
-          <div class="timeline-text">リハビリ専門デイサービス ポエム開成 M&amp;Aにより事業承継</div>
+          <div class="timeline-date">2018.11 ／ 平成30年11月</div>
+          <div class="timeline-text">リハビリ専門デイサービス ポエム開成 を M&amp;A により事業承継</div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-date">令和元年（2019年）4月</div>
+          <div class="timeline-date">2019.04 ／ 令和元年4月</div>
           <div class="timeline-text">介護福祉ポータルサイト「福ひろば 障がい福祉版」開設</div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-date">令和8年（2026年）6月</div>
+          <div class="timeline-date">2025.10 ／ 令和7年10月</div>
+          <div class="timeline-text">DX推進事業「CARE DESIGN WORKS」開始 ／ 自社プロダクト「絆太郎」「福ひろばラーニング」を提供</div>
+        </div>
+        <div class="timeline-item future">
+          <div class="timeline-date">2026.06 ／ 令和8年6月</div>
           <div class="timeline-text">poem de riha 安積店 開設予定（リハビリ専門デイサービス）</div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- 関連事業 -->
-    <div class="section">
-      <h3><span class="icon">&#x1F310;</span>関連事業</h3>
+    <!-- 06 関連事業 -->
+    <section class="block">
+      <div class="sec-head">
+        <div class="sec-num">06</div>
+        <div class="sec-title-block">
+          <div class="sec-eyebrow">Related Services</div>
+          <div class="sec-title">関連事業</div>
+        </div>
+      </div>
       <div class="related-grid">
         <div class="related-item">
-          <span class="ico">&#x1F4F1;</span>
-          <div>
-            <strong>福ひろば in 郡山</strong>（郡山市協働）<br>
-            <span style="font-size:12px;color:#8a7a6a">郡山市の介護福祉情報ポータルサイト</span>
-          </div>
+          <strong>福ひろば in 郡山</strong>
+          <div class="desc">郡山市と協働で運営する介護福祉情報ポータルサイト</div>
         </div>
         <div class="related-item">
-          <span class="ico">&#x1F4F1;</span>
-          <div>
-            <strong>福ひろば 障がい福祉版</strong><br>
-            <span style="font-size:12px;color:#8a7a6a">郡山市の障がい福祉情報ポータルサイト</span>
-          </div>
+          <strong>福ひろば 障がい福祉版</strong>
+          <div class="desc">郡山市の障がい福祉情報ポータルサイト</div>
         </div>
         <div class="related-item">
-          <span class="ico">&#x1F4AC;</span>
-          <div>
-            <strong>みんなの掲示板</strong><br>
-            <span style="font-size:12px;color:#8a7a6a">介護福祉・障がい福祉に関わる方々の交流の場</span>
-          </div>
+          <strong>みんなの掲示板</strong>
+          <div class="desc">介護福祉・障がい福祉に関わる方々の交流の場</div>
         </div>
         <div class="related-item">
-          <span class="ico">&#x1F3E0;</span>
-          <div>
-            <strong>re:Life Koriyama（リライフ郡山）</strong><br>
-            <span style="font-size:12px;color:#8a7a6a">介護保険外の自費訪問リハビリ</span>
-          </div>
+          <strong>re:Life Koriyama（リライフ郡山）</strong>
+          <div class="desc">介護保険外の自費訪問リハビリ</div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- お問い合わせ -->
-    <div class="section">
-      <h3><span class="icon">&#x1F4DE;</span>お問い合わせ</h3>
-      <div class="contact-box">
-        <div class="label">代表電話</div>
+    <!-- 07 お問い合わせ -->
+    <section class="block">
+      <div class="sec-head">
+        <div class="sec-num">07</div>
+        <div class="sec-title-block">
+          <div class="sec-eyebrow">Contact</div>
+          <div class="sec-title">お問い合わせ</div>
+        </div>
+      </div>
+
+      <div class="contact-block">
+        <div class="contact-eyebrow">REPRESENTATIVE</div>
         <div class="tel">024-973-8701</div>
-        <div class="mail">
+        <div class="mail-line">
           <a href="mailto:info@hana-hiro.com">info@hana-hiro.com</a>
         </div>
-        <div style="margin-top:12px;font-size:12px;color:#8a7a6a;line-height:1.7">
+        <div class="addr">
           〒962-0015 福島県須賀川市日向町22 サンディアスB102号室<br>
-          受付時間：平日 9:00〜17:00
+          受付時間 ｜ 平日 9:00 〜 17:00
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="footer-msg">
-      <strong>株式会社はなひろ</strong><br>
-      豊かなシルバーライフの創造から、日本中に夢と元気を。
+    <div class="doc-footer">
+      HANAHIRO &nbsp;&middot;&nbsp; CORPORATE PROFILE
+      <div class="copyright">&copy; 株式会社はなひろ</div>
     </div>
 
   </div>
