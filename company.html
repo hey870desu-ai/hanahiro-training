@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>会社概要｜株式会社はなひろ</title>
+  <meta property="og:title" content="株式会社はなひろ 会社概要">
+  <meta property="og:description" content="豊かなシルバーライフの創造から、日本中に夢と元気を。">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      background: #faf7f2;
+      color: #4a4a4a;
+      line-height: 1.7;
+      padding: 0 0 60px;
+    }
+    .header {
+      background: linear-gradient(150deg, #f9e4b7 0%, #f5c16c 30%, #e8a849 60%, #d4944a 100%);
+      color: #5a3e1b;
+      padding: 32px 20px 28px;
+      text-align: center;
+      position: sticky; top: 0; z-index: 10;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    .header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+    .header p { font-size: 13px; color: #6b4d28; }
+    .back-link {
+      position: absolute; top: 18px; left: 18px;
+      color: #5a3e1b; text-decoration: none; font-size: 14px; font-weight: 600;
+      background: rgba(255,255,255,0.6); padding: 6px 12px; border-radius: 20px;
+    }
+    .print-btn {
+      position: absolute; top: 18px; right: 18px;
+      background: rgba(255,255,255,0.7); border: none; padding: 6px 12px;
+      border-radius: 20px; font-size: 16px; cursor: pointer;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #f5c16c, #e8a849, #c4861f);
+      color: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    .hero-photo {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      display: block;
+      background: #f0d9a8;
+    }
+    .hero-body {
+      padding: 28px 24px;
+    }
+    .hero-eyebrow {
+      font-size: 11px; letter-spacing: 4px; opacity: 0.9; margin-bottom: 8px;
+    }
+    .hero h2 {
+      font-size: 22px; font-weight: 800; margin-bottom: 14px;
+    }
+    .hero-mission {
+      background: rgba(255,255,255,0.18);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+    .hero-mission .label {
+      font-size: 11px; opacity: 0.85; margin-bottom: 4px;
+    }
+    .hero-mission .text {
+      font-size: 14px; font-weight: 700; line-height: 1.7;
+    }
+    .hero-footer {
+      background: #fff;
+      padding: 16px 22px;
+      font-size: 13px;
+      color: #6b4d28;
+      line-height: 1.8;
+      text-align: left;
+    }
+
+    /* Section common */
+    .section {
+      background: #fff;
+      border-radius: 18px;
+      padding: 24px 22px;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    }
+    .section h3 {
+      font-size: 18px;
+      color: #5a3e1b;
+      font-weight: 800;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #f0d9a8;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section h3 .icon { font-size: 22px; }
+
+    /* CREDO */
+    .credo-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    @media (min-width: 640px) {
+      .credo-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .credo-card {
+      border: 2px solid #f0d9a8;
+      border-radius: 14px;
+      padding: 16px 18px;
+      background: #fff8ec;
+    }
+    .credo-card h4 {
+      font-size: 14px;
+      color: #c4861f;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .credo-card ul {
+      list-style: none; padding: 0; margin: 0;
+    }
+    .credo-card li {
+      font-size: 13px; color: #5a3e1b; padding: 4px 0;
+      line-height: 1.6;
+    }
+    .credo-card li::before {
+      content: "「"; color: #e8a849;
+    }
+    .credo-card li::after {
+      content: "」"; color: #e8a849;
+    }
+
+    /* Profile table */
+    .profile-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .profile-table tr {
+      border-bottom: 1px solid #f0e6d6;
+    }
+    .profile-table tr:last-child { border-bottom: none; }
+    .profile-table th {
+      width: 130px;
+      text-align: left;
+      padding: 12px 0;
+      color: #6b4d28;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .profile-table td {
+      padding: 12px 0;
+      color: #4a4a4a;
+      line-height: 1.7;
+    }
+
+    /* Office cards */
+    .office-card {
+      border: 1px solid #f0d9a8;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      background: #fff;
+    }
+    .office-card.upcoming {
+      border-style: dashed;
+      background: #fdf8ed;
+    }
+    .office-card .office-name {
+      font-size: 16px; font-weight: 800; color: #5a3e1b;
+      margin-bottom: 4px;
+    }
+    .office-card .office-sub {
+      font-size: 11px; color: #8a7a6a; margin-bottom: 10px;
+    }
+    .office-card .badge-upcoming {
+      display: inline-block;
+      background: #e8a849; color: #fff;
+      font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 10px;
+      margin-left: 6px;
+    }
+    .office-photo {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      background: #f5e6c8;
+    }
+    .office-row {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      font-size: 13px; padding: 4px 0;
+    }
+    .office-row .lbl {
+      min-width: 80px; color: #8a7a6a; font-weight: 600;
+    }
+    .office-row .val {
+      flex: 1; color: #4a4a4a;
+    }
+
+    /* History timeline */
+    .timeline {
+      position: relative;
+      padding-left: 28px;
+    }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 8px; top: 6px; bottom: 6px;
+      width: 2px;
+      background: linear-gradient(to bottom, #e8a849, #f5c16c);
+    }
+    .timeline-item {
+      position: relative;
+      padding: 8px 0 12px;
+    }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -25px; top: 12px;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: #e8a849;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px #f0d9a8;
+    }
+    .timeline-date {
+      font-size: 12px;
+      font-weight: 700;
+      color: #c4861f;
+      margin-bottom: 2px;
+    }
+    .timeline-text {
+      font-size: 14px;
+      color: #4a4a4a;
+      line-height: 1.6;
+    }
+    .timeline-text .deprecated {
+      font-size: 11px;
+      color: #8a7a6a;
+      margin-left: 6px;
+    }
+
+    /* Related */
+    .related-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .related-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 10px 12px;
+      background: #fff8ec;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #5a3e1b;
+      line-height: 1.6;
+    }
+    .related-item .ico {
+      font-size: 20px; flex-shrink: 0;
+    }
+
+    /* Contact */
+    .contact-box {
+      background: linear-gradient(135deg, #fff8ec, #faf2dc);
+      border-radius: 14px;
+      padding: 18px 20px;
+      text-align: center;
+    }
+    .contact-box .label {
+      font-size: 12px; color: #8a7a6a; margin-bottom: 4px;
+    }
+    .contact-box .tel {
+      font-size: 24px; font-weight: 800; color: #c4861f;
+      letter-spacing: 1px;
+    }
+    .contact-box .mail {
+      font-size: 14px; color: #5a3e1b; margin-top: 6px;
+    }
+    .contact-box a {
+      color: #c4861f; text-decoration: none; font-weight: 700;
+    }
+
+    /* Footer */
+    .footer-msg {
+      text-align: center;
+      font-size: 13px;
+      color: #8a7a6a;
+      margin-top: 30px;
+      padding: 20px;
+      line-height: 1.8;
+    }
+
+    /* Print */
+    @media print {
+      body { background: #fff; padding: 0; }
+      .header { position: static; box-shadow: none; }
+      .back-link, .print-btn { display: none !important; }
+      .section { box-shadow: none; border: 1px solid #e0d5c5; page-break-inside: avoid; }
+      .hero { box-shadow: none; }
+      .timeline-item { page-break-inside: avoid; }
+      .office-card { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="back-link">&#x2190; もどる</a>
+    <button class="print-btn" onclick="window.print()" title="印刷 / PDF保存">&#x1F5A8;&#xFE0F; 印刷</button>
+    <h1>&#x1F33B; 会社概要</h1>
+    <p>株式会社はなひろ</p>
+  </header>
+
+  <div class="container">
+
+    <!-- ヒーロー：理念 -->
+    <div class="hero">
+      <!-- 写真を入れたい場合: photos/hero.jpg を追加して下のコメントを外してください -->
+      <!-- <img class="hero-photo" src="photos/hero.jpg" alt="はなひろ"> -->
+      <div class="hero-body">
+        <div class="hero-eyebrow">OUR PHILOSOPHY</div>
+        <h2>はなひろの想い</h2>
+
+        <div class="hero-mission">
+          <div class="label">経営理念</div>
+          <div class="text">地域と共に育ち、貢献する。<br>情熱を持ってこの仕事を愛し、関わる人全てに感謝と感動を。</div>
+        </div>
+
+        <div class="hero-mission">
+          <div class="label">使命感</div>
+          <div class="text">豊かなシルバーライフの創造から、<br>日本中に夢と元気を。</div>
+        </div>
+
+        <div class="hero-mission">
+          <div class="label">志</div>
+          <div class="text">憧れの職業ナンバーワンを目指して。</div>
+        </div>
+      </div>
+      <div class="hero-footer">
+        はなひろは、「<strong>みんなの会社</strong>」です。CREDO（行動指針）はメンバーたちの手で作られました。一人ひとりが自分ごととして仕事に向き合い、会社に愛着を持ち、共に成長していく ─ そんな会社を目指しています。
+      </div>
+    </div>
+
+    <!-- CREDO -->
+    <div class="section">
+      <h3><span class="icon">&#x1F91D;</span>Our CREDO（私たちの約束）</h3>
+      <div class="credo-grid">
+        <div class="credo-card">
+          <h4>仲間との約束</h4>
+          <ul>
+            <li>日々、心を磨き続けます！</li>
+            <li>今日も最高の日にします！</li>
+            <li>大切な仲間だからこそ伝えます</li>
+          </ul>
+        </div>
+        <div class="credo-card">
+          <h4>お客様との約束</h4>
+          <ul>
+            <li>最高の笑顔でお迎えします！</li>
+            <li>敬意を持って心から寄り添います！</li>
+            <li>今日も最幸の日にします！</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 会社概要 -->
+    <div class="section">
+      <h3><span class="icon">&#x1F3E2;</span>会社概要</h3>
+      <table class="profile-table">
+        <tr><th>法人名</th><td>株式会社はなひろ</td></tr>
+        <tr><th>法人番号</th><td>6380001023295</td></tr>
+        <tr><th>設立</th><td>平成25年（2013年）9月</td></tr>
+        <tr><th>資本金</th><td>300万円</td></tr>
+        <tr><th>代表者</th><td>代表取締役 塙 啓之</td></tr>
+        <tr><th>役員</th><td>専務取締役 豊嶋 久美子</td></tr>
+        <tr><th>本社所在地</th><td>〒962-0015<br>福島県須賀川市日向町22 サンディアスB102号室</td></tr>
+        <tr><th>従業員数</th><td>32名</td></tr>
+        <tr><th>事業内容</th><td>
+          ・地域密着型通所介護／デイサービス<br>
+          ・リハビリ専門デイサービス<br>
+          ・自費訪問リハビリ<br>
+          ・かいご相談窓口<br>
+          ・介護福祉ポータルサイト「福ひろば」運営
+        </td></tr>
+        <tr><th>HP</th><td><a href="https://www.hana-hiro.com/" style="color:#c4861f">https://www.hana-hiro.com/</a></td></tr>
+      </table>
+    </div>
+
+    <!-- 事業所一覧 -->
+    <div class="section">
+      <h3><span class="icon">&#x1F4CD;</span>事業所一覧</h3>
+
+      <!-- 1. 賀庄 -->
+      <div class="office-card">
+        <!-- 写真：photos/poem-kasho.jpg -->
+        <!-- <img class="office-photo" src="photos/poem-kasho.jpg" alt="デイサービスセンターポエム郡山賀庄"> -->
+        <div class="office-name">デイサービスセンターポエム郡山賀庄</div>
+        <div class="office-sub">介護保険事業所番号：0770305233</div>
+        <div class="office-row"><span class="lbl">サービス</span><span class="val">地域密着型通所介護（定員10名）</span></div>
+        <div class="office-row"><span class="lbl">所在地</span><span class="val">〒963-8844 郡山市賀庄153-5</span></div>
+        <div class="office-row"><span class="lbl">TEL</span><span class="val">024-973-8701</span></div>
+        <div class="office-row"><span class="lbl">FAX</span><span class="val">024-973-8702</span></div>
+        <div class="office-row"><span class="lbl">Mail</span><span class="val">poem02@hana-hiro.com</span></div>
+      </div>
+
+      <!-- 2. 開成 -->
+      <div class="office-card">
+        <!-- 写真：photos/poem-kaisei.jpg -->
+        <!-- <img class="office-photo" src="photos/poem-kaisei.jpg" alt="リハビリ専門デイサービス ポエム開成"> -->
+        <div class="office-name">リハビリ専門デイサービス ポエム開成</div>
+        <div class="office-sub">介護保険事業所番号：0790300834</div>
+        <div class="office-row"><span class="lbl">サービス</span><span class="val">リハビリ専門デイサービス（定員18名）</span></div>
+        <div class="office-row"><span class="lbl">所在地</span><span class="val">〒963-8852 郡山市台新1-31-3 サンパレス國分1-東号室</span></div>
+        <div class="office-row"><span class="lbl">TEL</span><span class="val">024-983-5951</span></div>
+        <div class="office-row"><span class="lbl">FAX</span><span class="val">024-983-5952</span></div>
+        <div class="office-row"><span class="lbl">Mail</span><span class="val">poem03@hana-hiro.com</span></div>
+      </div>
+
+      <!-- 3. 舘山荘 -->
+      <div class="office-card">
+        <!-- 写真：photos/tateyama-sou.jpg -->
+        <!-- <img class="office-photo" src="photos/tateyama-sou.jpg" alt="矢祭町デイサービスセンター舘山荘"> -->
+        <div class="office-name">矢祭町デイサービスセンター舘山荘</div>
+        <div class="office-sub">介護保険事業所番号：0792900060</div>
+        <div class="office-row"><span class="lbl">サービス</span><span class="val">地域密着型通所介護（定員18名）</span></div>
+        <div class="office-row"><span class="lbl">所在地</span><span class="val">〒963-5118 福島県東白川郡矢祭町大字東舘字舘3-1</span></div>
+        <div class="office-row"><span class="lbl">TEL/FAX</span><span class="val">0247-46-3186</span></div>
+        <div class="office-row"><span class="lbl">Mail</span><span class="val">tateyamasou@hana-hiro.com</span></div>
+      </div>
+
+      <!-- 4. 新施設（開設準備中） -->
+      <div class="office-card upcoming">
+        <!-- 写真：photos/new-facility.jpg -->
+        <!-- <img class="office-photo" src="photos/new-facility.jpg" alt="新施設"> -->
+        <div class="office-name">（仮称）新施設<span class="badge-upcoming">2026年6月開設予定</span></div>
+        <div class="office-sub">リハビリ専門デイサービス（ポエム開成と同形態）</div>
+        <div class="office-row"><span class="lbl">所在地</span><span class="val">郡山市安積町笹川字四角担3-1</span></div>
+        <div class="office-row"><span class="lbl">開設準備室</span><span class="val">080-2848-2881（担当：豊嶋）</span></div>
+        <div class="office-row"><span class="lbl">Mail</span><span class="val">toyoshima@hana-hiro.com</span></div>
+      </div>
+    </div>
+
+    <!-- 沿革 -->
+    <div class="section">
+      <h3><span class="icon">&#x1F4DC;</span>沿革</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">平成25年（2013年）9月</div>
+          <div class="timeline-text">株式会社はなひろ 設立／代表取締役 塙啓之 就任</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">平成25年（2013年）12月</div>
+          <div class="timeline-text">郡山市内にデイサービスセンターポエム 開設<span class="deprecated">※現在は譲渡</span></div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">平成27年（2015年）3月</div>
+          <div class="timeline-text">ポエム かいご相談室（居宅介護支援事業所）開設<span class="deprecated">※現在は譲渡</span></div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">平成28年（2016年）6月</div>
+          <div class="timeline-text">デイサービスセンターポエム郡山賀庄 開設</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">平成29年（2017年）10月</div>
+          <div class="timeline-text">介護福祉ポータルサイト「福ひろば in 郡山」を郡山市と協働開設</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">平成30年（2018年）6月</div>
+          <div class="timeline-text">介護保険外サービス 訪問リハビリ「re:Life Koriyama（リライフ郡山）」開設</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">平成30年（2018年）11月</div>
+          <div class="timeline-text">リハビリ専門デイサービス ポエム開成 M&amp;Aにより事業承継</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">令和元年（2019年）4月</div>
+          <div class="timeline-text">介護福祉ポータルサイト「福ひろば 障がい福祉版」開設</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">令和8年（2026年）6月</div>
+          <div class="timeline-text">郡山市安積町に新施設 開設予定（リハビリ専門デイサービス）</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 関連事業 -->
+    <div class="section">
+      <h3><span class="icon">&#x1F310;</span>関連事業</h3>
+      <div class="related-grid">
+        <div class="related-item">
+          <span class="ico">&#x1F4F1;</span>
+          <div>
+            <strong>福ひろば in 郡山</strong>（郡山市協働）<br>
+            <span style="font-size:12px;color:#8a7a6a">郡山市の介護福祉情報ポータルサイト</span>
+          </div>
+        </div>
+        <div class="related-item">
+          <span class="ico">&#x1F4F1;</span>
+          <div>
+            <strong>福ひろば 障がい福祉版</strong><br>
+            <span style="font-size:12px;color:#8a7a6a">郡山市の障がい福祉情報ポータルサイト</span>
+          </div>
+        </div>
+        <div class="related-item">
+          <span class="ico">&#x1F4AC;</span>
+          <div>
+            <strong>みんなの掲示板</strong><br>
+            <span style="font-size:12px;color:#8a7a6a">介護福祉・障がい福祉に関わる方々の交流の場</span>
+          </div>
+        </div>
+        <div class="related-item">
+          <span class="ico">&#x1F3E0;</span>
+          <div>
+            <strong>re:Life Koriyama（リライフ郡山）</strong><br>
+            <span style="font-size:12px;color:#8a7a6a">介護保険外の自費訪問リハビリ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- お問い合わせ -->
+    <div class="section">
+      <h3><span class="icon">&#x1F4DE;</span>お問い合わせ</h3>
+      <div class="contact-box">
+        <div class="label">代表電話</div>
+        <div class="tel">024-973-8701</div>
+        <div class="mail">
+          <a href="mailto:info@hana-hiro.com">info@hana-hiro.com</a>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:#8a7a6a;line-height:1.7">
+          〒962-0015 福島県須賀川市日向町22 サンディアスB102号室<br>
+          受付時間：平日 9:00〜17:00
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-msg">
+      <strong>株式会社はなひろ</strong><br>
+      豊かなシルバーライフの創造から、日本中に夢と元気を。
+    </div>
+
+  </div>
+</body>
+</html>
