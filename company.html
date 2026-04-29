@@ -82,18 +82,12 @@
       padding: 56px 24px;
     }
 
-    /* ロゴ・タイトル */
+    /* タイトル */
     .brand-block {
       text-align: center;
       padding: 0 0 48px;
     }
-    .brand-block .logo {
-      max-width: 320px;
-      width: 75%;
-      height: auto;
-    }
     .brand-block .doc-title {
-      margin-top: 36px;
       font-family: 'Cormorant Garamond', serif;
       font-size: 42px;
       letter-spacing: 0.18em;
@@ -112,6 +106,16 @@
       height: 1px;
       background: var(--gold);
       margin: 28px auto 0;
+    }
+
+    /* フッターロゴ */
+    .footer-logo {
+      max-width: 280px;
+      width: 70%;
+      height: auto;
+      display: block;
+      margin: 0 auto 18px;
+      opacity: 0.92;
     }
 
     /* ヒーロー */
@@ -611,7 +615,7 @@
     .doc-footer {
       text-align: center;
       margin-top: 64px;
-      padding: 24px 0 0;
+      padding: 32px 0 0;
       border-top: 1px solid var(--line);
       font-family: 'Noto Sans JP', sans-serif;
       font-size: 11px;
@@ -698,9 +702,8 @@
 
   <div class="container">
 
-    <!-- ロゴ＋ドキュメントタイトル -->
+    <!-- ドキュメントタイトル -->
     <div class="brand-block">
-      <img src="photos/hanahiro_logpth_.png" alt="HANAHIRO" class="logo">
       <div class="doc-title">CORPORATE PROFILE</div>
       <div class="doc-sub">会 社 概 要</div>
       <div class="gold-line"></div>
@@ -1045,6 +1048,7 @@
     </section>
 
     <div class="doc-footer">
+      <img src="photos/hanahiro_logpth_.png" alt="HANAHIRO" class="footer-logo">
       &copy; 株式会社はなひろ
     </div>
 
