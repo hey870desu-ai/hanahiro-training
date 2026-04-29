@@ -757,7 +757,7 @@
     .print-only { display: none; }
 
     @page {
-      size: A4 portrait;
+      size: A4 landscape;
       margin: 0;
     }
 
@@ -779,133 +779,35 @@
       .pc-link { display: none !important; }
       a.related-item::after { display: none !important; }
 
-      .container {
-        max-width: 100%;
-        padding: 0;
-        margin: 0;
-      }
+      .container { max-width: 100%; padding: 0; margin: 0; }
 
       a { color: var(--ink); text-decoration: none; }
 
-      /* === 表紙 === */
-      .print-cover {
-        display: flex !important;
-        flex-direction: column;
-        align-items: center;
-        width: 210mm;
-        height: 297mm;
-        padding: 32mm 28mm 24mm;
-        box-sizing: border-box;
-        page-break-after: always;
-        background: linear-gradient(180deg, #fff 0%, #fbf9f4 50%, #f4ead6 100%);
-        text-align: center;
-        position: relative;
-      }
-      .pc-center {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-      }
-      .print-cover::before, .print-cover::after {
-        content: "";
-        position: absolute;
-        width: 60px; height: 60px;
-        border: 1px solid var(--gold);
-      }
-      .print-cover::before {
-        top: 18mm; left: 18mm;
-        border-right: none; border-bottom: none;
-      }
-      .print-cover::after {
-        bottom: 18mm; right: 18mm;
-        border-left: none; border-top: none;
-      }
-      .pc-top {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 12pt;
-        letter-spacing: 0.4em;
-        color: var(--gold);
-      }
-      .pc-logo-wrap {
-        margin: 30mm 0 16mm;
-      }
-      .pc-logo {
-        max-width: 110mm;
-        height: auto;
-      }
-      .pc-title {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 36pt;
-        letter-spacing: 0.18em;
-        color: var(--ink);
-        font-weight: 500;
-        margin-bottom: 6mm;
-      }
-      .pc-divider {
-        width: 24mm; height: 1px;
-        background: var(--gold);
-        margin: 6mm auto 8mm;
-      }
-      .pc-sub {
-        font-family: 'Noto Serif JP', serif;
-        font-size: 13pt;
-        letter-spacing: 0.4em;
-        color: var(--ink-soft);
-        margin-bottom: 10mm;
-      }
-      .pc-tagline {
-        font-family: 'Noto Serif JP', serif;
-        font-size: 12pt;
-        line-height: 2;
-        color: var(--ink);
-        letter-spacing: 0.1em;
-        margin-bottom: auto;
-      }
-      .pc-bottom {
-        margin-top: auto;
-        padding-top: 12mm;
-        border-top: 1px solid var(--line);
-        width: 100%;
-      }
-      .pc-name {
-        font-family: 'Noto Serif JP', serif;
-        font-size: 14pt;
-        font-weight: 600;
-        letter-spacing: 0.2em;
-        color: var(--ink);
-        margin-bottom: 3mm;
-      }
-      .pc-name-en {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 11pt;
-        letter-spacing: 0.3em;
-        color: var(--gold);
-      }
-
-      /* === 各ページ === */
+      /* === ページの基本：A4 横 === */
+      .print-cover,
       .hero,
       section.block {
-        width: 210mm;
-        min-height: 297mm;
-        padding: 22mm 22mm 28mm;
+        width: 297mm;
+        height: 210mm;
         box-sizing: border-box;
-        margin: 0 0 0 0 !important;
+        margin: 0 !important;
+        padding: 16mm 22mm 18mm;
         page-break-before: always;
-        page-break-inside: auto;
-        position: relative;
+        page-break-after: auto;
+        page-break-inside: avoid;
+        overflow: hidden;
         background: #fff;
         border: none !important;
+        position: relative;
       }
+      .print-cover { page-break-before: avoid; }
 
-      /* 各ページのフッター（社名・ページ番号は割愛しシンプルに） */
+      /* 各ページ共通フッター */
       .hero::after,
       section.block::after {
         content: "HANAHIRO  CORPORATE PROFILE";
         position: absolute;
-        bottom: 12mm; left: 0; right: 0;
+        bottom: 8mm; left: 0; right: 0;
         text-align: center;
         font-family: 'Cormorant Garamond', serif;
         font-size: 9pt;
@@ -913,118 +815,218 @@
         color: var(--ink-mute);
       }
 
-      /* hero（理念） */
+      /* === 表紙 === */
+      .print-cover {
+        display: flex !important;
+        flex-direction: row;
+        align-items: stretch;
+        padding: 0;
+        background: linear-gradient(135deg, #fff 0%, #fbf9f4 60%, #f4ead6 100%);
+      }
+      .print-cover::before, .print-cover::after {
+        content: "";
+        position: absolute;
+        width: 18mm; height: 18mm;
+        border: 1px solid var(--gold);
+      }
+      .print-cover::before {
+        top: 14mm; left: 14mm;
+        border-right: none; border-bottom: none;
+      }
+      .print-cover::after {
+        bottom: 14mm; right: 14mm;
+        border-left: none; border-top: none;
+        content: "";
+        background: none;
+      }
+      .pc-top {
+        position: absolute;
+        top: 18mm; right: 22mm;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 11pt;
+        letter-spacing: 0.4em;
+        color: var(--gold);
+      }
+      .pc-center {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20mm 24mm;
+        text-align: center;
+      }
+      .pc-logo-wrap {
+        margin-bottom: 12mm;
+      }
+      .pc-logo {
+        max-width: 90mm;
+        height: auto;
+      }
+      .pc-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 32pt;
+        letter-spacing: 0.2em;
+        color: var(--ink);
+        font-weight: 500;
+        margin-bottom: 4mm;
+      }
+      .pc-divider {
+        width: 18mm; height: 1px;
+        background: var(--gold);
+        margin: 4mm auto 6mm;
+      }
+      .pc-sub {
+        font-family: 'Noto Serif JP', serif;
+        font-size: 12pt;
+        letter-spacing: 0.4em;
+        color: var(--ink-soft);
+      }
+      .pc-bottom {
+        position: absolute;
+        bottom: 22mm; left: 0; right: 0;
+        text-align: center;
+        padding: 0 24mm;
+      }
+      .pc-tagline {
+        font-family: 'Noto Serif JP', serif;
+        font-size: 11pt;
+        line-height: 1.9;
+        color: var(--ink);
+        letter-spacing: 0.1em;
+        margin-bottom: 8mm;
+      }
+      .pc-name {
+        font-family: 'Noto Serif JP', serif;
+        font-size: 13pt;
+        font-weight: 600;
+        letter-spacing: 0.25em;
+        color: var(--ink);
+        margin-bottom: 2mm;
+      }
+      .pc-name-en {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 10pt;
+        letter-spacing: 0.3em;
+        color: var(--gold);
+      }
+
+      /* hero（理念）— 横レイアウトで3つの想いを横並び */
       .hero {
         text-align: center;
-        padding-top: 50mm;
-      }
-      .hero::before {
-        top: 18mm; left: 18mm;
-      }
-      .hero-title { font-size: 22pt; margin-bottom: 14mm; }
-      .hero-eyebrow { font-size: 10pt; margin-bottom: 4mm; }
-      .hero-mission { margin-bottom: 10mm; }
-      .hero-mission .text { font-size: 13pt; line-height: 2; }
-      .hero-credo-bottom { margin-top: 12mm; font-size: 10pt; }
-
-      /* セクションヘッダー */
-      .sec-head {
-        margin-bottom: 14mm;
-        padding-bottom: 6mm;
-      }
-      .sec-num { font-size: 28pt; }
-      .sec-title { font-size: 18pt; }
-      .sec-eyebrow { font-size: 10pt; }
-
-      /* 代表挨拶 */
-      .message-block { gap: 18mm; }
-      .message-photo { max-width: 60mm; }
-      .message-body p { font-size: 11pt; line-height: 2; margin-bottom: 6mm; }
-
-      /* CREDO */
-      .credo-grid { gap: 8mm; }
-      .credo-card { padding: 10mm; }
-      .credo-card h4 { font-size: 14pt; }
-      .credo-card li { font-size: 11pt; padding: 4mm 0; }
-
-      /* 会社概要表 */
-      .profile-table { font-size: 10.5pt; }
-      .profile-table th { padding: 5mm 6mm; width: 40mm; font-size: 9.5pt; }
-      .profile-table td { padding: 5mm 6mm; }
-
-      /* 事業所カード — 2列 */
-      .office-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 6mm;
-      }
-      .office-card {
-        padding: 8mm;
-        page-break-inside: avoid;
-      }
-      .office-card .office-name { font-size: 12pt; }
-      .office-card .office-sub { font-size: 9pt; }
-      .office-row { font-size: 9.5pt; padding: 1.5mm 0; }
-      .office-row .lbl { min-width: 22mm; font-size: 8pt; }
-
-      /* 事業所一覧は2ページにまたいでもOK */
-      section.block:has(.office-grid) {
-        page-break-before: always;
-      }
-
-      /* DX推進事業 — ダーク背景は印刷 */
-      .cdw-banner {
-        background: #1f2933 !important;
-        color: #fff;
-        padding: 14mm;
-        margin-bottom: 6mm;
-      }
-      .cdw-banner .cdw-text { color: #d8dde4 !important; }
-      .cdw-title { font-size: 24pt; }
-      .cdw-text { font-size: 10pt; }
-      .product-grid { gap: 6mm; }
-      .product-card { padding: 8mm; }
-      .product-card h4 { font-size: 13pt; }
-      .product-card .pc-desc { font-size: 10pt; }
-
-      /* 沿革 */
-      .timeline { padding-left: 8mm; }
-      .timeline-item { padding-bottom: 5mm; page-break-inside: avoid; }
-      .timeline-date { font-size: 9.5pt; }
-      .timeline-text { font-size: 10pt; }
-
-      /* 関連事業・加入団体・お問い合わせを1ページに収める */
-      section.block:nth-of-type(7),
-      section.block:nth-of-type(8),
-      section.block:nth-of-type(9) {
-        page-break-before: avoid;
-        min-height: auto;
-        padding: 8mm 22mm;
-      }
-      /* ただし最初の1つ（関連事業）は新しいページで開始 */
-      section.block:nth-of-type(7) {
-        page-break-before: always;
         padding-top: 22mm;
       }
-      /* 最後（お問い合わせ）は下部余白を確保 */
-      section.block:nth-of-type(9) {
-        padding-bottom: 22mm;
+      .hero-eyebrow { font-size: 9.5pt; margin-bottom: 3mm; }
+      .hero-title { font-size: 20pt; margin-bottom: 14mm; }
+      .hero-mission {
+        display: inline-block;
+        width: 30%;
+        vertical-align: top;
+        margin: 0 1% 8mm;
+      }
+      .hero-mission .text { font-size: 11pt; line-height: 1.9; }
+      .hero-credo-bottom {
+        margin-top: 6mm;
+        font-size: 9.5pt;
+        max-width: 200mm;
+        margin-left: auto;
+        margin-right: auto;
       }
 
-      /* 関連事業/加入団体カード */
-      .related-grid { gap: 4mm; }
-      .related-item { padding: 6mm 8mm; font-size: 10pt; }
-      .related-item strong { font-size: 11pt; }
+      /* セクションヘッダー */
+      .sec-head { margin-bottom: 8mm; padding-bottom: 4mm; }
+      .sec-num { font-size: 26pt; }
+      .sec-title { font-size: 16pt; }
+      .sec-eyebrow { font-size: 9pt; }
+
+      /* 01 代表挨拶 — 写真左+メッセージ右の横レイアウト */
+      .message-block {
+        grid-template-columns: 70mm 1fr;
+        gap: 14mm;
+        align-items: center;
+      }
+      .message-photo { max-width: 70mm; }
+      .message-body p { font-size: 10.5pt; line-height: 1.9; margin-bottom: 4mm; }
+      .message-signature { margin-top: 8mm; padding-top: 4mm; }
+
+      /* 02 CREDO — 2カードを横並び */
+      .credo-grid { grid-template-columns: 1fr 1fr; gap: 10mm; }
+      .credo-card { padding: 10mm; }
+      .credo-card h4 { font-size: 13pt; }
+      .credo-card li { font-size: 10.5pt; padding: 3mm 0; }
+
+      /* 03 会社概要 */
+      .profile-table { font-size: 10pt; }
+      .profile-table th { padding: 4mm 6mm; width: 36mm; font-size: 9pt; }
+      .profile-table td { padding: 4mm 6mm; }
+
+      /* 04 事業所一覧 — 2x2グリッド */
+      .office-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 5mm;
+      }
+      .office-card { padding: 7mm 8mm; }
+      .office-card .office-name { font-size: 11.5pt; }
+      .office-card .office-sub { font-size: 8.5pt; padding-bottom: 5mm; }
+      .office-row { font-size: 9pt; padding: 1mm 0; }
+      .office-row .lbl { min-width: 18mm; font-size: 8pt; }
+
+      /* 05 DX推進事業 */
+      .cdw-banner {
+        background: #1f2933 !important;
+        color: #fff !important;
+        padding: 10mm 14mm;
+        margin-bottom: 5mm;
+      }
+      .cdw-banner .cdw-text { color: #d8dde4 !important; }
+      .cdw-eyebrow { font-size: 9pt; margin-bottom: 3mm; }
+      .cdw-title { font-size: 22pt; margin-bottom: 2mm; }
+      .cdw-jp { font-size: 10pt; margin-bottom: 5mm; }
+      .cdw-text { font-size: 9.5pt; line-height: 1.85; }
+      .product-grid { grid-template-columns: 1fr 1fr; gap: 6mm; }
+      .product-card { padding: 8mm; }
+      .product-card h4 { font-size: 12.5pt; margin-bottom: 6mm; }
+      .product-card .pc-desc { font-size: 9.5pt; line-height: 1.8; }
+
+      /* 06 沿革 — 2列タイムライン */
+      .timeline {
+        column-count: 2;
+        column-gap: 14mm;
+        column-fill: balance;
+        padding-left: 6mm;
+        border-left: none;
+      }
+      .timeline-item {
+        padding: 0 0 4mm;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      .timeline-item::before {
+        left: -10mm;
+      }
+      .timeline-date { font-size: 9pt; }
+      .timeline-text { font-size: 9.5pt; line-height: 1.6; }
+
+      /* 07 関連事業 */
+      .related-grid { grid-template-columns: 1fr 1fr; gap: 4mm; }
+      .related-item { padding: 5mm 7mm; font-size: 9.5pt; }
+      .related-item strong { font-size: 10.5pt; }
       .related-item .desc { font-size: 9pt; }
       .related-item .url-line { font-size: 8.5pt; }
 
-      /* お問い合わせ */
-      .contact-block { padding: 16mm 12mm; }
-      .contact-block .tel { font-size: 28pt; }
+      /* 08 加入団体 — 3カードを横並び */
+      section.block:nth-of-type(8) .related-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
 
-      /* QRコード（既存）— お問い合わせ内に表示 */
-      .print-qr-block { margin-top: 12mm; padding-top: 8mm; }
+      /* 09 お問い合わせ — 連絡先 + QR を1ページに */
+      .contact-block { padding: 12mm 14mm; }
+      .contact-block .tel { font-size: 24pt; }
+      .print-qr-block { margin-top: 8mm; padding-top: 6mm; }
+      .qr-grid { grid-template-columns: repeat(4, 1fr); gap: 6mm; }
+      .qr-item img { width: 70px; height: 70px; }
 
-      /* 印刷時にwebの装飾を抑える */
+      /* 影は除去 */
       .credo-card, .office-card, .product-card, .related-item {
         box-shadow: none;
       }
