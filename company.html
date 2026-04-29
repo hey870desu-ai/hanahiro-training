@@ -1092,21 +1092,21 @@
         color: var(--gold);
         margin-top: 1mm;
       }
-      /* タイトル横に表示するインラインQR */
+      /* タイトル横（カード右上）に絶対配置するQR */
+      .product-card { position: relative; }
       .pc-title-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 6mm;
-        margin-bottom: 6mm;
+        display: block;
+        padding-right: 22mm; /* QR分のスペース確保 */
+        margin-bottom: 5mm;
       }
       .pc-title-row h4 {
-        flex: 1;
         margin-bottom: 0;
       }
       .print-only-qr.inline {
-        margin-top: 0;
-        flex-shrink: 0;
+        position: absolute;
+        top: 7mm;
+        right: 7mm;
+        margin: 0;
         text-align: center;
       }
       .print-only-qr.inline img {
