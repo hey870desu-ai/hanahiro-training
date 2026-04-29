@@ -1071,11 +1071,49 @@
       .qr-grid { grid-template-columns: repeat(4, 1fr); gap: 6mm; }
       .qr-item img { width: 70px; height: 70px; }
 
+      /* 印刷時のみ表示するQR：プロダクト・関連事業 */
+      .print-only-qr {
+        display: block !important;
+        margin-top: 4mm;
+        text-align: right;
+      }
+      .print-only-qr img {
+        width: 22mm;
+        height: 22mm;
+        border: 1px solid var(--line);
+        padding: 1mm;
+        background: #fff;
+      }
+      .print-only-qr span {
+        display: block;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 7.5pt;
+        letter-spacing: 0.2em;
+        color: var(--gold);
+        margin-top: 1mm;
+      }
+      .product-card .print-only-qr {
+        text-align: right;
+      }
+      .print-only-qr.small {
+        text-align: center;
+        margin-top: 2mm;
+      }
+      .print-only-qr.small img {
+        width: 16mm;
+        height: 16mm;
+      }
+      /* 印刷時はrelated-itemのURL行を非表示にしてQRを使う */
+      .related-item .url-line { display: none !important; }
+
       /* 影は除去 */
       .credo-card, .office-card, .product-card, .related-item {
         box-shadow: none;
       }
     }
+
+    /* 通常表示時はQR画像を非表示 */
+    .print-only-qr { display: none; }
   </style>
 </head>
 <body>
@@ -1325,20 +1363,28 @@
       <div class="product-grid">
         <div class="product-card">
           <div class="pc-tag">PRODUCT 01</div>
-          <h4>絆太郎（ばんたろう）</h4>
+          <h4>勤怠管理システム 絆太郎<span style="font-size:10pt;color:var(--ink-mute);font-weight:400;margin-left:6px">（ばんたろう）</span></h4>
           <div class="pc-desc">
             介護事業所のための勤怠管理・シフト作成SaaS。AIが各スタッフの希望を考慮した最適なシフトを自動生成し、LINE連携で打刻や申請も完結。「人と向き合う時間を大切にしたい」現場の想いを技術で支えます。
           </div>
           <a href="https://kintai-saas-v1.vercel.app/lp.html" class="pc-link" target="_blank" rel="noopener">View Service &nbsp;&rarr;</a>
+          <div class="print-only-qr">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fkintai-saas-v1.vercel.app%2Flp.html" alt="QR 勤怠管理システム 絆太郎">
+            <span>カメラでスキャン</span>
+          </div>
         </div>
 
         <div class="product-card">
           <div class="pc-tag">PRODUCT 02</div>
-          <h4>福ひろばラーニング</h4>
+          <h4>福ひろばラーニング 絆太郎<span style="font-size:10pt;color:var(--ink-mute);font-weight:400;margin-left:6px">（ばんたろう）</span></h4>
           <div class="pc-desc">
             介護・障がい福祉事業所向けのeラーニングSaaS。法定研修から現場実務まで体系化されたカリキュラムを提供し、限られた時間で効率よく学べる環境を整えます。マルチテナント対応でテナントごとの運用が可能。
           </div>
           <a href="https://learning.hana-hiro.com/demo" class="pc-link" target="_blank" rel="noopener">View Service &nbsp;&rarr;</a>
+          <div class="print-only-qr">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Flearning.hana-hiro.com%2Fdemo" alt="QR 福ひろばラーニング 絆太郎">
+            <span>カメラでスキャン</span>
+          </div>
         </div>
       </div>
     </section>
@@ -1400,7 +1446,7 @@
         </div>
         <div class="timeline-item">
           <div class="timeline-date">2025.10 ／ 令和7年10月</div>
-          <div class="timeline-text">DX推進事業「CARE DESIGN WORKS」開始 ／ 自社プロダクト「絆太郎」「福ひろばラーニング」を提供</div>
+          <div class="timeline-text">DX推進事業「CARE DESIGN WORKS」開始 ／ 自社プロダクト「勤怠管理システム 絆太郎」「福ひろばラーニング 絆太郎」を提供</div>
         </div>
         <div class="timeline-item future">
           <div class="timeline-date">2026.06 ／ 令和8年6月</div>
@@ -1423,15 +1469,21 @@
           <strong>福ひろば in 郡山（介護版）</strong>
           <div class="desc">郡山市と協働で運営する介護福祉情報ポータルサイト</div>
           <div class="url-line">www.fukuhiroba.com</div>
+          <div class="print-only-qr small">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fwww.fukuhiroba.com%2F" alt="QR 福ひろば">
+          </div>
         </a>
         <a class="related-item" href="https://www.fukuhiroba.com/koriyama/fukushi/" target="_blank" rel="noopener">
           <strong>福ひろば 障がい福祉版</strong>
           <div class="desc">郡山市の障がい福祉サービス情報ポータルサイト</div>
           <div class="url-line">www.fukuhiroba.com/koriyama/fukushi/</div>
+          <div class="print-only-qr small">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fwww.fukuhiroba.com%2Fkoriyama%2Ffukushi%2F" alt="QR 福ひろば 障がい福祉版">
+          </div>
         </a>
         <div class="related-item">
-          <strong>みんなの掲示板</strong>
-          <div class="desc">介護福祉・障がい福祉に関わる方々の交流の場（福ひろば内）</div>
+          <strong>福ひろば 2.0</strong>
+          <div class="desc">介護福祉・障がい福祉に関わる方々の交流の場（バーチャル空間）</div>
         </div>
         <div class="related-item">
           <strong>re:Life Koriyama（リライフ郡山）</strong>
