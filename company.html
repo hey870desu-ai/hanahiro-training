@@ -791,7 +791,7 @@
         height: 210mm;
         box-sizing: border-box;
         margin: 0 !important;
-        padding: 16mm 22mm 18mm;
+        padding: 14mm 22mm 16mm;
         page-break-before: always;
         page-break-after: auto;
         page-break-inside: avoid;
@@ -807,45 +807,47 @@
       section.block::after {
         content: "HANAHIRO  CORPORATE PROFILE";
         position: absolute;
-        bottom: 8mm; left: 0; right: 0;
+        bottom: 6mm; left: 0; right: 0;
         text-align: center;
         font-family: 'Cormorant Garamond', serif;
-        font-size: 9pt;
+        font-size: 8.5pt;
         letter-spacing: 0.4em;
         color: var(--ink-mute);
       }
 
-      /* === 表紙 === */
+      /* === 表紙：縦flexで3段に整列 === */
       .print-cover {
         display: flex !important;
-        flex-direction: row;
-        align-items: stretch;
-        padding: 0;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 22mm 28mm 18mm;
         background: linear-gradient(135deg, #fff 0%, #fbf9f4 60%, #f4ead6 100%);
       }
-      .print-cover::before, .print-cover::after {
+      .print-cover::before {
         content: "";
         position: absolute;
+        top: 14mm; left: 14mm;
         width: 18mm; height: 18mm;
         border: 1px solid var(--gold);
-      }
-      .print-cover::before {
-        top: 14mm; left: 14mm;
         border-right: none; border-bottom: none;
       }
       .print-cover::after {
-        bottom: 14mm; right: 14mm;
-        border-left: none; border-top: none;
-        content: "";
-        background: none;
+        content: "HANAHIRO  CORPORATE PROFILE";
+        position: absolute;
+        bottom: 8mm; left: 0; right: 0;
+        text-align: center;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 8.5pt;
+        letter-spacing: 0.4em;
+        color: var(--ink-mute);
       }
       .pc-top {
-        position: absolute;
-        top: 18mm; right: 22mm;
         font-family: 'Cormorant Garamond', serif;
         font-size: 11pt;
         letter-spacing: 0.4em;
         color: var(--gold);
+        align-self: flex-end;
       }
       .pc-center {
         flex: 1;
@@ -853,14 +855,14 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 20mm 24mm;
         text-align: center;
+        margin: 6mm 0;
       }
       .pc-logo-wrap {
-        margin-bottom: 12mm;
+        margin-bottom: 14mm;
       }
       .pc-logo {
-        max-width: 90mm;
+        max-width: 95mm;
         height: auto;
       }
       .pc-title {
@@ -874,7 +876,7 @@
       .pc-divider {
         width: 18mm; height: 1px;
         background: var(--gold);
-        margin: 4mm auto 6mm;
+        margin: 4mm auto 5mm;
       }
       .pc-sub {
         font-family: 'Noto Serif JP', serif;
@@ -883,10 +885,8 @@
         color: var(--ink-soft);
       }
       .pc-bottom {
-        position: absolute;
-        bottom: 22mm; left: 0; right: 0;
         text-align: center;
-        padding: 0 24mm;
+        width: 100%;
       }
       .pc-tagline {
         font-family: 'Noto Serif JP', serif;
@@ -894,7 +894,7 @@
         line-height: 1.9;
         color: var(--ink);
         letter-spacing: 0.1em;
-        margin-bottom: 8mm;
+        margin-bottom: 6mm;
       }
       .pc-name {
         font-family: 'Noto Serif JP', serif;
@@ -911,10 +911,13 @@
         color: var(--gold);
       }
 
-      /* hero（理念）— 横レイアウトで3つの想いを横並び */
+      /* hero（理念）— 縦中央寄せ */
       .hero {
         text-align: center;
-        padding-top: 22mm;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 28mm 22mm 28mm;
       }
       .hero-eyebrow { font-size: 9.5pt; margin-bottom: 3mm; }
       .hero-title { font-size: 20pt; margin-bottom: 14mm; }
@@ -934,8 +937,8 @@
       }
 
       /* セクションヘッダー */
-      .sec-head { margin-bottom: 8mm; padding-bottom: 4mm; }
-      .sec-num { font-size: 26pt; }
+      .sec-head { margin-bottom: 7mm; padding-bottom: 4mm; }
+      .sec-num { font-size: 24pt; }
       .sec-title { font-size: 16pt; }
       .sec-eyebrow { font-size: 9pt; }
 
@@ -955,21 +958,21 @@
       .credo-card h4 { font-size: 13pt; }
       .credo-card li { font-size: 10.5pt; padding: 3mm 0; }
 
-      /* 03 会社概要 */
-      .profile-table { font-size: 10pt; }
-      .profile-table th { padding: 4mm 6mm; width: 36mm; font-size: 9pt; }
-      .profile-table td { padding: 4mm 6mm; }
+      /* 03 会社概要 — 詰めて1ページに収める */
+      .profile-table { font-size: 9.5pt; }
+      .profile-table th { padding: 2.8mm 5mm; width: 32mm; font-size: 8.5pt; }
+      .profile-table td { padding: 2.8mm 5mm; line-height: 1.55; }
 
-      /* 04 事業所一覧 — 2x2グリッド */
+      /* 04 事業所一覧 — 2x2グリッド・コンパクト */
       .office-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 5mm;
+        gap: 4mm;
       }
-      .office-card { padding: 7mm 8mm; }
-      .office-card .office-name { font-size: 11.5pt; }
-      .office-card .office-sub { font-size: 8.5pt; padding-bottom: 5mm; }
-      .office-row { font-size: 9pt; padding: 1mm 0; }
-      .office-row .lbl { min-width: 18mm; font-size: 8pt; }
+      .office-card { padding: 5.5mm 7mm; }
+      .office-card .office-name { font-size: 11pt; margin-bottom: 2mm; }
+      .office-card .office-sub { font-size: 8pt; margin-bottom: 4mm; padding-bottom: 3mm; }
+      .office-row { font-size: 8.5pt; padding: 0.8mm 0; }
+      .office-row .lbl { min-width: 16mm; font-size: 7.5pt; }
 
       /* 05 DX推進事業 */
       .cdw-banner {
@@ -1009,10 +1012,30 @@
 
       /* 07 関連事業 */
       .related-grid { grid-template-columns: 1fr 1fr; gap: 4mm; }
-      .related-item { padding: 5mm 7mm; font-size: 9.5pt; }
-      .related-item strong { font-size: 10.5pt; }
-      .related-item .desc { font-size: 9pt; }
-      .related-item .url-line { font-size: 8.5pt; }
+      .related-item { padding: 4mm 6mm; font-size: 9.5pt; }
+      .related-item strong { font-size: 10pt; margin-bottom: 2mm; }
+      .related-item .desc { font-size: 8.5pt; line-height: 1.6; }
+      .related-item .url-line { font-size: 8pt; margin-top: 3mm; }
+
+      /* 07 関連事業と08 加入団体を1ページに収める */
+      section.block:nth-of-type(7),
+      section.block:nth-of-type(8) {
+        height: auto;
+        min-height: auto;
+        padding: 8mm 22mm 6mm;
+      }
+      section.block:nth-of-type(7) {
+        page-break-before: always;
+        padding-top: 14mm;
+      }
+      section.block:nth-of-type(8) {
+        page-break-before: avoid;
+        padding-bottom: 18mm;
+      }
+      /* 7のセクションフッター（ページ中央のフッター）は非表示にして、8で表示する */
+      section.block:nth-of-type(7)::after {
+        display: none;
+      }
 
       /* 08 加入団体 — 3カードを横並び */
       section.block:nth-of-type(8) .related-grid {
