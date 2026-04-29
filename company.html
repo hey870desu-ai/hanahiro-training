@@ -108,6 +108,79 @@
       margin: 28px auto 0;
     }
 
+    /* 代表メッセージ */
+    .message-block {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    @media (max-width: 640px) {
+      .message-block {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        text-align: center;
+      }
+    }
+    .message-photo {
+      position: relative;
+    }
+    .message-photo img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center 28%;
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 24px rgba(31,41,51,0.08);
+    }
+    .message-photo::after {
+      content: "";
+      position: absolute;
+      bottom: -6px; right: -6px;
+      width: 30px; height: 30px;
+      border-right: 1px solid var(--gold);
+      border-bottom: 1px solid var(--gold);
+    }
+    .message-body p {
+      font-size: 14px;
+      line-height: 2.05;
+      color: var(--ink);
+      margin-bottom: 14px;
+      letter-spacing: 0.04em;
+    }
+    .message-body p:last-of-type { margin-bottom: 0; }
+    .message-signature {
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line-soft);
+      text-align: right;
+      font-family: 'Noto Serif JP', serif;
+    }
+    @media (max-width: 640px) {
+      .message-signature { text-align: center; }
+    }
+    .message-signature .role {
+      font-size: 11px;
+      color: var(--ink-mute);
+      letter-spacing: 0.2em;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .message-signature .name {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      color: var(--ink);
+    }
+    .message-signature .name-en {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      margin-left: 8px;
+    }
+
     /* フッターロゴ */
     .footer-logo {
       max-width: 280px;
@@ -738,10 +811,36 @@
       </div>
     </div>
 
-    <!-- 01 CREDO -->
+    <!-- 01 代表挨拶 -->
     <section class="block">
       <div class="sec-head">
         <div class="sec-num">01</div>
+        <div class="sec-title-block">
+          <div class="sec-eyebrow">President's Message</div>
+          <div class="sec-title">代表挨拶</div>
+        </div>
+      </div>
+
+      <div class="message-block">
+        <div class="message-photo">
+          <img src="photos/0C5A0358.JPG" alt="代表取締役 塙 啓之">
+        </div>
+        <div class="message-body">
+          <p>介護の仕事には、人とのふれあい、利用者さまの笑顔、感謝の言葉など、たくさんの魅力があります。その魅力を、まずは私たち自身が感じ、地域へ広げていく ─ そんな会社でありたいと考えています。</p>
+          <p>メンバー一人ひとりの可能性を信じ、たくさんの経験の場を提供する。「枠を取っ払え」を合言葉に、視野を狭めずに挑戦できる環境を整える。それが、はなひろの人づくりの基本です。</p>
+          <p>経営理念をブレずに伝え続け、心を一つにして、介護業界で日本一を目指せるチームをつくっていく。地域と共に育ち、関わるすべての人に感謝と感動を ─ その想いを、これからも積み重ねてまいります。</p>
+          <div class="message-signature">
+            <span class="role">REPRESENTATIVE DIRECTOR</span>
+            <span class="name">塙 啓之</span><span class="name-en">Hiroyuki Hanawa</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 CREDO -->
+    <section class="block">
+      <div class="sec-head">
+        <div class="sec-num">02</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Our Credo</div>
           <div class="sec-title">私たちの約束</div>
@@ -769,10 +868,10 @@
       </div>
     </section>
 
-    <!-- 02 会社概要 -->
+    <!-- 03 会社概要 -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">02</div>
+        <div class="sec-num">03</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Company Profile</div>
           <div class="sec-title">会社概要</div>
@@ -799,10 +898,10 @@
       </table>
     </section>
 
-    <!-- 03 事業所一覧 -->
+    <!-- 04 事業所一覧 -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">03</div>
+        <div class="sec-num">04</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Our Locations</div>
           <div class="sec-title">事業所一覧</div>
@@ -865,10 +964,10 @@
       </div>
     </section>
 
-    <!-- 04 CARE DESIGN WORKS -->
+    <!-- 05 CARE DESIGN WORKS -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">04</div>
+        <div class="sec-num">05</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">DX Division</div>
           <div class="sec-title">DX推進事業</div>
@@ -905,10 +1004,10 @@
       </div>
     </section>
 
-    <!-- 05 沿革 -->
+    <!-- 06 沿革 -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">05</div>
+        <div class="sec-num">06</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Our History</div>
           <div class="sec-title">沿革</div>
@@ -971,10 +1070,10 @@
       </div>
     </section>
 
-    <!-- 06 関連事業 -->
+    <!-- 07 関連事業 -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">06</div>
+        <div class="sec-num">07</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Related Services</div>
           <div class="sec-title">関連事業</div>
@@ -1002,10 +1101,10 @@
       </div>
     </section>
 
-    <!-- 07 お問い合わせ -->
+    <!-- 08 お問い合わせ -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">07</div>
+        <div class="sec-num">08</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Contact</div>
           <div class="sec-title">お問い合わせ</div>
