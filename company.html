@@ -1092,8 +1092,26 @@
         color: var(--gold);
         margin-top: 1mm;
       }
-      .product-card .print-only-qr {
-        text-align: right;
+      /* タイトル横に表示するインラインQR */
+      .pc-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 6mm;
+        margin-bottom: 6mm;
+      }
+      .pc-title-row h4 {
+        flex: 1;
+        margin-bottom: 0;
+      }
+      .print-only-qr.inline {
+        margin-top: 0;
+        flex-shrink: 0;
+        text-align: center;
+      }
+      .print-only-qr.inline img {
+        width: 22mm;
+        height: 22mm;
       }
       .print-only-qr.small {
         text-align: center;
@@ -1363,28 +1381,32 @@
       <div class="product-grid">
         <div class="product-card">
           <div class="pc-tag">PRODUCT 01</div>
-          <h4>勤怠管理システム 絆太郎<span style="font-size:10pt;color:var(--ink-mute);font-weight:400;margin-left:6px">（ばんたろう）</span></h4>
+          <div class="pc-title-row">
+            <h4>勤怠管理システム 絆太郎<span style="font-size:10pt;color:var(--ink-mute);font-weight:400;margin-left:6px">（ばんたろう）</span></h4>
+            <div class="print-only-qr inline">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fkintai-saas-v1.vercel.app%2Flp.html" alt="QR 勤怠管理システム 絆太郎">
+              <span>SCAN</span>
+            </div>
+          </div>
           <div class="pc-desc">
             介護事業所のための勤怠管理・シフト作成SaaS。AIが各スタッフの希望を考慮した最適なシフトを自動生成し、LINE連携で打刻や申請も完結。「人と向き合う時間を大切にしたい」現場の想いを技術で支えます。
           </div>
           <a href="https://kintai-saas-v1.vercel.app/lp.html" class="pc-link" target="_blank" rel="noopener">View Service &nbsp;&rarr;</a>
-          <div class="print-only-qr">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fkintai-saas-v1.vercel.app%2Flp.html" alt="QR 勤怠管理システム 絆太郎">
-            <span>カメラでスキャン</span>
-          </div>
         </div>
 
         <div class="product-card">
           <div class="pc-tag">PRODUCT 02</div>
-          <h4>福ひろばラーニング 絆太郎<span style="font-size:10pt;color:var(--ink-mute);font-weight:400;margin-left:6px">（ばんたろう）</span></h4>
+          <div class="pc-title-row">
+            <h4>福ひろばラーニング 絆太郎<span style="font-size:10pt;color:var(--ink-mute);font-weight:400;margin-left:6px">（ばんたろう）</span></h4>
+            <div class="print-only-qr inline">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Flearning.hana-hiro.com%2Fdemo" alt="QR 福ひろばラーニング 絆太郎">
+              <span>SCAN</span>
+            </div>
+          </div>
           <div class="pc-desc">
             介護・障がい福祉事業所向けのeラーニングSaaS。法定研修から現場実務まで体系化されたカリキュラムを提供し、限られた時間で効率よく学べる環境を整えます。マルチテナント対応でテナントごとの運用が可能。
           </div>
           <a href="https://learning.hana-hiro.com/demo" class="pc-link" target="_blank" rel="noopener">View Service &nbsp;&rarr;</a>
-          <div class="print-only-qr">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Flearning.hana-hiro.com%2Fdemo" alt="QR 福ひろばラーニング 絆太郎">
-            <span>カメラでスキャン</span>
-          </div>
         </div>
       </div>
     </section>
@@ -1481,10 +1503,14 @@
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fwww.fukuhiroba.com%2Fkoriyama%2Ffukushi%2F" alt="QR 福ひろば 障がい福祉版">
           </div>
         </a>
-        <div class="related-item">
+        <a class="related-item" href="https://www.fukuhiroba.com/fukuhiroba2.0/" target="_blank" rel="noopener">
           <strong>福ひろば 2.0</strong>
           <div class="desc">介護福祉・障がい福祉に関わる方々の交流の場（バーチャル空間）</div>
-        </div>
+          <div class="url-line">www.fukuhiroba.com/fukuhiroba2.0/</div>
+          <div class="print-only-qr small">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fwww.fukuhiroba.com%2Ffukuhiroba2.0%2F" alt="QR 福ひろば 2.0">
+          </div>
+        </a>
         <div class="related-item">
           <strong>re:Life Koriyama（リライフ郡山）</strong>
           <div class="desc">介護保険外の自費訪問リハビリ</div>
