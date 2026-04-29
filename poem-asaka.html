@@ -307,7 +307,18 @@
       font-weight: 600;
       color: var(--gold);
       letter-spacing: 0.1em;
+      margin-bottom: 2px;
+    }
+    .flow-time-pm {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px;
+      color: var(--ink-soft);
+      letter-spacing: 0.1em;
       margin-bottom: 4px;
+    }
+    .flow-time-pm::before {
+      content: "／ ";
+      color: var(--ink-mute);
     }
     .flow-label {
       font-family: 'Noto Serif JP', serif;
@@ -884,40 +895,49 @@
       </div>
 
       <div class="schedule">
-        <div style="text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:14px;letter-spacing:0.1em">＜ 午前の部のながれ ＞</div>
+        <div style="text-align:center;font-size:12px;color:var(--ink-soft);margin-bottom:14px;letter-spacing:0.1em">
+          <span style="color:var(--gold);font-weight:600">午前の部</span>　／　<span style="color:var(--ink-soft)">午後の部</span>
+        </div>
         <div class="timeline-flow">
           <div class="flow-step">
             <div class="flow-time">9:00</div>
+            <div class="flow-time-pm">13:25</div>
             <div class="flow-label">送迎・受付</div>
             <div class="flow-desc">ご自宅までお迎え</div>
           </div>
           <div class="flow-step">
             <div class="flow-time">9:10</div>
+            <div class="flow-time-pm">13:35</div>
             <div class="flow-label">バイタルチェック</div>
             <div class="flow-desc">血圧・体調確認</div>
           </div>
           <div class="flow-step">
             <div class="flow-time">9:15</div>
+            <div class="flow-time-pm">13:40</div>
             <div class="flow-label">PT監修体操</div>
             <div class="flow-desc">準備運動・全身ストレッチ</div>
           </div>
           <div class="flow-step">
             <div class="flow-time">9:30</div>
+            <div class="flow-time-pm">13:55</div>
             <div class="flow-label">マシン<br>トレーニング</div>
             <div class="flow-desc">個別メニュー実施</div>
           </div>
           <div class="flow-step">
             <div class="flow-time">10:30</div>
+            <div class="flow-time-pm">14:55</div>
             <div class="flow-label">脳トレ・<br>個別ケア</div>
             <div class="flow-desc">楽しいクイズ・休憩</div>
           </div>
           <div class="flow-step">
             <div class="flow-time">11:30</div>
+            <div class="flow-time-pm">15:55</div>
             <div class="flow-label">クールダウン</div>
             <div class="flow-desc">整理運動・水分補給</div>
           </div>
           <div class="flow-step">
             <div class="flow-time">12:05</div>
+            <div class="flow-time-pm">16:30</div>
             <div class="flow-label">送迎</div>
             <div class="flow-desc">ご自宅までお送り</div>
           </div>
