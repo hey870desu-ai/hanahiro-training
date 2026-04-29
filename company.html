@@ -124,15 +124,24 @@
     }
     .message-photo {
       position: relative;
-    }
-    .message-photo img {
       width: 100%;
       aspect-ratio: 1 / 1;
+    }
+    .message-photo-frame {
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
-      object-fit: cover;
-      object-position: center 28%;
+      overflow: hidden;
       border: 1px solid var(--line);
       box-shadow: 0 8px 24px rgba(31,41,51,0.08);
+    }
+    .message-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      transform: scale(1.55);
+      transform-origin: center 30%;
     }
     .message-photo::after {
       content: "";
@@ -141,6 +150,7 @@
       width: 30px; height: 30px;
       border-right: 1px solid var(--gold);
       border-bottom: 1px solid var(--gold);
+      z-index: 1;
     }
     .message-body p {
       font-size: 14px;
@@ -823,7 +833,9 @@
 
       <div class="message-block">
         <div class="message-photo">
-          <img src="photos/0C5A0358.JPG" alt="代表取締役 塙 啓之">
+          <div class="message-photo-frame">
+            <img src="photos/0C5A0358.JPG" alt="代表取締役 塙 啓之">
+          </div>
         </div>
         <div class="message-body">
           <p>介護の仕事には、人とのふれあい、利用者さまの笑顔、感謝の言葉など、たくさんの魅力があります。その魅力を、まずは私たち自身が感じ、地域へ広げていく ─ そんな会社でありたいと考えています。</p>
