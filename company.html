@@ -606,36 +606,82 @@
     /* フッター */
     .doc-footer {
       text-align: center;
-      margin-top: 80px;
-      padding: 32px 0;
+      margin-top: 64px;
+      padding: 24px 0 0;
       border-top: 1px solid var(--line);
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 12px;
-      color: var(--ink-mute);
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-    }
-    .doc-footer .copyright {
-      margin-top: 6px;
       font-family: 'Noto Sans JP', sans-serif;
-      letter-spacing: 0.06em;
       font-size: 11px;
+      color: var(--ink-mute);
+      letter-spacing: 0.1em;
+    }
+
+    /* QRコード（印刷時のみ表示） */
+    .print-qr-block { display: none; }
+    @media print {
+      .print-qr-block {
+        display: block;
+        margin-top: 28px;
+        padding-top: 24px;
+        border-top: 1px solid var(--line);
+      }
+      .qr-eyebrow {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 11px;
+        letter-spacing: 0.4em;
+        color: var(--gold);
+        margin-bottom: 14px;
+        text-transform: uppercase;
+      }
+      .qr-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .qr-item {
+        text-align: center;
+      }
+      .qr-item img {
+        width: 90px; height: 90px;
+        border: 1px solid var(--line);
+        padding: 4px;
+        background: #fff;
+      }
+      .qr-label {
+        font-family: 'Noto Sans JP', sans-serif;
+        font-size: 9px;
+        color: var(--ink);
+        margin-top: 6px;
+        line-height: 1.4;
+      }
+      .qr-label span {
+        color: var(--ink-soft);
+        font-size: 8.5px;
+      }
     }
 
     /* 印刷 */
+    @page {
+      size: A4;
+      margin: 12mm 14mm;
+    }
     @media print {
-      body { background: #fff; padding: 0; font-size: 11pt; }
+      body { background: #fff; padding: 0; font-size: 10.5pt; }
       .topbar { display: none; }
-      .container { padding: 24px; max-width: 100%; }
+      .container { padding: 0; max-width: 100%; }
       section.block, .hero, .cdw-banner, .credo-card, .office-card, .product-card, .related-item, .contact-block {
         box-shadow: none;
         page-break-inside: avoid;
       }
-      .hero { padding: 30px; }
-      .cdw-banner { background: #1f2933 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .brand-block { padding-bottom: 24px; }
+      .brand-block .doc-title { font-size: 28px; }
+      .hero { padding: 24px; }
+      .cdw-banner { background: #1f2933 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; color-adjust: exact; }
+      .cdw-banner .cdw-text { color: #d8dde4 !important; }
       .timeline-item { page-break-inside: avoid; }
       a { color: inherit; text-decoration: none; }
       .pc-link { display: none; }
+      a.related-item::after { display: none; }
+      .doc-footer { border-top: 1px solid var(--line); margin-top: 32px; padding-top: 12px; }
     }
   </style>
 </head>
@@ -805,7 +851,7 @@
           <div class="office-name">poem de riha 安積店<span class="badge-upcoming">2026.06 OPEN</span></div>
           <div class="office-sub">リハビリ専門デイサービス（ポエム開成と同形態）</div>
           <div class="office-row"><span class="lbl">Address</span><span class="val">郡山市安積町笹川字四角担3-1</span></div>
-          <div class="office-row"><span class="lbl">Tel</span><span class="val">090-7068-5817（本部電話開設までの暫定）</span></div>
+          <div class="office-row"><span class="lbl">Tel</span><span class="val">080-2848-2881（担当：豊嶋）</span></div>
           <div class="office-row"><span class="lbl">Mail</span><span class="val">toyoshima@hana-hiro.com</span></div>
         </div>
 
@@ -960,21 +1006,42 @@
       </div>
 
       <div class="contact-block">
-        <div class="contact-eyebrow">REPRESENTATIVE</div>
-        <div class="tel">024-973-8701</div>
+        <div class="contact-eyebrow">REPRESENTATIVE DIRECT</div>
+        <div class="tel">090-7068-5817</div>
         <div class="mail-line">
           <a href="mailto:info@hana-hiro.com">info@hana-hiro.com</a>
         </div>
         <div class="addr">
-          〒962-0015 福島県須賀川市日向町22 サンディアスB102号室<br>
-          受付時間 ｜ 平日 9:00 〜 17:00
+          〒962-0015 福島県須賀川市日向町22 サンディアスB102号室
+        </div>
+
+        <!-- 印刷時のみ表示するInstagram QRコード -->
+        <div class="print-qr-block">
+          <div class="qr-eyebrow">FOLLOW US ON INSTAGRAM</div>
+          <div class="qr-grid">
+            <div class="qr-item">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fwww.instagram.com%2Fhanahiro_com%2F" alt="@hanahiro_com">
+              <div class="qr-label">@hanahiro_com<br><span>株式会社はなひろ</span></div>
+            </div>
+            <div class="qr-item">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fwww.instagram.com%2Fpoem02gasho%2F" alt="@poem02gasho">
+              <div class="qr-label">@poem02gasho<br><span>ポエム郡山賀庄</span></div>
+            </div>
+            <div class="qr-item">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fwww.instagram.com%2Fpoem_kaisei%2F" alt="@poem_kaisei">
+              <div class="qr-label">@poem_kaisei<br><span>ポエム開成</span></div>
+            </div>
+            <div class="qr-item">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fwww.instagram.com%2Ftateyama_day%2F" alt="@tateyama_day">
+              <div class="qr-label">@tateyama_day<br><span>舘山荘</span></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <div class="doc-footer">
-      HANAHIRO &nbsp;&middot;&nbsp; CORPORATE PROFILE
-      <div class="copyright">&copy; 株式会社はなひろ</div>
+      &copy; 株式会社はなひろ
     </div>
 
   </div>
