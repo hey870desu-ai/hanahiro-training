@@ -911,29 +911,32 @@
         color: var(--gold);
       }
 
-      /* hero（理念）— 縦中央寄せ */
+      /* hero（理念）— 中央寄せ・3つの想いを横並び */
       .hero {
         text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 28mm 22mm 28mm;
+        padding: 32mm 22mm 26mm;
+        display: block;
       }
-      .hero-eyebrow { font-size: 9.5pt; margin-bottom: 3mm; }
-      .hero-title { font-size: 20pt; margin-bottom: 14mm; }
+      .hero-eyebrow { font-size: 9.5pt; margin-bottom: 3mm; display: block; }
+      .hero-title { font-size: 20pt; margin-bottom: 16mm; display: block; }
       .hero-mission {
         display: inline-block;
         width: 30%;
         vertical-align: top;
-        margin: 0 1% 8mm;
+        margin: 0 1% 6mm;
+        text-align: center;
       }
+      .hero-mission .ml { font-size: 9pt; margin-bottom: 4mm; }
+      .hero-mission .mj { font-size: 11pt; margin-bottom: 5mm; }
       .hero-mission .text { font-size: 11pt; line-height: 1.9; }
       .hero-credo-bottom {
-        margin-top: 6mm;
+        display: block;
+        margin: 8mm auto 0;
+        padding-top: 8mm;
+        border-top: 1px solid var(--line-soft);
         font-size: 9.5pt;
         max-width: 200mm;
-        margin-left: auto;
-        margin-right: auto;
+        text-align: center;
       }
 
       /* セクションヘッダー */
@@ -966,13 +969,18 @@
       /* 04 事業所一覧 — 2x2グリッド・コンパクト */
       .office-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 4mm;
+        gap: 3mm;
       }
-      .office-card { padding: 5.5mm 7mm; }
-      .office-card .office-name { font-size: 11pt; margin-bottom: 2mm; }
-      .office-card .office-sub { font-size: 8pt; margin-bottom: 4mm; padding-bottom: 3mm; }
-      .office-row { font-size: 8.5pt; padding: 0.8mm 0; }
-      .office-row .lbl { min-width: 16mm; font-size: 7.5pt; }
+      .office-card { padding: 4.5mm 6mm; }
+      .office-card .office-name { font-size: 10.5pt; margin-bottom: 1.5mm; }
+      .office-card .office-sub { font-size: 7.5pt; margin-bottom: 3mm; padding-bottom: 2.5mm; }
+      .office-row { font-size: 8pt; padding: 0.6mm 0; line-height: 1.55; }
+      .office-row .lbl { min-width: 14mm; font-size: 7pt; }
+      .office-card .office-name .badge-upcoming {
+        font-size: 9pt;
+        padding: 1.5mm 4mm;
+        margin-left: 4mm;
+      }
 
       /* 05 DX推進事業 */
       .cdw-banner {
@@ -1020,26 +1028,40 @@
       /* 07 関連事業と08 加入団体を1ページに収める */
       section.block:nth-of-type(7),
       section.block:nth-of-type(8) {
-        height: auto;
-        min-height: auto;
-        padding: 8mm 22mm 6mm;
+        height: auto !important;
+        min-height: 0 !important;
+        page-break-inside: auto;
       }
       section.block:nth-of-type(7) {
         page-break-before: always;
-        padding-top: 14mm;
+        padding: 14mm 22mm 4mm;
       }
       section.block:nth-of-type(8) {
         page-break-before: avoid;
-        padding-bottom: 18mm;
+        padding: 4mm 22mm 16mm;
       }
-      /* 7のセクションフッター（ページ中央のフッター）は非表示にして、8で表示する */
-      section.block:nth-of-type(7)::after {
-        display: none;
+      /* 7のセクションフッターは非表示、8側のみ表示 */
+      section.block:nth-of-type(7)::after { display: none !important; }
+      section.block:nth-of-type(8)::after {
+        position: static;
+        display: block;
+        margin-top: 8mm;
+        padding-top: 4mm;
       }
 
-      /* 08 加入団体 — 3カードを横並び */
+      /* 07 関連事業 — 4列でコンパクトに */
+      section.block:nth-of-type(7) .related-grid {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+      /* 08 加入団体 — 3列 */
       section.block:nth-of-type(8) .related-grid {
         grid-template-columns: 1fr 1fr 1fr;
+      }
+      /* 7と8のセクションヘッダーをコンパクトに */
+      section.block:nth-of-type(7) .sec-head,
+      section.block:nth-of-type(8) .sec-head {
+        margin-bottom: 5mm;
+        padding-bottom: 3mm;
       }
 
       /* 09 お問い合わせ — 連絡先 + QR を1ページに */
