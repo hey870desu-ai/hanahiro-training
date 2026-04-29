@@ -449,6 +449,33 @@
       border: 0;
     }
     .access-map-print { display: none; }
+
+    .sougei-area-map {
+      margin-top: 22px;
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 24px;
+    }
+    .sougei-area-map h4 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 14px;
+      letter-spacing: 0.04em;
+    }
+    .sougei-area-map img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--line);
+    }
+    .sougei-area-map p {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--ink-soft);
+      line-height: 1.7;
+    }
     .access-info h4 {
       font-family: 'Noto Serif JP', serif;
       font-size: 16px;
@@ -716,20 +743,30 @@
 
       /* アクセス */
       .access-grid { grid-template-columns: 1fr 1fr; gap: 8mm; }
-      .access-info { padding: 10mm; }
-      .access-info h4 { font-size: 12pt; }
-      .access-info p { font-size: 10pt; }
+      .access-info { padding: 8mm; }
+      .access-info h4 { font-size: 11pt; margin-bottom: 4mm; }
+      .access-info p { font-size: 10pt; line-height: 1.7; }
       .access-map { display: none !important; }
-      .access-map-print {
-        display: block !important;
-        margin-top: 8mm;
-        padding: 10mm 14mm;
-        background: #fff;
-        border: 1px solid var(--line);
+      .access-map-print { display: none !important; }
+      .sougei-area-map {
+        margin-top: 6mm;
+        padding: 6mm 8mm 5mm;
       }
-      .access-map-print img {
-        width: 32mm !important;
-        height: 32mm !important;
+      .sougei-area-map h4 {
+        font-size: 11pt;
+        margin-bottom: 4mm;
+      }
+      .sougei-area-map img {
+        max-height: 105mm;
+        width: auto;
+        max-width: 100%;
+        margin: 0 auto;
+        display: block;
+      }
+      .sougei-area-map p {
+        font-size: 8pt;
+        margin-top: 3mm;
+        text-align: center;
       }
 
       /* お問い合わせ */
@@ -1088,6 +1125,13 @@
       <div class="access-map">
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3171.7050828152483!2d140.36211223886934!3d37.349490180565745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60206b26b8e3a1c3%3A0xe020f6ded81afc58!2z44CSOTYzLTAxMDIg56aP5bO255yM6YOh5bGx5biC5a6J56mN55S656y55bed5Zub6KeS5Z2m77yT4oiS77yR!5e0!3m2!1sja!2sjp!4v1777480647477!5m2!1sja!2sjp" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="poem de riha 安積店 地図"></iframe>
       </div>
+
+      <div class="sougei-area-map">
+        <h4>🚐 送迎エリアマップ</h4>
+        <img src="photos/sougei-area.png" alt="送迎エリアマップ：郡山市・須賀川市を中心に車で約20分圏内">
+        <p>※ 車での送迎時間の目安です。エリア外でもお気軽にご相談ください。地図データ © OpenStreetMap contributors</p>
+      </div>
+
       <div class="access-map-print">
         <div style="display:flex;align-items:center;justify-content:center;gap:8mm">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fmaps.google.com%2F%3Fq%3D37.349490%2C140.362112" alt="QR 地図">
