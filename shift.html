@@ -146,6 +146,21 @@
     }
     .unit-tab:hover { color: var(--ink); }
     .unit-tab.active { background: var(--gold); color: #fff; border-color: var(--gold); }
+    .unit-tab-del {
+      background: transparent; border: none; color: var(--ink-mute);
+      font-size: 14px; padding: 0 4px; cursor: pointer;
+      align-self: center; margin-left: -14px; margin-right: 4px;
+      bottom: -2px; position: relative;
+    }
+    .unit-tab-del:hover { color: #c0392b; }
+    .unit-tab-add {
+      background: #fff; border: 1px dashed var(--line); border-bottom: none;
+      padding: 9px 14px; font-family: 'Noto Serif JP', serif;
+      font-size: 12px; font-weight: 600; color: var(--ink-mute);
+      cursor: pointer; border-radius: 8px 8px 0 0;
+      position: relative; bottom: -2px; margin-left: 4px;
+    }
+    .unit-tab-add:hover { color: var(--gold); border-color: var(--gold); }
 
     /* 月選択 */
     .month-selector {
@@ -643,7 +658,7 @@ const FACILITIES = [
       businessDays: '月〜金（祝日も営業）／ 休：土日・年末年始',
       capacity: 18,
     },
-    units: ['午前の部', '午後の部'],
+    units: ['1単位目', '2単位目'],
   },
   {
     id: 'kasho',
@@ -656,7 +671,7 @@ const FACILITIES = [
       businessDays: '',
       capacity: 10,
     },
-    units: ['1日'],
+    units: ['1単位目'],
   },
   {
     id: 'kaisei',
@@ -669,7 +684,7 @@ const FACILITIES = [
       businessDays: '月〜土（祝日も営業）',
       capacity: 18,
     },
-    units: ['午前の部', '午後の部'],
+    units: ['1単位目', '2単位目'],
   },
   {
     id: 'tateyama',
@@ -682,7 +697,7 @@ const FACILITIES = [
       businessDays: '',
       capacity: 18,
     },
-    units: ['1日'],
+    units: ['1単位目'],
   },
 ];
 
@@ -841,6 +856,30 @@ async function subscribeFacility(facilityId) {
           }
         }
       } catch (e) { console.warn('migrate employmentType', e); }
+      // 旧単位名（午前の部 / 午後の部 / 1日）→ N単位目 にマイグレーション
+      try {
+        if (Array.isArray(data.units) && data.data) {
+          const renameMap = {};
+          const newUnits = data.units.map((u, i) => {
+            if (/^\d+単位目$/.test(u)) return u;
+            const newName = `${i + 1}単位目`;
+            renameMap[u] = newName;
+            return newName;
+          });
+          if (Object.keys(renameMap).length > 0) {
+            const newData = {};
+            data.units.forEach((u, i) => {
+              const newName = newUnits[i];
+              newData[newName] = data.data[u];
+            });
+            data.units = newUnits;
+            data.data = newData;
+            if (data.currentUnit && renameMap[data.currentUnit]) {
+              data.currentUnit = renameMap[data.currentUnit];
+            }
+          }
+        }
+      } catch (e) { console.warn('migrate unit names', e); }
       // 反映
       state.facilities[facilityId] = data;
       if (state.currentFacility === facilityId) {
@@ -897,11 +936,14 @@ async function tryMigrateLegacy() {
       asakaData = {
         info: FACILITIES.find(f => f.id === 'asaka').info,
         patterns: obj.patterns || JSON.parse(JSON.stringify(DEFAULT_PATTERNS)),
-        units: ['午前の部', '午後の部'],
-        currentUnit: obj.currentUnit || '午前の部',
+        units: ['1単位目', '2単位目'],
+        currentUnit: '1単位目',
         year: obj.year || 2026,
         month: obj.month || 6,
-        data: obj.units,
+        data: {
+          '1単位目': obj.units['午前の部'] || { staff: [], schedule: {} },
+          '2単位目': obj.units['午後の部'] || { staff: [], schedule: {} },
+        },
         updatedAt: 0,
       };
     } else if (obj.staff) {
@@ -910,7 +952,7 @@ async function tryMigrateLegacy() {
       asakaData.patterns = obj.patterns || asakaData.patterns;
       asakaData.year = obj.year || asakaData.year;
       asakaData.month = obj.month || asakaData.month;
-      asakaData.data['午前の部'] = { staff: obj.staff, schedule: obj.schedule || {} };
+      asakaData.data['1単位目'] = { staff: obj.staff, schedule: obj.schedule || {} };
     }
     if (!hasData) return false;
 
@@ -1001,23 +1043,69 @@ function renderUnitTabs() {
   const f = curFacility();
   const wrap = document.getElementById('unit-tabs');
   wrap.innerHTML = '';
-  if (f.units.length === 1) {
-    wrap.style.display = 'none';
-    return;
-  }
   wrap.style.display = 'flex';
-  f.units.forEach(u => {
+  f.units.forEach((u, idx) => {
     const btn = document.createElement('button');
     btn.className = 'unit-tab' + (u === f.currentUnit ? ' active' : '');
-    btn.textContent = (u.includes('午前') ? '🌅 ' : u.includes('午後') ? '🌆 ' : '') + u;
+    btn.textContent = u;
     btn.onclick = () => switchUnit(u);
     wrap.appendChild(btn);
+    // 削除ボタン（中身が空の単位のみ可）
+    if (f.units.length > 1) {
+      const del = document.createElement('button');
+      del.className = 'unit-tab-del';
+      del.textContent = '×';
+      del.title = `${u} を削除（中身が空の場合のみ）`;
+      del.onclick = (e) => { e.stopPropagation(); removeUnit(u); };
+      wrap.appendChild(del);
+    }
   });
+  // 単位追加ボタン（最大3まで）
+  if (f.units.length < 3) {
+    const add = document.createElement('button');
+    add.className = 'unit-tab-add';
+    add.textContent = '＋ 単位を追加';
+    add.title = '事業所全体のサービス提供単位を増やす';
+    add.onclick = addUnit;
+    wrap.appendChild(add);
+  }
   const note = document.createElement('span');
   note.style.cssText = 'margin-left:auto;font-size:12px;color:var(--ink-mute)';
   note.textContent = '※ 単位ごとに職員と勤務予定を独立管理';
   wrap.appendChild(note);
 }
+
+window.addUnit = function() {
+  const f = curFacility();
+  if (f.units.length >= 3) return;
+  const next = `${f.units.length + 1}単位目`;
+  if (f.units.includes(next)) return;
+  f.units.push(next);
+  f.data[next] = { staff: JSON.parse(JSON.stringify(DEFAULT_STAFF)), schedule: {} };
+  f.currentUnit = next;
+  scheduleSave();
+  renderAll();
+};
+
+window.removeUnit = function(unit) {
+  const f = curFacility();
+  if (f.units.length <= 1) { alert('単位は1つ以上必要です'); return; }
+  const ud = f.data[unit];
+  const hasStaff = ud && ud.staff && ud.staff.some(s => s.name || s.jobTitle !== '管理者' && s.jobTitle);
+  const hasSchedule = ud && ud.schedule && Object.keys(ud.schedule).length > 0
+    && Object.values(ud.schedule).some(monthData =>
+      Object.values(monthData).some(staffData =>
+        Object.values(staffData).some(v => v && v !== '')
+      )
+    );
+  if (hasSchedule) { alert(`${unit} にシフト入力があるため削除できません`); return; }
+  if (!confirm(`${unit} を削除しますか？（職員一覧も削除されます）`)) return;
+  f.units = f.units.filter(u => u !== unit);
+  delete f.data[unit];
+  if (f.currentUnit === unit) f.currentUnit = f.units[0];
+  scheduleSave();
+  renderAll();
+};
 
 function switchFacility(fid) {
   state.currentFacility = fid;
@@ -1727,21 +1815,24 @@ window.importJson = function(event) {
         state.facilities['asaka'] = {
           info: FACILITIES.find(f => f.id === 'asaka').info,
           patterns: obj.patterns || JSON.parse(JSON.stringify(DEFAULT_PATTERNS)),
-          units: ['午前の部', '午後の部'],
-          currentUnit: obj.currentUnit || '午前の部',
+          units: ['1単位目', '2単位目'],
+          currentUnit: '1単位目',
           year: obj.year || 2026,
           month: obj.month || 6,
-          data: obj.units,
+          data: {
+            '1単位目': obj.units['午前の部'] || { staff: [], schedule: {} },
+            '2単位目': obj.units['午後の部'] || { staff: [], schedule: {} },
+          },
           updatedAt: 0,
         };
         await saveFacility('asaka');
       } else if (obj.staff) {
-        // 最古形式（staff/schedule直下）→ 安積店の午前の部に取り込み
+        // 最古形式（staff/schedule直下）→ 安積店の1単位目に取り込み
         const fdata = makeDefaultFacilityState(FACILITIES.find(f => f.id === 'asaka'));
         fdata.patterns = obj.patterns || fdata.patterns;
         fdata.year = obj.year || fdata.year;
         fdata.month = obj.month || fdata.month;
-        fdata.data['午前の部'] = { staff: obj.staff, schedule: obj.schedule || {} };
+        fdata.data['1単位目'] = { staff: obj.staff, schedule: obj.schedule || {} };
         state.facilities['asaka'] = fdata;
         await saveFacility('asaka');
       } else {
