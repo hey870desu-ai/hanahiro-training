@@ -32,14 +32,17 @@ FACILITIES = [
         'slug': 'asaka',
         'lat': 37.349490, 'lng': 140.362112,
         'labels': [
-            ('郡山市', 37.4003, 140.3596, 'big'),
+            ('郡山駅', 37.3963, 140.3873, 'big'),
             ('須賀川市', 37.2868, 140.3727, 'big'),
             ('安積町', 37.3505, 140.3613, 'med'),
             ('富田町', 37.3782, 140.3257, 'med'),
             ('大槻町', 37.3772, 140.3027, 'med'),
+            ('安積永盛', 37.3325, 140.3717, 'med'),
+            ('田村町', 37.3500, 140.4350, 'med'),
             ('日和田町', 37.4490, 140.3837, 'small'),
             ('長沼', 37.3300, 140.2300, 'small'),
-            ('安積永盛', 37.3325, 140.3717, 'small'),
+            ('喜久田町', 37.4250, 140.2937, 'small'),
+            ('阿久津', 37.3580, 140.3870, 'small'),
         ],
     },
     {
@@ -47,13 +50,15 @@ FACILITIES = [
         'slug': 'kasho',
         'lat': 37.371613, 'lng': 140.368108,
         'labels': [
-            ('郡山市', 37.4003, 140.3596, 'big'),
-            ('賀庄', 37.371613, 140.368108, 'med'),
+            ('郡山駅', 37.3963, 140.3873, 'big'),
             ('安積町', 37.3505, 140.3613, 'med'),
             ('富田町', 37.3782, 140.3257, 'med'),
+            ('富久山町', 37.4115, 140.3870, 'med'),
             ('日和田町', 37.4490, 140.3837, 'med'),
-            ('喜久田町', 37.4250, 140.2937, 'small'),
+            ('喜久田町', 37.4250, 140.2937, 'med'),
+            ('田村町', 37.3500, 140.4350, 'med'),
             ('大槻町', 37.3772, 140.3027, 'small'),
+            ('安積永盛', 37.3325, 140.3717, 'small'),
         ],
     },
     {
@@ -61,14 +66,15 @@ FACILITIES = [
         'slug': 'kaisei',
         'lat': 37.393652, 'lng': 140.345112,
         'labels': [
-            ('郡山市', 37.4003, 140.3596, 'big'),
-            ('台新', 37.393652, 140.345112, 'med'),
-            ('開成', 37.398, 140.343, 'med'),
+            ('郡山駅', 37.3963, 140.3873, 'big'),
+            ('開成山公園', 37.4015, 140.3590, 'med'),
             ('富田町', 37.3782, 140.3257, 'med'),
+            ('喜久田町', 37.4250, 140.2937, 'med'),
+            ('日和田町', 37.4490, 140.3837, 'med'),
             ('大槻町', 37.3772, 140.3027, 'med'),
-            ('喜久田町', 37.4250, 140.2937, 'small'),
-            ('日和田町', 37.4490, 140.3837, 'small'),
-            ('安積町', 37.3505, 140.3613, 'small'),
+            ('安積町', 37.3505, 140.3613, 'med'),
+            ('富久山町', 37.4115, 140.3870, 'small'),
+            ('田村町', 37.3700, 140.4250, 'small'),
         ],
     },
     {
@@ -76,11 +82,13 @@ FACILITIES = [
         'slug': 'tateyama',
         'lat': 36.875226, 'lng': 140.428018,
         'labels': [
-            ('矢祭町', 36.875, 140.428, 'big'),
-            ('塙町', 36.951, 140.460, 'big'),
-            ('棚倉町', 37.029, 140.376, 'big'),
-            ('東舘', 36.875, 140.428, 'small'),
-            ('大子町', 36.768, 140.358, 'med'),
+            ('矢祭町中心部', 36.876, 140.392, 'big'),
+            ('塙町', 36.951, 140.413, 'big'),
+            ('大子町', 36.768, 140.358, 'big'),
+            ('東舘', 36.875, 140.428, 'med'),
+            ('内川', 36.910, 140.420, 'small'),
+            ('関岡', 36.840, 140.420, 'small'),
+            ('下関河内', 36.860, 140.470, 'small'),
         ],
     },
 ]
@@ -147,11 +155,7 @@ def render_facility(fac, output_dir, zoom=12, w=1400, h=900):
         coords = f['geometry']['coordinates'][0]
         m.add_polygon(Polygon(coords, '#b8883560', '#a87827', simplify=False))
 
-    # 中心マーカー
-    m.add_marker(CircleMarker((fac['lng'], fac['lat']), '#1f2933', 30))
-    m.add_marker(CircleMarker((fac['lng'], fac['lat']), '#fff', 24))
-    m.add_marker(CircleMarker((fac['lng'], fac['lat']), '#b88835', 14))
-
+    # 中心マーカーは後でPILで📍ピンとして描画する
     img = m.render(zoom=zoom).convert('RGB')
     draw = ImageDraw.Draw(img)
 
@@ -180,14 +184,31 @@ def render_facility(fac, output_dir, zoom=12, w=1400, h=900):
         draw = ImageDraw.Draw(img)
         draw.text((x - bw // 2, y - bh // 2 - 3), name, fill=color, font=f)
 
-    # 中心の施設名ラベル
+    # 中心の📍ピン（PILで描画）
     cx, cy = w // 2, h // 2
+    pin_size = 56
+    # ティアドロップ型のピン（楕円＋三角）
+    pin_top = cy - pin_size
+    # ピン外側（ダーク）
+    draw.ellipse([cx - pin_size // 2 - 2, pin_top - 2, cx + pin_size // 2 + 2, pin_top + pin_size + 2],
+                 fill='#1f2933', outline=None)
+    # 三角の足を描く（黒）
+    foot = [(cx - 14, pin_top + pin_size - 6), (cx + 14, pin_top + pin_size - 6), (cx, cy + 6)]
+    draw.polygon(foot, fill='#1f2933')
+    # ピン内側（ゴールド）
+    draw.ellipse([cx - pin_size // 2 + 4, pin_top + 4, cx + pin_size // 2 - 4, pin_top + pin_size - 4],
+                 fill='#a87827', outline=None)
+    # 中心の白い丸
+    draw.ellipse([cx - 8, pin_top + pin_size // 2 - 8, cx + 8, pin_top + pin_size // 2 + 8],
+                 fill='#fff', outline=None)
+
+    # 施設名ラベル（ピンの右）
     label = fac['name']
     bbox = draw.textbbox((0, 0), label, font=font_big)
     lw = bbox[2] - bbox[0]
     lh = bbox[3] - bbox[1]
-    lx = cx + 35
-    ly = cy - 18
+    lx = cx + 38
+    ly = cy - pin_size + 12
     draw.rectangle([lx - 10, ly - 8, lx + lw + 12, ly + lh + 10], fill='#1f2933')
     draw.text((lx, ly - 3), label, fill='#fff', font=font_big)
 
