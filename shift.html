@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <title>勤務形態一覧表｜poem de riha 安積店</title>
-  <meta name="description" content="勤務形態一覧表（シフト管理）。シフトパターンを登録し、ドロップダウンで選択するだけで月合計・常勤換算が自動計算されます。">
+  <title>勤務形態一覧表｜株式会社はなひろ</title>
+  <meta name="description" content="株式会社はなひろ4事業所の勤務形態一覧表（シフト管理）。クラウド同期で複数端末からリアルタイム編集可能。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,187 +23,160 @@
       --line: #e3dccc;
       --line-soft: #f0eadb;
       --weekend: #fff4ec;
-      --week1: #fbf9f4;
-      --week2: #ffffff;
     }
-
     body {
       font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', sans-serif;
-      color: var(--ink);
-      background: var(--paper);
-      line-height: 1.6;
-      font-size: 14px;
+      color: var(--ink); background: var(--paper);
+      line-height: 1.6; font-size: 14px;
       -webkit-font-smoothing: antialiased;
       padding: 0 0 60px;
     }
 
+    /* パスワードゲート */
+    .auth-overlay {
+      position: fixed; inset: 0;
+      background: rgba(31,41,51,0.92); z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .auth-modal {
+      background: #fff; padding: 36px 32px; border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 400px; width: 90%;
+      text-align: center;
+    }
+    .auth-modal h2 {
+      font-family: 'Noto Serif JP', serif; font-size: 18px; color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .auth-modal p { font-size: 13px; color: var(--ink-soft); margin-bottom: 20px; }
+    .auth-modal input {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--line);
+      font-size: 16px; border-radius: 4px; text-align: center;
+      letter-spacing: 0.1em;
+    }
+    .auth-modal input:focus { outline: 2px solid var(--gold); border-color: var(--gold); }
+    .auth-modal button {
+      margin-top: 16px; padding: 10px 28px;
+      background: var(--ink); color: #fff; border: none;
+      border-radius: 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+      letter-spacing: 0.05em;
+    }
+    .auth-modal button:hover { background: var(--gold); }
+    .auth-modal .err { color: #c0392b; font-size: 12px; margin-top: 8px; min-height: 16px; }
+
     /* topbar */
     .topbar {
-      background: #fff;
-      border-bottom: 1px solid var(--line);
+      background: #fff; border-bottom: 1px solid var(--line);
       padding: 14px 20px;
-      position: sticky; top: 0; z-index: 100;
+      position: sticky; top: 0; z-index: 50;
       display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
+      flex-wrap: wrap; gap: 10px;
     }
     .topbar .crumb {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 14px;
-      letter-spacing: 0.15em;
-      color: var(--ink-soft);
+      font-size: 14px; letter-spacing: 0.15em; color: var(--ink-soft);
       text-transform: uppercase;
     }
     .topbar a, .topbar button {
-      color: var(--ink-soft);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 500;
-      background: transparent;
-      border: 1px solid var(--line);
-      padding: 6px 14px;
-      border-radius: 22px;
-      cursor: pointer;
+      color: var(--ink-soft); text-decoration: none;
+      font-size: 13px; font-weight: 500;
+      background: transparent; border: 1px solid var(--line);
+      padding: 6px 14px; border-radius: 22px; cursor: pointer;
       transition: all 0.2s;
     }
-    .topbar button.primary {
-      background: var(--ink);
-      color: #fff;
-      border-color: var(--ink);
-    }
-    .topbar button:hover {
-      background: var(--ink); color: #fff; border-color: var(--ink);
-    }
+    .topbar button.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .topbar button:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
 
-    .container { max-width: 1600px; margin: 0 auto; padding: 24px 16px; }
+    .container { max-width: 1700px; margin: 0 auto; padding: 24px 16px; }
 
     /* タイトル */
-    .doc-head {
-      text-align: center;
-      padding: 16px 0 24px;
-    }
+    .doc-head { text-align: center; padding: 12px 0 18px; }
     .doc-eyebrow {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 11pt;
-      letter-spacing: 0.4em;
-      color: var(--gold);
-      margin-bottom: 6px;
+      font-family: 'Cormorant Garamond', serif; font-size: 10pt;
+      letter-spacing: 0.4em; color: var(--gold); margin-bottom: 4px;
     }
     .doc-title {
-      font-family: 'Noto Serif JP', serif;
-      font-size: 24px;
-      font-weight: 600;
-      color: var(--ink);
+      font-family: 'Noto Serif JP', serif; font-size: 22px;
+      font-weight: 600; color: var(--ink);
     }
+
+    /* 事業所タブ */
+    .facility-tabs {
+      display: flex; gap: 6px; margin-bottom: 8px;
+      border-bottom: 2px solid var(--ink); padding: 0 4px;
+      flex-wrap: wrap; align-items: center;
+    }
+    .facility-tab {
+      background: #fff; border: 1px solid var(--line); border-bottom: none;
+      padding: 9px 18px; font-family: 'Noto Serif JP', serif;
+      font-size: 13px; font-weight: 600; color: var(--ink-soft);
+      cursor: pointer; border-radius: 8px 8px 0 0;
+      position: relative; bottom: -2px;
+      transition: all 0.15s;
+    }
+    .facility-tab:hover { color: var(--ink); }
+    .facility-tab.active { background: var(--ink); color: #fff; border-color: var(--ink); }
 
     /* 事業所情報 */
     .facility-info {
-      background: #fff;
-      border: 1px solid var(--line);
-      padding: 18px 22px;
-      margin-bottom: 24px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px 24px;
-      font-size: 13px;
+      background: #fff; border: 1px solid var(--line);
+      padding: 14px 18px; margin-bottom: 18px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px;
+      font-size: 12.5px;
     }
     .facility-info .row { display: flex; gap: 8px; }
     .facility-info .lbl {
-      color: var(--gold); font-weight: 600; min-width: 110px;
+      color: var(--gold); font-weight: 600; min-width: 100px;
       font-family: 'Noto Serif JP', serif;
     }
 
     /* 単位タブ */
     .unit-tabs {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 8px;
-      border-bottom: 2px solid var(--gold);
-      padding: 0 4px;
+      display: flex; gap: 4px; margin-bottom: 8px;
+      border-bottom: 2px solid var(--gold); padding: 0 4px;
       align-items: center;
     }
     .unit-tab {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-bottom: none;
-      padding: 10px 24px;
-      font-family: 'Noto Serif JP', serif;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--ink-soft);
-      cursor: pointer;
-      border-radius: 8px 8px 0 0;
-      transition: all 0.15s;
-      position: relative;
-      bottom: -2px;
+      background: #fff; border: 1px solid var(--line); border-bottom: none;
+      padding: 9px 22px; font-family: 'Noto Serif JP', serif;
+      font-size: 13px; font-weight: 600; color: var(--ink-soft);
+      cursor: pointer; border-radius: 8px 8px 0 0;
+      position: relative; bottom: -2px; transition: all 0.15s;
     }
     .unit-tab:hover { color: var(--ink); }
-    .unit-tab.active {
-      background: var(--gold);
-      color: #fff;
-      border-color: var(--gold);
-    }
+    .unit-tab.active { background: var(--gold); color: #fff; border-color: var(--gold); }
 
     /* 月選択 */
     .month-selector {
-      background: #fff;
-      border: 1px solid var(--line);
-      padding: 12px 20px;
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
+      background: #fff; border: 1px solid var(--line);
+      padding: 12px 20px; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     }
     .month-selector select {
-      font-family: inherit;
-      font-size: 14px;
-      padding: 6px 10px;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      background: #fff;
-      color: var(--ink);
+      font-family: inherit; font-size: 14px; padding: 6px 10px;
+      border: 1px solid var(--line); border-radius: 4px;
+      background: #fff; color: var(--ink);
     }
-    .month-selector .label {
-      font-family: 'Noto Serif JP', serif;
-      font-weight: 600;
-      color: var(--ink);
-    }
+    .month-selector .label { font-family: 'Noto Serif JP', serif; font-weight: 600; color: var(--ink); }
     .month-selector button {
-      background: transparent;
-      border: 1px solid var(--line);
-      padding: 5px 12px;
-      border-radius: 18px;
-      font-size: 13px;
-      cursor: pointer;
-      color: var(--ink-soft);
+      background: transparent; border: 1px solid var(--line);
+      padding: 5px 12px; border-radius: 18px; font-size: 13px;
+      cursor: pointer; color: var(--ink-soft);
     }
     .month-selector button:hover { background: var(--ink); color: #fff; }
 
     /* セクション */
-    .section {
-      background: #fff;
-      border: 1px solid var(--line);
-      margin-bottom: 24px;
-    }
+    .section { background: #fff; border: 1px solid var(--line); margin-bottom: 24px; }
     .section-head {
-      padding: 14px 20px;
-      background: var(--ink);
-      color: #fff;
+      padding: 14px 20px; background: var(--ink); color: #fff;
       display: flex; justify-content: space-between; align-items: center;
-      font-family: 'Noto Serif JP', serif;
-      font-size: 15px;
-      font-weight: 600;
+      font-family: 'Noto Serif JP', serif; font-size: 15px; font-weight: 600;
     }
     .section-head .actions { display: flex; gap: 8px; }
     .section-head .actions button {
-      background: transparent;
-      border: 1px solid var(--gold-soft);
-      color: var(--gold-soft);
-      padding: 4px 12px;
-      border-radius: 16px;
-      font-size: 12px;
-      cursor: pointer;
+      background: transparent; border: 1px solid var(--gold-soft);
+      color: var(--gold-soft); padding: 4px 12px; border-radius: 16px;
+      font-size: 12px; cursor: pointer;
     }
     .section-head .actions button:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
     .section-body { padding: 16px 20px; }
@@ -224,31 +197,18 @@
     details[open] summary::before { transform: rotate(90deg); }
 
     .pattern-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-      margin-top: 12px;
+      width: 100%; border-collapse: collapse;
+      font-size: 13px; margin-top: 12px;
     }
     .pattern-table th {
-      background: var(--ink);
-      color: #fff;
-      padding: 8px;
-      font-weight: 600;
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      text-align: center;
+      background: var(--ink); color: #fff;
+      padding: 8px; font-weight: 600; font-size: 12px;
+      letter-spacing: 0.04em; text-align: center;
     }
-    .pattern-table td {
-      padding: 0;
-      border: 1px solid var(--line-soft);
-    }
+    .pattern-table td { padding: 0; border: 1px solid var(--line-soft); }
     .pattern-table input {
-      width: 100%;
-      padding: 6px 8px;
-      border: none;
-      font-family: inherit;
-      font-size: 13px;
-      background: transparent;
+      width: 100%; padding: 6px 8px; border: none;
+      font-family: inherit; font-size: 13px; background: transparent;
       text-align: center;
     }
     .pattern-table input:focus { background: var(--gold-pale); outline: 1px solid var(--gold); }
@@ -262,82 +222,51 @@
     .pattern-table .del-btn:hover { color: #c0392b; }
     .add-row-btn {
       margin-top: 10px;
-      background: transparent;
-      border: 1px dashed var(--gold);
-      color: var(--gold);
-      padding: 6px 16px;
-      cursor: pointer;
-      font-size: 13px;
-      border-radius: 4px;
+      background: transparent; border: 1px dashed var(--gold);
+      color: var(--gold); padding: 6px 16px; cursor: pointer;
+      font-size: 13px; border-radius: 4px;
     }
     .add-row-btn:hover { background: var(--gold-pale); }
 
     /* シフト一覧表 */
     .shift-table-wrap {
-      overflow-x: auto;
-      background: #fff;
-      border: 1px solid var(--line);
+      overflow-x: auto; background: #fff; border: 1px solid var(--line);
     }
-    .shift-table {
-      border-collapse: collapse;
-      font-size: 12px;
-      min-width: 100%;
-    }
+    .shift-table { border-collapse: collapse; font-size: 12px; min-width: 100%; }
     .shift-table th, .shift-table td {
-      border: 1px solid var(--line-soft);
-      padding: 0;
-      text-align: center;
+      border: 1px solid var(--line-soft); padding: 0; text-align: center;
     }
     .shift-table thead th {
-      background: var(--ink);
-      color: #fff;
-      padding: 6px 4px;
-      font-weight: 600;
-      font-size: 11px;
+      background: var(--ink); color: #fff;
+      padding: 6px 4px; font-weight: 600; font-size: 11px;
       position: sticky; top: 0; z-index: 10;
     }
-    .shift-table thead .day-header {
-      min-width: 38px;
-      width: 38px;
-    }
+    .shift-table thead .day-header { min-width: 38px; width: 38px; }
     .shift-table thead .day-sat { background: #2c4159; }
     .shift-table thead .day-sun { background: #5a3338; }
     .shift-table tbody td.weekend { background: var(--weekend); }
     .shift-table tbody td.week-end-divider { border-right: 2px solid var(--gold-soft); }
     .shift-table tbody td.staff-info input,
     .shift-table tbody td.staff-info select {
-      width: 100%;
-      padding: 6px 8px;
-      border: none;
-      background: transparent;
-      font-family: inherit;
-      font-size: 12px;
+      width: 100%; padding: 6px 8px; border: none;
+      background: transparent; font-family: inherit; font-size: 12px;
     }
     .shift-table tbody td.staff-info input:focus,
     .shift-table tbody td.staff-info select:focus {
       background: var(--gold-pale); outline: 1px solid var(--gold);
     }
     .shift-table tbody td.shift-cell select {
-      width: 100%;
-      padding: 4px 2px;
-      border: none;
-      background: transparent;
-      font-family: inherit;
-      font-size: 11px;
-      text-align: center;
-      text-align-last: center;
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
+      width: 100%; padding: 4px 2px; border: none;
+      background: transparent; font-family: inherit; font-size: 11px;
+      text-align: center; text-align-last: center;
+      cursor: pointer; appearance: none; -webkit-appearance: none;
     }
     .shift-table tbody td.shift-cell select:focus {
       background: var(--gold-pale); outline: 1px solid var(--gold);
     }
     .shift-table tbody td.summary {
-      background: var(--gold-pale);
-      font-weight: 600;
-      padding: 6px 8px;
-      min-width: 60px;
+      background: var(--gold-pale); font-weight: 600;
+      padding: 6px 8px; min-width: 60px;
     }
     .shift-table tbody td.note input {
       width: 100%; padding: 6px 8px; border: none; background: transparent;
@@ -349,50 +278,41 @@
       color: var(--ink-mute); cursor: pointer; font-size: 14px;
     }
     .shift-table .del-row-btn:hover { color: #c0392b; }
-
     .shift-table tfoot td {
-      background: var(--gold-pale);
-      font-weight: 700;
-      padding: 6px 4px;
-      font-size: 11px;
-      color: var(--ink);
+      background: var(--gold-pale); font-weight: 700;
+      padding: 6px 4px; font-size: 11px; color: var(--ink);
     }
 
-    /* フィックス職員列 */
-    .col-no, .col-job, .col-emp, .col-name { background: #fff; }
-
-    /* バックアップ系 */
+    /* バックアップ */
     .actions-bar {
-      display: flex; gap: 10px; flex-wrap: wrap;
-      padding: 16px 20px;
-      background: var(--gold-pale);
-      border: 1px solid var(--gold-soft);
-      margin-top: 24px;
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+      padding: 16px 20px; background: var(--gold-pale);
+      border: 1px solid var(--gold-soft); margin-top: 24px;
     }
     .actions-bar button {
       background: var(--ink); color: #fff;
       border: none; padding: 8px 18px;
-      border-radius: 22px; font-size: 13px; cursor: pointer;
-      font-weight: 500;
+      border-radius: 22px; font-size: 13px; cursor: pointer; font-weight: 500;
     }
     .actions-bar button.secondary {
       background: #fff; color: var(--ink); border: 1px solid var(--ink);
     }
     .actions-bar button:hover { opacity: 0.85; }
     .save-status {
-      margin-left: auto;
-      font-size: 12px;
-      color: var(--ink-soft);
+      margin-left: auto; font-size: 12px; color: var(--ink-soft);
       font-style: italic;
     }
+    .save-status.synced { color: #27ae60; }
+    .save-status.saving { color: var(--gold); }
+    .save-status.error { color: #c0392b; }
 
-    /* 印刷スタイル */
+    /* 印刷 */
     @page { size: A3 landscape; margin: 8mm; }
     @media print {
-      .topbar, .actions-bar, details, .month-selector button { display: none !important; }
+      .topbar, .actions-bar, details, .month-selector button, .facility-tabs { display: none !important; }
       body { background: #fff; padding: 0; font-size: 9pt; }
       .container { padding: 0; max-width: 100%; }
-      .doc-head { padding: 4mm 0 4mm; }
+      .doc-head { padding: 4mm 0; }
       .doc-title { font-size: 18pt; }
       .facility-info { font-size: 9pt; padding: 8px 12px; }
       .month-selector { padding: 6px 12px; font-size: 9pt; }
@@ -403,12 +323,25 @@
       .shift-table tbody td.shift-cell select { font-size: 10pt; -webkit-appearance: none; appearance: none; }
       .shift-table tfoot td { font-size: 9pt; }
       select { background: transparent !important; }
-      select::-ms-expand { display: none; }
       .del-row-btn, .del-btn, .add-row-btn { display: none !important; }
     }
   </style>
 </head>
 <body>
+
+<!-- パスワードゲート -->
+<div id="auth-overlay" class="auth-overlay">
+  <div class="auth-modal">
+    <h2>🔒 勤務形態一覧表</h2>
+    <p>パスワードを入力してください</p>
+    <input id="auth-input" type="password" placeholder="パスワード" onkeydown="if(event.key==='Enter')checkAuth()">
+    <div><button onclick="checkAuth()">開く</button></div>
+    <div class="err" id="auth-err"></div>
+  </div>
+</div>
+
+<!-- メインアプリ（認証後表示） -->
+<div id="main-app" style="display:none">
 
 <div class="topbar">
   <a href="https://www.hana-hiro.com/">&#x2190; ホームへ</a>
@@ -426,22 +359,14 @@
     <h1 class="doc-title">勤務形態一覧表</h1>
   </div>
 
-  <!-- 事業所情報 -->
-  <div class="facility-info">
-    <div class="row"><span class="lbl">事業所名</span><span>poem de riha 安積店</span></div>
-    <div class="row"><span class="lbl">サービス種別</span><span>地域密着型通所介護（3〜4時間）／介護予防・日常生活支援総合事業</span></div>
-    <div class="row"><span class="lbl">所在地</span><span>福島県郡山市安積町笹川字四角担3-1</span></div>
-    <div class="row"><span class="lbl">提供時間</span><span>午前 9:00〜12:05 ／ 午後 13:25〜16:30</span></div>
-    <div class="row"><span class="lbl">営業日</span><span>月〜金（祝日も営業）／ 休：土日・年末年始</span></div>
-    <div class="row"><span class="lbl">利用定員</span><span>1日 18名</span></div>
-  </div>
+  <!-- 事業所タブ -->
+  <div class="facility-tabs" id="facility-tabs"></div>
 
-  <!-- 単位切り替えタブ -->
-  <div class="unit-tabs">
-    <button class="unit-tab" data-unit="午前の部" onclick="switchUnit('午前の部')">🌅 午前の部</button>
-    <button class="unit-tab" data-unit="午後の部" onclick="switchUnit('午後の部')">🌆 午後の部</button>
-    <span style="margin-left:auto;font-size:12px;color:var(--ink-mute)">※ 各単位ごとに職員と勤務予定を独立管理／Excel書き出し時は両方が出力されます</span>
-  </div>
+  <!-- 事業所情報 -->
+  <div class="facility-info" id="facility-info"></div>
+
+  <!-- 単位タブ -->
+  <div class="unit-tabs" id="unit-tabs"></div>
 
   <!-- 月選択 -->
   <div class="month-selector">
@@ -457,7 +382,7 @@
 
   <!-- シフトパターン管理 -->
   <details>
-    <summary>シフトパターン管理（クリックで開閉）</summary>
+    <summary>シフトパターン管理（クリックで開閉／事業所ごとに独立）</summary>
     <div style="padding:0 16px 16px;background:#fff;border:1px solid var(--line);border-top:none">
       <table class="pattern-table">
         <thead>
@@ -497,29 +422,102 @@
 
   <!-- バックアップ -->
   <div class="actions-bar">
-    <button onclick="exportXlsx()">📊 Excelで書き出し</button>
-    <button class="secondary" onclick="exportJson()">💾 バックアップ(JSON)</button>
+    <button onclick="exportXlsx()">📊 Excel書き出し</button>
+    <button class="secondary" onclick="exportJson()">💾 JSONバックアップ</button>
     <button class="secondary" onclick="document.getElementById('json-import').click()">📥 JSON読み込み</button>
     <input type="file" id="json-import" accept=".json" style="display:none" onchange="importJson(event)">
-    <button class="secondary" onclick="resetAll()">🔄 全データリセット</button>
     <span class="save-status" id="save-status">─</span>
   </div>
 
 </div>
 
-<script>
-'use strict';
+</div><!-- /main-app -->
 
-// ===== データ構造 =====
-const STORAGE_KEY = 'hanahiro-shift-schedule';
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+// ===== Firebase 初期化 =====
+const firebaseConfig = {
+  apiKey: "AIzaSyBRla-iZ2IMo7yS4TsUf9deA49fc0igtgk",
+  authDomain: "hanahiro-training.firebaseapp.com",
+  projectId: "hanahiro-training",
+  storageBucket: "hanahiro-training.firebasestorage.app",
+  messagingSenderId: "804848273664",
+  appId: "1:804848273664:web:8c2757d7eb0b2e89c94be5"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const authReady = signInAnonymously(auth).catch(err => console.warn('[auth]', err));
+
+// ===== 設定 =====
+const PASSWORD = 'hanahiro2026';
+const AUTH_SESSION_KEY = 'hanahiro-shift-authed';
+
+const FACILITIES = [
+  {
+    id: 'asaka',
+    shortName: 'poem de riha 安積店',
+    info: {
+      name: 'poem de riha 安積店',
+      service: '地域密着型通所介護（3〜4時間）／ 介護予防・日常生活支援総合事業',
+      address: '福島県郡山市安積町笹川字四角担3-1',
+      openTime: '午前 9:00〜12:05 ／ 午後 13:25〜16:30',
+      businessDays: '月〜金（祝日も営業）／ 休：土日・年末年始',
+      capacity: 18,
+    },
+    units: ['午前の部', '午後の部'],
+  },
+  {
+    id: 'kasho',
+    shortName: 'ポエム郡山賀庄',
+    info: {
+      name: 'デイサービスセンターポエム郡山賀庄',
+      service: '地域密着型通所介護',
+      address: '〒963-8844 郡山市賀庄153-5',
+      openTime: '通常デイ',
+      businessDays: '',
+      capacity: 10,
+    },
+    units: ['1日'],
+  },
+  {
+    id: 'kaisei',
+    shortName: 'ポエム開成',
+    info: {
+      name: 'リハビリ専門デイサービス ポエム開成',
+      service: 'リハビリ専門デイサービス',
+      address: '〒963-8852 郡山市台新1-31-3 サンパレス國分1-東号室',
+      openTime: '午前 9:00〜12:15 ／ 午後 13:30〜16:45',
+      businessDays: '月〜土（祝日も営業）',
+      capacity: 18,
+    },
+    units: ['午前の部', '午後の部'],
+  },
+  {
+    id: 'tateyama',
+    shortName: '舘山荘',
+    info: {
+      name: '矢祭町デイサービスセンター舘山荘',
+      service: '地域密着型通所介護（矢祭町指定管理）',
+      address: '〒963-5118 福島県東白川郡矢祭町大字東舘字舘3-1',
+      openTime: '通常デイ',
+      businessDays: '',
+      capacity: 18,
+    },
+    units: ['1日'],
+  },
+];
 
 const DEFAULT_PATTERNS = [
-  { code: '早',  name: '早番',          start: '7:30',  end: '16:30', breakTime: '1:00', hours: 8.0,  note: '' },
-  { code: '日',  name: '日勤',          start: '9:00',  end: '18:00', breakTime: '1:00', hours: 8.0,  note: '' },
-  { code: '遅',  name: '遅番',          start: '11:00', end: '20:00', breakTime: '1:00', hours: 8.0,  note: '' },
-  { code: 'A',   name: '午前の部担当',   start: '8:30',  end: '13:00', breakTime: '',     hours: 4.5,  note: 'poem de riha 想定' },
-  { code: 'B',   name: '午後の部担当',   start: '13:00', end: '17:00', breakTime: '',     hours: 4.0,  note: 'poem de riha 想定' },
-  { code: '通',  name: '通し勤務',      start: '8:30',  end: '17:30', breakTime: '1:00', hours: 8.0,  note: '' },
+  { code: '早',   name: '早番',         start: '7:30',  end: '16:30', breakTime: '1:00', hours: 8.0,  note: '' },
+  { code: '日',   name: '日勤',         start: '9:00',  end: '18:00', breakTime: '1:00', hours: 8.0,  note: '' },
+  { code: '遅',   name: '遅番',         start: '11:00', end: '20:00', breakTime: '1:00', hours: 8.0,  note: '' },
+  { code: 'A',    name: '午前の部担当',  start: '8:30',  end: '13:00', breakTime: '',     hours: 4.5,  note: '' },
+  { code: 'B',    name: '午後の部担当',  start: '13:00', end: '17:00', breakTime: '',     hours: 4.0,  note: '' },
+  { code: '通',   name: '通し勤務',     start: '8:30',  end: '17:30', breakTime: '1:00', hours: 8.0,  note: '' },
   { code: '半早', name: '半日早番',     start: '8:30',  end: '13:00', breakTime: '',     hours: 4.5,  note: '' },
   { code: '半遅', name: '半日遅番',     start: '13:00', end: '17:30', breakTime: '',     hours: 4.5,  note: '' },
   { code: '夜',   name: '夜勤',         start: '17:00', end: '翌9:00', breakTime: '2:00', hours: 14.0, note: '' },
@@ -531,116 +529,246 @@ const DEFAULT_PATTERNS = [
 ];
 
 const DEFAULT_STAFF = [
-  { jobTitle: '管理者',         employmentType: '常勤専従', name: '', note: '' },
-  { jobTitle: '生活相談員',      employmentType: '常勤専従', name: '', note: '' },
-  { jobTitle: '看護職員',        employmentType: '常勤専従', name: '', note: '' },
-  { jobTitle: '機能訓練指導員',  employmentType: '常勤専従', name: '', note: '柔道整復師' },
-  { jobTitle: '介護職員',        employmentType: '常勤専従', name: '', note: '' },
-  { jobTitle: '介護職員',        employmentType: '常勤専従', name: '', note: '' },
-  { jobTitle: '介護職員',        employmentType: '非常勤専従', name: '', note: '' },
-  { jobTitle: '介護職員',        employmentType: '非常勤専従', name: '', note: '' },
+  { jobTitle: '管理者', employmentType: '常勤専従', name: '', note: '' },
+  { jobTitle: '生活相談員', employmentType: '常勤専従', name: '', note: '' },
+  { jobTitle: '看護職員', employmentType: '常勤専従', name: '', note: '' },
+  { jobTitle: '機能訓練指導員', employmentType: '常勤専従', name: '', note: '' },
+  { jobTitle: '介護職員', employmentType: '常勤専従', name: '', note: '' },
 ];
 
-const UNITS = ['午前の部', '午後の部'];
-const DEFAULT_UNIT_DATA = () => ({
-  staff: JSON.parse(JSON.stringify(DEFAULT_STAFF)),
-  schedule: {},
-});
+const DAY_LABELS = ['日','月','火','水','木','金','土'];
 
+function makeDefaultFacilityState(facility) {
+  const data = {};
+  for (const u of facility.units) {
+    data[u] = { staff: JSON.parse(JSON.stringify(DEFAULT_STAFF)), schedule: {} };
+  }
+  return {
+    info: facility.info,
+    patterns: JSON.parse(JSON.stringify(DEFAULT_PATTERNS)),
+    units: facility.units,
+    currentUnit: facility.units[0],
+    year: 2026,
+    month: 6,
+    data,
+    updatedAt: 0,
+  };
+}
+
+// ===== 状態 =====
 let state = {
-  year: 2026,
-  month: 6,
-  currentUnit: '午前の部',
-  patterns: JSON.parse(JSON.stringify(DEFAULT_PATTERNS)),
-  units: {
-    '午前の部': DEFAULT_UNIT_DATA(),
-    '午後の部': DEFAULT_UNIT_DATA(),
-  },
+  currentFacility: 'asaka',
+  facilities: {},
 };
 
-// 旧データ構造（staff/schedule 直下）からのマイグレーション
-function migrateLegacy(obj) {
-  if (obj.staff || obj.schedule) {
-    const legacyStaff = obj.staff || JSON.parse(JSON.stringify(DEFAULT_STAFF));
-    const legacySchedule = obj.schedule || {};
-    obj.units = {
-      '午前の部': { staff: legacyStaff, schedule: legacySchedule },
-      '午後の部': DEFAULT_UNIT_DATA(),
-    };
-    delete obj.staff;
-    delete obj.schedule;
-  }
-  if (!obj.currentUnit) obj.currentUnit = '午前の部';
-  if (!obj.units) obj.units = { '午前の部': DEFAULT_UNIT_DATA(), '午後の部': DEFAULT_UNIT_DATA() };
-  for (const u of UNITS) {
-    if (!obj.units[u]) obj.units[u] = DEFAULT_UNIT_DATA();
-  }
-  return obj;
-}
+// 各事業所の最終ローカル保存タイムスタンプ（自分のechoを判定）
+const lastLocalSave = {};
+const saveTimers = {};
+const subscriptions = {};
 
-// 現在の単位の便利ゲッター
-function curStaff() { return state.units[state.currentUnit].staff; }
-function curSchedule() { return state.units[state.currentUnit].schedule; }
-
-// ===== 永続化 =====
-function save() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    updateSaveStatus('保存済み: ' + new Date().toLocaleString('ja-JP'));
-  } catch(e) {
-    updateSaveStatus('保存失敗: ' + e.message);
-  }
+// ===== ユーティリティ =====
+function escape(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
-function load() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const obj = JSON.parse(raw);
-      state = Object.assign(state, obj);
-      state = migrateLegacy(state);
-    }
-  } catch(e) { console.error(e); }
-}
-
-function switchUnit(unit) {
-  if (!UNITS.includes(unit)) return;
-  state.currentUnit = unit;
-  save();
-  updateUnitTabs();
-  render();
-}
-function updateUnitTabs() {
-  document.querySelectorAll('.unit-tab').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.unit === state.currentUnit);
-  });
-}
-function updateSaveStatus(msg) {
-  document.getElementById('save-status').textContent = msg;
-}
-
-// ===== 月キー =====
-function monthKey() { return `${state.year}-${String(state.month).padStart(2,'0')}`; }
+function curFacility() { return state.facilities[state.currentFacility]; }
+function curUnit() { return state.currentFacility ? curFacility().currentUnit : null; }
+function curStaff() { return curFacility().data[curUnit()].staff; }
+function curSchedule() { return curFacility().data[curUnit()].schedule; }
+function monthKey() { const f = curFacility(); return `${f.year}-${String(f.month).padStart(2,'0')}`; }
 function getSchedule(staffIdx, day) {
-  const sch = curSchedule();
-  const k = monthKey();
+  const sch = curSchedule(); const k = monthKey();
   return (sch[k] && sch[k][staffIdx] && sch[k][staffIdx][day]) || '';
 }
 function setSchedule(staffIdx, day, value) {
-  const sch = curSchedule();
-  const k = monthKey();
+  const sch = curSchedule(); const k = monthKey();
   if (!sch[k]) sch[k] = {};
   if (!sch[k][staffIdx]) sch[k][staffIdx] = {};
   sch[k][staffIdx][day] = value;
 }
+function daysInMonth(y, m) { return new Date(y, m, 0).getDate(); }
+function getDayOfWeek(y, m, d) { return new Date(y, m - 1, d).getDay(); }
 
-// ===== カレンダー計算 =====
-function daysInMonth(y, m) {
-  return new Date(y, m, 0).getDate();
+// ===== 認証ゲート =====
+window.checkAuth = function() {
+  const input = document.getElementById('auth-input').value;
+  const errEl = document.getElementById('auth-err');
+  if (input === PASSWORD) {
+    sessionStorage.setItem(AUTH_SESSION_KEY, '1');
+    document.getElementById('auth-overlay').style.display = 'none';
+    document.getElementById('main-app').style.display = 'block';
+    initApp();
+  } else {
+    errEl.textContent = 'パスワードが違います';
+  }
+};
+
+function checkSessionAuth() {
+  if (sessionStorage.getItem(AUTH_SESSION_KEY) === '1') {
+    document.getElementById('auth-overlay').style.display = 'none';
+    document.getElementById('main-app').style.display = 'block';
+    initApp();
+  } else {
+    document.getElementById('auth-input').focus();
+  }
 }
-function getDayOfWeek(y, m, d) {
-  return new Date(y, m - 1, d).getDay(); // 0=日, 6=土
+
+// ===== Firebase 同期 =====
+function setStatus(text, cls) {
+  const el = document.getElementById('save-status');
+  el.textContent = text;
+  el.className = 'save-status' + (cls ? ' ' + cls : '');
 }
-const DAY_LABELS = ['日','月','火','水','木','金','土'];
+
+async function subscribeFacility(facilityId) {
+  await authReady;
+  const ref = doc(db, 'shift-schedules', facilityId);
+  if (subscriptions[facilityId]) return; // 既に購読中
+  subscriptions[facilityId] = onSnapshot(ref, async (snapshot) => {
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      // 自分の echo は無視（updatedAt が一致）
+      if (data.updatedAt && data.updatedAt === lastLocalSave[facilityId]) return;
+      // 反映
+      state.facilities[facilityId] = data;
+      if (state.currentFacility === facilityId) {
+        renderAll();
+      }
+    } else {
+      // ドキュメントが無い → デフォルトで初期化してアップロード
+      const facility = FACILITIES.find(f => f.id === facilityId);
+      state.facilities[facilityId] = makeDefaultFacilityState(facility);
+      await saveFacility(facilityId);
+      if (state.currentFacility === facilityId) renderAll();
+    }
+  }, (err) => {
+    console.error('subscribe error', err);
+    setStatus('同期エラー: ' + err.message, 'error');
+  });
+}
+
+async function saveFacility(facilityId) {
+  await authReady;
+  setStatus('保存中…', 'saving');
+  const stamp = Date.now();
+  state.facilities[facilityId].updatedAt = stamp;
+  lastLocalSave[facilityId] = stamp;
+  try {
+    await setDoc(doc(db, 'shift-schedules', facilityId), state.facilities[facilityId]);
+    setStatus('クラウド同期済み: ' + new Date().toLocaleTimeString('ja-JP'), 'synced');
+  } catch (err) {
+    console.error('save error', err);
+    setStatus('保存失敗: ' + err.message, 'error');
+  }
+}
+
+function scheduleSave() {
+  const fid = state.currentFacility;
+  if (!fid) return;
+  if (saveTimers[fid]) clearTimeout(saveTimers[fid]);
+  saveTimers[fid] = setTimeout(() => saveFacility(fid), 800);
+  setStatus('変更あり…', 'saving');
+}
+
+// ===== 初期化 =====
+async function initApp() {
+  setStatus('クラウドに接続中…', 'saving');
+  await authReady;
+
+  // 4事業所の購読を開始（最初は空のstateを用意）
+  for (const f of FACILITIES) {
+    if (!state.facilities[f.id]) state.facilities[f.id] = makeDefaultFacilityState(f);
+  }
+  for (const f of FACILITIES) {
+    await subscribeFacility(f.id);
+  }
+
+  buildFacilityTabs();
+  buildMonthSelector();
+  renderAll();
+  setStatus('準備完了', 'synced');
+}
+
+// ===== UI レンダリング =====
+function renderAll() {
+  renderFacilityTabs();
+  renderFacilityInfo();
+  renderUnitTabs();
+  renderPatterns();
+  renderShiftTable();
+  // 月セレクタを現在の事業所の年月に合わせる
+  const f = curFacility();
+  document.getElementById('year').value = f.year;
+  document.getElementById('month').value = f.month;
+}
+
+function buildFacilityTabs() {
+  const wrap = document.getElementById('facility-tabs');
+  wrap.innerHTML = '';
+  FACILITIES.forEach(f => {
+    const btn = document.createElement('button');
+    btn.className = 'facility-tab';
+    btn.dataset.facility = f.id;
+    btn.textContent = f.shortName;
+    btn.onclick = () => switchFacility(f.id);
+    wrap.appendChild(btn);
+  });
+}
+
+function renderFacilityTabs() {
+  document.querySelectorAll('.facility-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.facility === state.currentFacility);
+  });
+}
+
+function renderFacilityInfo() {
+  const f = curFacility();
+  const info = f.info;
+  const html = `
+    <div class="row"><span class="lbl">事業所名</span><span>${escape(info.name)}</span></div>
+    <div class="row"><span class="lbl">サービス種別</span><span>${escape(info.service)}</span></div>
+    <div class="row"><span class="lbl">所在地</span><span>${escape(info.address)}</span></div>
+    <div class="row"><span class="lbl">提供時間</span><span>${escape(info.openTime)}</span></div>
+    <div class="row"><span class="lbl">営業日</span><span>${escape(info.businessDays || '─')}</span></div>
+    <div class="row"><span class="lbl">利用定員</span><span>1日 ${info.capacity}名</span></div>
+  `;
+  document.getElementById('facility-info').innerHTML = html;
+}
+
+function renderUnitTabs() {
+  const f = curFacility();
+  const wrap = document.getElementById('unit-tabs');
+  wrap.innerHTML = '';
+  if (f.units.length === 1) {
+    wrap.style.display = 'none';
+    return;
+  }
+  wrap.style.display = 'flex';
+  f.units.forEach(u => {
+    const btn = document.createElement('button');
+    btn.className = 'unit-tab' + (u === f.currentUnit ? ' active' : '');
+    btn.textContent = (u.includes('午前') ? '🌅 ' : u.includes('午後') ? '🌆 ' : '') + u;
+    btn.onclick = () => switchUnit(u);
+    wrap.appendChild(btn);
+  });
+  const note = document.createElement('span');
+  note.style.cssText = 'margin-left:auto;font-size:12px;color:var(--ink-mute)';
+  note.textContent = '※ 単位ごとに職員と勤務予定を独立管理';
+  wrap.appendChild(note);
+}
+
+function switchFacility(fid) {
+  state.currentFacility = fid;
+  renderAll();
+}
+function switchUnit(unit) {
+  const f = curFacility();
+  if (!f.units.includes(unit)) return;
+  f.currentUnit = unit;
+  scheduleSave();
+  renderAll();
+}
 
 // ===== 月選択 =====
 function buildMonthSelector() {
@@ -653,32 +781,32 @@ function buildMonthSelector() {
     opt.value = y; opt.textContent = y;
     yearSel.appendChild(opt);
   }
-  yearSel.value = state.year;
   monthSel.innerHTML = '';
   for (let m = 1; m <= 12; m++) {
     const opt = document.createElement('option');
     opt.value = m; opt.textContent = m;
     monthSel.appendChild(opt);
   }
-  monthSel.value = state.month;
-
-  yearSel.addEventListener('change', () => { state.year = parseInt(yearSel.value); save(); render(); });
-  monthSel.addEventListener('change', () => { state.month = parseInt(monthSel.value); save(); render(); });
+  yearSel.addEventListener('change', () => { curFacility().year = parseInt(yearSel.value); scheduleSave(); renderShiftTable(); });
+  monthSel.addEventListener('change', () => { curFacility().month = parseInt(monthSel.value); scheduleSave(); renderShiftTable(); });
 }
-function changeMonth(delta) {
-  state.month += delta;
-  if (state.month > 12) { state.month = 1; state.year += 1; }
-  if (state.month < 1) { state.month = 12; state.year -= 1; }
-  document.getElementById('year').value = state.year;
-  document.getElementById('month').value = state.month;
-  save(); render();
-}
+window.changeMonth = function(delta) {
+  const f = curFacility();
+  f.month += delta;
+  if (f.month > 12) { f.month = 1; f.year += 1; }
+  if (f.month < 1) { f.month = 12; f.year -= 1; }
+  document.getElementById('year').value = f.year;
+  document.getElementById('month').value = f.month;
+  scheduleSave();
+  renderShiftTable();
+};
 
 // ===== シフトパターン =====
 function renderPatterns() {
+  const f = curFacility();
   const tbody = document.getElementById('pattern-tbody');
   tbody.innerHTML = '';
-  state.patterns.forEach((p, i) => {
+  f.patterns.forEach((p, i) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td><input value="${escape(p.code)}" oninput="updatePattern(${i}, 'code', this.value)"></td>
@@ -693,36 +821,35 @@ function renderPatterns() {
     tbody.appendChild(tr);
   });
 }
-function updatePattern(i, key, value) {
-  state.patterns[i][key] = value;
-  save();
-  renderShiftTable();  // dropdown更新のため
-}
-function addPattern() {
-  state.patterns.push({ code: '', name: '', start: '', end: '', breakTime: '', hours: 0, note: '' });
-  save(); renderPatterns(); renderShiftTable();
-}
-function removePattern(i) {
+window.updatePattern = function(i, key, value) {
+  curFacility().patterns[i][key] = value;
+  scheduleSave();
+  renderShiftTable();
+};
+window.addPattern = function() {
+  curFacility().patterns.push({ code: '', name: '', start: '', end: '', breakTime: '', hours: 0, note: '' });
+  scheduleSave(); renderPatterns(); renderShiftTable();
+};
+window.removePattern = function(i) {
   if (!confirm('このシフトパターンを削除しますか？')) return;
-  state.patterns.splice(i, 1);
-  save(); renderPatterns(); renderShiftTable();
-}
+  curFacility().patterns.splice(i, 1);
+  scheduleSave(); renderPatterns(); renderShiftTable();
+};
 
 // ===== シフト一覧表 =====
 function buildShiftHead(days) {
+  const f = curFacility();
   const thead = document.getElementById('shift-thead');
   let h1 = '<tr>';
-  // 固定情報
   h1 += '<th rowspan="2" style="min-width:30px">No.</th>';
   h1 += '<th rowspan="2" style="min-width:100px">職種</th>';
   h1 += '<th rowspan="2" style="min-width:90px">雇用形態</th>';
   h1 += '<th rowspan="2" style="min-width:120px">氏名</th>';
-  // 日付（4週グループ）
   let weekStart = 1;
   while (weekStart <= days) {
     const weekEnd = Math.min(weekStart + 6, days);
     const span = weekEnd - weekStart + 1;
-    h1 += `<th colspan="${span}" style="background:var(--gold)">${Math.floor(weekStart/7)+1}週目 (${weekStart}日〜${weekEnd}日)</th>`;
+    h1 += `<th colspan="${span}" style="background:var(--gold)">${Math.floor(weekStart/7)+1}週目</th>`;
     weekStart = weekEnd + 1;
   }
   h1 += '<th rowspan="2" style="min-width:60px">月合計<br>(h)</th>';
@@ -734,7 +861,7 @@ function buildShiftHead(days) {
 
   let h2 = '<tr>';
   for (let d = 1; d <= days; d++) {
-    const dow = getDayOfWeek(state.year, state.month, d);
+    const dow = getDayOfWeek(f.year, f.month, d);
     let dayClass = 'day-header';
     if (dow === 6) dayClass += ' day-sat';
     if (dow === 0) dayClass += ' day-sun';
@@ -744,12 +871,11 @@ function buildShiftHead(days) {
   thead.innerHTML = h1 + h2;
 }
 function buildShiftTbody(days) {
+  const f = curFacility();
   const tbody = document.getElementById('shift-tbody');
   tbody.innerHTML = '';
-
   const optionsHtml = '<option value=""></option>' +
-    state.patterns.map(p => `<option value="${escape(p.code)}">${escape(p.code)}</option>`).join('');
-
+    f.patterns.map(p => `<option value="${escape(p.code)}">${escape(p.code)}</option>`).join('');
   curStaff().forEach((s, i) => {
     const tr = document.createElement('tr');
     let html = '';
@@ -757,10 +883,8 @@ function buildShiftTbody(days) {
     html += `<td class="staff-info col-job"><input value="${escape(s.jobTitle)}" oninput="updateStaff(${i},'jobTitle',this.value)"></td>`;
     html += `<td class="staff-info col-emp"><input value="${escape(s.employmentType)}" oninput="updateStaff(${i},'employmentType',this.value)"></td>`;
     html += `<td class="staff-info col-name"><input value="${escape(s.name)}" oninput="updateStaff(${i},'name',this.value)"></td>`;
-
-    let weekTotal = 0;
     for (let d = 1; d <= days; d++) {
-      const dow = getDayOfWeek(state.year, state.month, d);
+      const dow = getDayOfWeek(f.year, f.month, d);
       const isWeekEndCol = (d % 7 === 0 && d < days);
       const cls = ['shift-cell'];
       if (dow === 6 || dow === 0) cls.push('weekend');
@@ -770,37 +894,30 @@ function buildShiftTbody(days) {
         <select onchange="setShiftCell(${i},${d},this.value)">${optionsHtml.replace(`value="${escape(value)}"`, `value="${escape(value)}" selected`)}</select>
       </td>`;
     }
-
     const total = calcMonthTotal(i, days);
-    const weekly = total / 4;
-    const fte = total / 160;
     html += `<td class="summary">${total.toFixed(1)}</td>`;
-    html += `<td class="summary">${weekly.toFixed(1)}</td>`;
-    html += `<td class="summary">${fte.toFixed(2)}</td>`;
+    html += `<td class="summary">${(total/4).toFixed(1)}</td>`;
+    html += `<td class="summary">${(total/160).toFixed(2)}</td>`;
     html += `<td class="note"><input value="${escape(s.note)}" oninput="updateStaff(${i},'note',this.value)"></td>`;
     html += `<td><button class="del-row-btn" onclick="removeStaff(${i})" title="削除">×</button></td>`;
-
     tr.innerHTML = html;
     tbody.appendChild(tr);
   });
 }
 function buildShiftTfoot(days) {
+  const f = curFacility();
   const tfoot = document.getElementById('shift-tfoot');
   let html = '<tr>';
   html += '<td colspan="4" style="text-align:right;padding-right:10px">合計</td>';
-
-  // 各日の合計
   for (let d = 1; d <= days; d++) {
     let dayTotal = 0;
     curStaff().forEach((_, i) => {
       const code = getSchedule(i, d);
-      const p = state.patterns.find(p => p.code === code);
+      const p = f.patterns.find(p => p.code === code);
       if (p) dayTotal += p.hours;
     });
     html += `<td>${dayTotal > 0 ? dayTotal.toFixed(1) : '-'}</td>`;
   }
-
-  // 月合計の総合計
   let grandTotal = 0;
   curStaff().forEach((_, i) => grandTotal += calcMonthTotal(i, days));
   html += `<td>${grandTotal.toFixed(1)}</td>`;
@@ -810,160 +927,121 @@ function buildShiftTfoot(days) {
   html += '</tr>';
   tfoot.innerHTML = html;
 }
-function calcMonthTotal(staffIdx, days, scheduleObj) {
-  // scheduleObj が指定されたら（Excel書き出し時の他単位用）、そちらを使う
+function calcMonthTotal(staffIdx, days) {
+  const f = curFacility();
   let total = 0;
   for (let d = 1; d <= days; d++) {
-    let code;
-    if (scheduleObj) {
-      const k = monthKey();
-      code = (scheduleObj[k] && scheduleObj[k][staffIdx] && scheduleObj[k][staffIdx][d]) || '';
-    } else {
-      code = getSchedule(staffIdx, d);
-    }
-    const p = state.patterns.find(p => p.code === code);
+    const code = getSchedule(staffIdx, d);
+    const p = f.patterns.find(p => p.code === code);
     if (p) total += p.hours;
   }
   return total;
 }
-function setShiftCell(staffIdx, day, code) {
+window.setShiftCell = function(staffIdx, day, code) {
   setSchedule(staffIdx, day, code);
-  save();
-  renderShiftTable(); // 再計算
-}
-function updateStaff(i, key, value) {
+  scheduleSave();
+  renderShiftTable();
+};
+window.updateStaff = function(i, key, value) {
   curStaff()[i][key] = value;
-  save();
-}
-function addStaff() {
+  scheduleSave();
+};
+window.addStaff = function() {
   curStaff().push({ jobTitle: '', employmentType: '', name: '', note: '' });
-  save(); renderShiftTable();
-}
-function removeStaff(i) {
-  if (!confirm(`【${state.currentUnit}】 この職員を削除しますか？\n（その職員の月のシフトデータも削除されます）`)) return;
+  scheduleSave(); renderShiftTable();
+};
+window.removeStaff = function(i) {
+  if (!confirm('この職員を削除しますか？')) return;
   curStaff().splice(i, 1);
   const sch = curSchedule();
-  Object.keys(sch).forEach(k => {
-    if (sch[k][i]) delete sch[k][i];
-  });
-  save(); renderShiftTable();
-}
-
+  Object.keys(sch).forEach(k => { if (sch[k][i]) delete sch[k][i]; });
+  scheduleSave(); renderShiftTable();
+};
 function renderShiftTable() {
-  const days = daysInMonth(state.year, state.month);
+  const f = curFacility();
+  const days = daysInMonth(f.year, f.month);
   buildShiftHead(days);
   buildShiftTbody(days);
   buildShiftTfoot(days);
-  document.getElementById('day-info').textContent = `${days}日 / 1日(月初) ${DAY_LABELS[getDayOfWeek(state.year, state.month, 1)]}曜`;
-}
-
-function render() {
-  renderPatterns();
-  renderShiftTable();
+  document.getElementById('day-info').textContent = `${days}日 / 1日(月初) ${DAY_LABELS[getDayOfWeek(f.year, f.month, 1)]}曜`;
 }
 
 // ===== Excel書き出し =====
-function exportXlsx() {
-  const days = daysInMonth(state.year, state.month);
+window.exportXlsx = function() {
+  const f = curFacility();
+  const days = daysInMonth(f.year, f.month);
   const wb = XLSX.utils.book_new();
 
-  // シート1: シフトパターン
-  const patternData = [['コード', 'シフト名', '開始', '終了', '休憩', '実働(h)', '備考']];
-  state.patterns.forEach(p => {
-    patternData.push([p.code, p.name, p.start, p.end, p.breakTime, p.hours, p.note]);
-  });
-  const wsPattern = XLSX.utils.aoa_to_sheet(patternData);
-  XLSX.utils.book_append_sheet(wb, wsPattern, 'シフトパターン');
+  // シフトパターン
+  const pData = [['コード','シフト名','開始','終了','休憩','実働(h)','備考']];
+  f.patterns.forEach(p => pData.push([p.code, p.name, p.start, p.end, p.breakTime, p.hours, p.note]));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(pData), 'シフトパターン');
 
   // 各単位ごとに1シート
-  for (const unit of UNITS) {
-    const unitData = state.units[unit];
+  for (const u of f.units) {
     const main = [];
-    main.push([`【${unit}】 勤務形態一覧表 ${state.year}年${state.month}月`]);
+    main.push([`【${f.info.name}】 ${u} 勤務形態一覧表 ${f.year}年${f.month}月`]);
     main.push([]);
-    const dayHeader = ['No.', '職種', '雇用形態', '氏名'];
+    const hdr = ['No.','職種','雇用形態','氏名'];
     for (let d = 1; d <= days; d++) {
-      dayHeader.push(`${d}\n${DAY_LABELS[getDayOfWeek(state.year, state.month, d)]}`);
+      hdr.push(`${d}\n${DAY_LABELS[getDayOfWeek(f.year, f.month, d)]}`);
     }
-    dayHeader.push('月合計(h)', '月平均(h/週)', '常勤換算(月/160h)', '備考');
-    main.push(dayHeader);
+    hdr.push('月合計(h)','月平均(h/週)','常勤換算(月/160h)','備考');
+    main.push(hdr);
 
+    const unitData = f.data[u];
     unitData.staff.forEach((s, i) => {
       const row = [i+1, s.jobTitle, s.employmentType, s.name];
-      const k = monthKey();
+      const k = `${f.year}-${String(f.month).padStart(2,'0')}`;
+      let total = 0;
       for (let d = 1; d <= days; d++) {
         const code = (unitData.schedule[k] && unitData.schedule[k][i] && unitData.schedule[k][i][d]) || '';
         row.push(code);
+        const p = f.patterns.find(pp => pp.code === code);
+        if (p) total += p.hours;
       }
-      const total = calcMonthTotal(i, days, unitData.schedule);
       row.push(total, total/4, total/160, s.note);
       main.push(row);
     });
-    const ws = XLSX.utils.aoa_to_sheet(main);
-    XLSX.utils.book_append_sheet(wb, ws, unit);
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(main), u);
   }
+  const fname = `${f.info.name.replace(/[／\/]/g,'_')}_勤務形態${f.year}年${f.month}月.xlsx`;
+  XLSX.writeFile(wb, fname);
+};
 
-  XLSX.writeFile(wb, `勤務形態一覧表_${state.year}年${state.month}月.xlsx`);
-}
-
-// ===== JSON =====
-function exportJson() {
+window.exportJson = function() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `勤務形態データ_${monthKey()}.json`;
+  a.download = `勤務形態データ_${new Date().toISOString().slice(0,10)}.json`;
   a.click();
   URL.revokeObjectURL(a.href);
-}
-function importJson(event) {
+};
+
+window.importJson = function(event) {
   const file = event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = (e) => {
+  reader.onload = async (e) => {
     try {
       const obj = JSON.parse(e.target.result);
-      if (!confirm('現在のデータを上書きしますか？\nこの操作は取り消せません。')) return;
-      state = Object.assign(state, obj);
-      save(); render();
+      if (!confirm('現在のクラウドデータを上書きしますか？')) return;
+      if (obj.facilities) {
+        state.facilities = obj.facilities;
+        for (const fid of Object.keys(state.facilities)) {
+          await saveFacility(fid);
+        }
+      }
+      renderAll();
       alert('読み込み完了');
     } catch(e) { alert('読み込み失敗: ' + e.message); }
   };
   reader.readAsText(file);
   event.target.value = '';
-}
-function resetAll() {
-  if (!confirm('すべてのデータをリセットして、初期状態に戻します。\n本当によろしいですか？')) return;
-  state = {
-    year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
-    currentUnit: '午前の部',
-    patterns: JSON.parse(JSON.stringify(DEFAULT_PATTERNS)),
-    units: {
-      '午前の部': DEFAULT_UNIT_DATA(),
-      '午後の部': DEFAULT_UNIT_DATA(),
-    },
-  };
-  document.getElementById('year').value = state.year;
-  document.getElementById('month').value = state.month;
-  updateUnitTabs();
-  save(); render();
-}
-
-// ===== ユーティリティ =====
-function escape(s) {
-  return String(s == null ? '' : s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
+};
 
 // ===== 起動 =====
-window.addEventListener('DOMContentLoaded', () => {
-  load();
-  buildMonthSelector();
-  updateUnitTabs();
-  render();
-});
-
+checkSessionAuth();
 </script>
 </body>
 </html>
