@@ -417,6 +417,31 @@
       }
       .print-shift-table .week-divider { border-left: 1.5pt solid var(--gold); }
 
+      /* 勤務形態の区分 凡例 */
+      .print-emp-legend {
+        margin-top: 3mm;
+        font-size: 9pt;
+        display: flex;
+        align-items: center;
+        gap: 4mm;
+        flex-wrap: wrap;
+      }
+      .print-emp-legend .title {
+        font-weight: bold;
+        background: var(--gold-pale);
+        padding: 1mm 3mm;
+        border: 1px solid var(--ink);
+      }
+      .print-emp-legend .item {
+        padding: 0 1mm;
+      }
+      .print-emp-legend .item b {
+        display: inline-block;
+        min-width: 5mm;
+        text-align: center;
+        font-weight: bold;
+      }
+
       /* 印刷フッター（提出用署名欄） */
       .print-footer {
         margin-top: 4mm;
@@ -528,6 +553,24 @@
         <tbody id="pattern-tbody"></tbody>
       </table>
       <button class="add-row-btn" onclick="addPattern()">+ シフトパターンを追加</button>
+    </div>
+  </details>
+
+  <!-- 勤務形態の区分 凡例 -->
+  <details>
+    <summary>勤務形態の区分（A〜D 行政書式）</summary>
+    <div style="padding:0 16px 16px;background:#fff;border:1px solid var(--line);border-top:none">
+      <table class="pattern-table" style="max-width:480px">
+        <thead>
+          <tr><th style="width:60px">記号</th><th>区分</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="text-align:center;font-weight:bold">A</td><td>常勤で専従</td></tr>
+          <tr><td style="text-align:center;font-weight:bold">B</td><td>常勤で兼務</td></tr>
+          <tr><td style="text-align:center;font-weight:bold">C</td><td>非常勤で専従</td></tr>
+          <tr><td style="text-align:center;font-weight:bold">D</td><td>非常勤で兼務</td></tr>
+        </tbody>
+      </table>
     </div>
   </details>
 
@@ -660,12 +703,37 @@ const DEFAULT_PATTERNS = [
   { code: '休',   name: '休み',         start: '',      end: '',      breakTime: '',     hours: 0.0,  note: '' },
 ];
 
+// 勤務形態の区分（行政書式 A〜D）
+const EMPLOYMENT_TYPES = [
+  { code: 'A', label: '常勤で専従' },
+  { code: 'B', label: '常勤で兼務' },
+  { code: 'C', label: '非常勤で専従' },
+  { code: 'D', label: '非常勤で兼務' },
+];
+
+// 旧データ（"常勤専従" 等）を A〜D へマイグレーション
+function migrateEmploymentType(v) {
+  if (!v) return '';
+  if (['A','B','C','D'].includes(v)) return v;
+  const s = String(v).replace(/\s/g,'');
+  if (s.includes('常勤') && s.includes('専従')) return 'A';
+  if (s.includes('常勤') && s.includes('兼務')) return 'B';
+  if (s.includes('非常勤') && s.includes('専従')) return 'C';
+  if (s.includes('非常勤') && s.includes('兼務')) return 'D';
+  return '';
+}
+
+function employmentLabel(code) {
+  const t = EMPLOYMENT_TYPES.find(e => e.code === code);
+  return t ? `${t.code}（${t.label}）` : (code || '');
+}
+
 const DEFAULT_STAFF = [
-  { jobTitle: '管理者', employmentType: '常勤専従', name: '', note: '' },
-  { jobTitle: '生活相談員', employmentType: '常勤専従', name: '', note: '' },
-  { jobTitle: '看護職員', employmentType: '常勤専従', name: '', note: '' },
-  { jobTitle: '機能訓練指導員', employmentType: '常勤専従', name: '', note: '' },
-  { jobTitle: '介護職員', employmentType: '常勤専従', name: '', note: '' },
+  { jobTitle: '管理者', employmentType: 'A', name: '', note: '' },
+  { jobTitle: '生活相談員', employmentType: 'A', name: '', note: '' },
+  { jobTitle: '看護職員', employmentType: 'A', name: '', note: '' },
+  { jobTitle: '機能訓練指導員', employmentType: 'A', name: '', note: '' },
+  { jobTitle: '介護職員', employmentType: 'A', name: '', note: '' },
 ];
 
 const DAY_LABELS = ['日','月','火','水','木','金','土'];
@@ -762,6 +830,17 @@ async function subscribeFacility(facilityId) {
       const data = snapshot.data();
       // 自分の echo は無視（updatedAt が一致）
       if (data.updatedAt && data.updatedAt === lastLocalSave[facilityId]) return;
+      // 旧データ（雇用形態フリー入力）→ A〜D へマイグレーション
+      try {
+        if (data.units && data.data) {
+          for (const u of data.units) {
+            const ud = data.data[u];
+            if (ud && Array.isArray(ud.staff)) {
+              ud.staff.forEach(s => { s.employmentType = migrateEmploymentType(s.employmentType); });
+            }
+          }
+        }
+      } catch (e) { console.warn('migrate employmentType', e); }
       // 反映
       state.facilities[facilityId] = data;
       if (state.currentFacility === facilityId) {
@@ -1025,7 +1104,7 @@ function buildShiftHead(days) {
   let h1 = '<tr>';
   h1 += '<th rowspan="2" style="min-width:30px">No.</th>';
   h1 += '<th rowspan="2" style="min-width:100px">職種</th>';
-  h1 += '<th rowspan="2" style="min-width:90px">雇用形態</th>';
+  h1 += '<th rowspan="2" style="min-width:80px" title="A:常勤で専従／B:常勤で兼務／C:非常勤で専従／D:非常勤で兼務">勤務形態<br>の区分</th>';
   h1 += '<th rowspan="2" style="min-width:120px">氏名</th>';
   let weekStart = 1;
   while (weekStart <= days) {
@@ -1063,7 +1142,10 @@ function buildShiftTbody(days) {
     let html = '';
     html += `<td class="row-num">${i+1}</td>`;
     html += `<td class="staff-info col-job"><input value="${escape(s.jobTitle)}" oninput="updateStaff(${i},'jobTitle',this.value)"></td>`;
-    html += `<td class="staff-info col-emp"><input value="${escape(s.employmentType)}" oninput="updateStaff(${i},'employmentType',this.value)"></td>`;
+    const emp = migrateEmploymentType(s.employmentType);
+    const empOpts = '<option value=""></option>' +
+      EMPLOYMENT_TYPES.map(e => `<option value="${e.code}"${emp===e.code?' selected':''}>${e.code}（${e.label}）</option>`).join('');
+    html += `<td class="staff-info col-emp"><select onchange="updateStaff(${i},'employmentType',this.value)" title="勤務形態の区分">${empOpts}</select></td>`;
     html += `<td class="staff-info col-name"><input value="${escape(s.name)}" oninput="updateStaff(${i},'name',this.value)"></td>`;
     for (let d = 1; d <= days; d++) {
       const dow = getDayOfWeek(f.year, f.month, d);
@@ -1195,6 +1277,26 @@ window.exportXlsx = async function() {
     r.height = 22;
   });
 
+  // 勤務形態の区分（A〜D）凡例
+  wsP.addRow([]);
+  const empTitleRow = wsP.addRow(['勤務形態の区分']);
+  wsP.mergeCells(empTitleRow.number, 1, empTitleRow.number, 2);
+  empTitleRow.getCell(1).font = { ...FONT, bold: true, color: { argb: 'FFFFFFFF' } };
+  empTitleRow.getCell(1).fill = HEADER_FILL;
+  empTitleRow.getCell(1).alignment = CENTER;
+  empTitleRow.getCell(1).border = ALL_BORDER;
+  empTitleRow.height = 22;
+  EMPLOYMENT_TYPES.forEach(e => {
+    const r = wsP.addRow([e.code, e.label]);
+    r.getCell(1).font = { ...FONT, bold: true, size: 12 };
+    r.getCell(1).alignment = CENTER;
+    r.getCell(1).border = ALL_BORDER;
+    r.getCell(2).font = FONT;
+    r.getCell(2).alignment = LEFT;
+    r.getCell(2).border = ALL_BORDER;
+    r.height = 20;
+  });
+
   // ----- 各単位ごとに1シート -----
   for (const u of f.units) {
     const sheetName = u.length > 31 ? u.slice(0, 31) : u;  // Excelシート名31文字制限
@@ -1282,7 +1384,7 @@ window.exportXlsx = async function() {
     ws.getRow(tHead2).height = 20;
 
     // 固定情報（縦結合）
-    ['No.', '職種', '雇用形態', '氏名'].forEach((label, i) => {
+    ['No.', '職種', '勤務形態の区分', '氏名'].forEach((label, i) => {
       ws.mergeCells(tHead1, i + 1, tHead2, i + 1);
       const c = ws.getCell(tHead1, i + 1);
       c.value = label;
@@ -1341,7 +1443,7 @@ window.exportXlsx = async function() {
       const r = dataStartRow + i;
       ws.getCell(r, 1).value = i + 1;
       ws.getCell(r, 2).value = s.jobTitle;
-      ws.getCell(r, 3).value = s.employmentType;
+      ws.getCell(r, 3).value = migrateEmploymentType(s.employmentType);
       ws.getCell(r, 4).value = s.name;
       let total = 0;
       for (let d = 1; d <= days; d++) {
@@ -1491,7 +1593,7 @@ function generatePrintPages() {
     // 表
     pageHtml += '<table class="print-shift-table"><thead>';
     pageHtml += '<tr>';
-    pageHtml += '<th rowspan="2">No.</th><th rowspan="2">職種</th><th rowspan="2">雇用形態</th><th rowspan="2">氏名</th>';
+    pageHtml += '<th rowspan="2">No.</th><th rowspan="2">職種</th><th rowspan="2">勤務形態<br>の区分</th><th rowspan="2">氏名</th>';
     let weekStart = 1, weekIdx = 1;
     while (weekStart <= days) {
       const weekEnd = Math.min(weekStart + 6, days);
@@ -1518,7 +1620,7 @@ function generatePrintPages() {
       pageHtml += '<tr>';
       pageHtml += `<td>${i+1}</td>`;
       pageHtml += `<td class="left-align">${wakaWa(s.jobTitle)}</td>`;
-      pageHtml += `<td>${wakaWa(s.employmentType)}</td>`;
+      pageHtml += `<td>${wakaWa(migrateEmploymentType(s.employmentType))}</td>`;
       pageHtml += `<td class="left-align">${wakaWa(s.name)}</td>`;
       for (let d = 1; d <= days; d++) {
         const dow = getDayOfWeek(f.year, f.month, d);
@@ -1552,6 +1654,15 @@ function generatePrintPages() {
     pageHtml += `<td>${(grandTotal/160).toFixed(2)}</td>`;
     pageHtml += '<td></td>';
     pageHtml += '</tr></tfoot></table>';
+
+    // 勤務形態の区分 凡例
+    pageHtml += `<div class="print-emp-legend">
+      <span class="title">勤務形態の区分</span>
+      <span class="item"><b>A</b> 常勤で専従</span>
+      <span class="item"><b>B</b> 常勤で兼務</span>
+      <span class="item"><b>C</b> 非常勤で専従</span>
+      <span class="item"><b>D</b> 非常勤で兼務</span>
+    </div>`;
 
     // フッター
     pageHtml += `<div class="print-footer">
