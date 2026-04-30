@@ -671,6 +671,53 @@ function scheduleSave() {
   setStatus('変更あり…', 'saving');
 }
 
+// ===== 旧localStorage（v1）からのマイグレーション =====
+const LEGACY_KEY = 'hanahiro-shift-schedule';
+async function tryMigrateLegacy() {
+  const raw = localStorage.getItem(LEGACY_KEY);
+  if (!raw) return false;
+  try {
+    const obj = JSON.parse(raw);
+    // v1旧形式：{ year, month, patterns, staff, schedule } または { year, month, patterns, units: {...} }
+    let hasData = false;
+    let asakaData = null;
+    if (obj.units && (obj.units['午前の部'] || obj.units['午後の部'])) {
+      hasData = true;
+      asakaData = {
+        info: FACILITIES.find(f => f.id === 'asaka').info,
+        patterns: obj.patterns || JSON.parse(JSON.stringify(DEFAULT_PATTERNS)),
+        units: ['午前の部', '午後の部'],
+        currentUnit: obj.currentUnit || '午前の部',
+        year: obj.year || 2026,
+        month: obj.month || 6,
+        data: obj.units,
+        updatedAt: 0,
+      };
+    } else if (obj.staff) {
+      hasData = true;
+      asakaData = makeDefaultFacilityState(FACILITIES.find(f => f.id === 'asaka'));
+      asakaData.patterns = obj.patterns || asakaData.patterns;
+      asakaData.year = obj.year || asakaData.year;
+      asakaData.month = obj.month || asakaData.month;
+      asakaData.data['午前の部'] = { staff: obj.staff, schedule: obj.schedule || {} };
+    }
+    if (!hasData) return false;
+
+    const ok = confirm('古いバージョンのデータがブラウザに残っています。\n「poem de riha 安積店」のデータとしてクラウドに取り込みますか？\n\n（取り込み後、旧データはローカルから削除されます。\nキャンセルすると現在のクラウドデータが優先されます）');
+    if (!ok) return false;
+
+    // クラウドにアップロード
+    state.facilities['asaka'] = asakaData;
+    await saveFacility('asaka');
+    localStorage.removeItem(LEGACY_KEY);
+    alert('旧データを「poem de riha 安積店」に取り込みました。');
+    return true;
+  } catch (e) {
+    console.error('legacy migration', e);
+    return false;
+  }
+}
+
 // ===== 初期化 =====
 async function initApp() {
   setStatus('クラウドに接続中…', 'saving');
@@ -683,6 +730,9 @@ async function initApp() {
   for (const f of FACILITIES) {
     await subscribeFacility(f.id);
   }
+
+  // 旧localStorage データがあれば取り込み確認
+  await tryMigrateLegacy();
 
   buildFacilityTabs();
   buildMonthSelector();
@@ -1025,12 +1075,39 @@ window.importJson = function(event) {
   reader.onload = async (e) => {
     try {
       const obj = JSON.parse(e.target.result);
-      if (!confirm('現在のクラウドデータを上書きしますか？')) return;
+      if (!confirm('JSONファイルからデータを取り込みます。よろしいですか？')) return;
+
       if (obj.facilities) {
+        // 新形式
         state.facilities = obj.facilities;
         for (const fid of Object.keys(state.facilities)) {
           await saveFacility(fid);
         }
+      } else if (obj.units && (obj.units['午前の部'] || obj.units['午後の部'])) {
+        // 旧形式（単位構造あり）→ 安積店に取り込み
+        state.facilities['asaka'] = {
+          info: FACILITIES.find(f => f.id === 'asaka').info,
+          patterns: obj.patterns || JSON.parse(JSON.stringify(DEFAULT_PATTERNS)),
+          units: ['午前の部', '午後の部'],
+          currentUnit: obj.currentUnit || '午前の部',
+          year: obj.year || 2026,
+          month: obj.month || 6,
+          data: obj.units,
+          updatedAt: 0,
+        };
+        await saveFacility('asaka');
+      } else if (obj.staff) {
+        // 最古形式（staff/schedule直下）→ 安積店の午前の部に取り込み
+        const fdata = makeDefaultFacilityState(FACILITIES.find(f => f.id === 'asaka'));
+        fdata.patterns = obj.patterns || fdata.patterns;
+        fdata.year = obj.year || fdata.year;
+        fdata.month = obj.month || fdata.month;
+        fdata.data['午前の部'] = { staff: obj.staff, schedule: obj.schedule || {} };
+        state.facilities['asaka'] = fdata;
+        await saveFacility('asaka');
+      } else {
+        alert('JSON形式が認識できません。');
+        return;
       }
       renderAll();
       alert('読み込み完了');
