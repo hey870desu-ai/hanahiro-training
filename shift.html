@@ -799,11 +799,11 @@ const QUALIFICATIONS = [
 ];
 
 const DEFAULT_STAFF = [
-  { jobTitle: '管理者', employmentType: 'A', qualification: '', name: '', note: '' },
-  { jobTitle: '生活相談員', employmentType: 'A', qualification: '', name: '', note: '' },
-  { jobTitle: '看護職員', employmentType: 'A', qualification: '看護師', name: '', note: '' },
-  { jobTitle: '機能訓練指導員', employmentType: 'A', qualification: '理学療法士', name: '', note: '' },
-  { jobTitle: '介護職員', employmentType: 'A', qualification: '介護福祉士', name: '', note: '' },
+  { jobTitle: '管理者', employmentType: 'A', qualification: '', name: '', concurrentDuty: '', note: '' },
+  { jobTitle: '生活相談員', employmentType: 'A', qualification: '', name: '', concurrentDuty: '', note: '' },
+  { jobTitle: '看護職員', employmentType: 'A', qualification: '看護師', name: '', concurrentDuty: '', note: '' },
+  { jobTitle: '機能訓練指導員', employmentType: 'A', qualification: '理学療法士', name: '', concurrentDuty: '', note: '' },
+  { jobTitle: '介護職員', employmentType: 'A', qualification: '介護福祉士', name: '', concurrentDuty: '', note: '' },
 ];
 
 const DAY_LABELS = ['日','月','火','水','木','金','土'];
@@ -1348,6 +1348,7 @@ function buildShiftHead(days) {
   h1 += '<th rowspan="2" style="min-width:60px">月合計<br>(h)</th>';
   h1 += '<th rowspan="2" style="min-width:60px">月平均<br>(h/週)</th>';
   h1 += `<th rowspan="2" style="min-width:70px">常勤換算<br>(月/${getMonthlyStandard(f)}h)</th>`;
+  h1 += '<th rowspan="2" style="min-width:140px" title="兼務先及び兼務する職務の内容">兼務状況</th>';
   h1 += '<th rowspan="2" style="min-width:90px">備考</th>';
   h1 += '<th rowspan="2" style="min-width:30px"></th>';
   h1 += '</tr>';
@@ -1395,6 +1396,7 @@ function buildShiftTbody(days) {
     html += `<td class="summary">${total.toFixed(1)}</td>`;
     html += `<td class="summary">${(total/4).toFixed(1)}</td>`;
     html += `<td class="summary">${(total/getMonthlyStandard(f)).toFixed(2)}</td>`;
+    html += `<td class="note"><input value="${escape(s.concurrentDuty || '')}" oninput="updateStaff(${i},'concurrentDuty',this.value)" placeholder="兼務先・職務内容"></td>`;
     html += `<td class="note"><input value="${escape(s.note)}" oninput="updateStaff(${i},'note',this.value)"></td>`;
     html += `<td><button class="del-row-btn" onclick="removeStaff(${i})" title="削除">×</button></td>`;
     tr.innerHTML = html;
@@ -1420,7 +1422,7 @@ function buildShiftTfoot(days) {
   html += `<td>${grandTotal.toFixed(1)}</td>`;
   html += `<td>${(grandTotal/4).toFixed(1)}</td>`;
   html += `<td>${(grandTotal/getMonthlyStandard(f)).toFixed(2)}</td>`;
-  html += '<td colspan="2"></td>';
+  html += '<td colspan="3"></td>';
   html += '</tr>';
   tfoot.innerHTML = html;
 }
@@ -1448,7 +1450,7 @@ window.updateStaff = function(i, key, value) {
   }
 };
 window.addStaff = function() {
-  curStaff().push({ jobTitle: '', employmentType: '', qualification: '', name: '', note: '' });
+  curStaff().push({ jobTitle: '', employmentType: '', qualification: '', name: '', concurrentDuty: '', note: '' });
   scheduleSave(); renderShiftTable();
 };
 window.removeStaff = function(i) {
@@ -1577,11 +1579,12 @@ window.exportXlsx = async function() {
     for (let d = 1; d <= days; d++) {
       ws.getColumn(5 + d).width = 4.5;
     }
-    ws.getColumn(5 + days + 1).width = 9;
-    ws.getColumn(5 + days + 2).width = 9;
-    ws.getColumn(5 + days + 3).width = 10;
-    ws.getColumn(5 + days + 4).width = 14;
-    const totalCols = 5 + days + 4;
+    ws.getColumn(5 + days + 1).width = 9;   // 月合計
+    ws.getColumn(5 + days + 2).width = 9;   // 月平均
+    ws.getColumn(5 + days + 3).width = 10;  // 常勤換算
+    ws.getColumn(5 + days + 4).width = 18;  // 兼務状況
+    ws.getColumn(5 + days + 5).width = 14;  // 備考
+    const totalCols = 5 + days + 5;
 
     // === ヘッダー（公的書式風） ===
     // 1行目: 法人名（左）/ タイトル（中央）/ 提出日（右）
@@ -1687,7 +1690,7 @@ window.exportXlsx = async function() {
     }
 
     // サマリー列ヘッダー（縦結合）
-    const summaryLabels = ['月合計\n(h)', '月平均\n(h/週)', `常勤換算\n(月/${getMonthlyStandard(f)}h)`, '備考'];
+    const summaryLabels = ['月合計\n(h)', '月平均\n(h/週)', `常勤換算\n(月/${getMonthlyStandard(f)}h)`, '兼務状況\n(兼務先・職務内容)', '備考'];
     summaryLabels.forEach((label, i) => {
       const col = 5 + days + 1 + i;
       ws.mergeCells(tHead1, col, tHead2, col);
@@ -1727,13 +1730,15 @@ window.exportXlsx = async function() {
       const sumCol = 5 + days + 1;
       const avgCol = 5 + days + 2;
       const fteCol = 5 + days + 3;
-      const noteCol = 5 + days + 4;
+      const concCol = 5 + days + 4;
+      const noteCol = 5 + days + 5;
       ws.getCell(r, sumCol).value = total;
       ws.getCell(r, sumCol).numFmt = '0.0';
       ws.getCell(r, avgCol).value = total / 4;
       ws.getCell(r, avgCol).numFmt = '0.0';
       ws.getCell(r, fteCol).value = total / getMonthlyStandard(f);
       ws.getCell(r, fteCol).numFmt = '0.00';
+      ws.getCell(r, concCol).value = s.concurrentDuty || '';
       ws.getCell(r, noteCol).value = s.note;
       [sumCol, avgCol, fteCol].forEach(c => {
         ws.getCell(r, c).font = { ...FONT, bold: true, size: 10 };
@@ -1748,9 +1753,11 @@ window.exportXlsx = async function() {
         cell.alignment = c === 1 ? CENTER : LEFT;
         cell.border = ALL_BORDER;
       });
-      ws.getCell(r, noteCol).font = { ...FONT, size: 9 };
-      ws.getCell(r, noteCol).alignment = LEFT;
-      ws.getCell(r, noteCol).border = ALL_BORDER;
+      [concCol, noteCol].forEach(c => {
+        ws.getCell(r, c).font = { ...FONT, size: 9 };
+        ws.getCell(r, c).alignment = LEFT;
+        ws.getCell(r, c).border = ALL_BORDER;
+      });
       ws.getRow(r).height = 22;
     });
 
@@ -1788,8 +1795,10 @@ window.exportXlsx = async function() {
       c.alignment = CENTER;
       c.border = ALL_BORDER;
     });
-    ws.getCell(totalRow, 5 + days + 4).fill = GOLD_PALE_FILL;
-    ws.getCell(totalRow, 5 + days + 4).border = ALL_BORDER;
+    [5 + days + 4, 5 + days + 5].forEach(c => {
+      ws.getCell(totalRow, c).fill = GOLD_PALE_FILL;
+      ws.getCell(totalRow, c).border = ALL_BORDER;
+    });
     ws.getRow(totalRow).height = 24;
 
     // 署名欄（合計行の3行下）
@@ -1875,7 +1884,7 @@ function generatePrintPages() {
       weekStart = weekEnd + 1;
       weekIdx++;
     }
-    pageHtml += `<th rowspan="2">月合計<br>(h)</th><th rowspan="2">月平均<br>(h/週)</th><th rowspan="2">常勤換算<br>(月/${getMonthlyStandard(f)}h)</th><th rowspan="2">備考</th>`;
+    pageHtml += `<th rowspan="2">月合計<br>(h)</th><th rowspan="2">月平均<br>(h/週)</th><th rowspan="2">常勤換算<br>(月/${getMonthlyStandard(f)}h)</th><th rowspan="2">兼務状況<br>(兼務先・職務内容)</th><th rowspan="2">備考</th>`;
     pageHtml += '</tr><tr>';
     for (let d = 1; d <= days; d++) {
       const dow = getDayOfWeek(f.year, f.month, d);
@@ -1909,6 +1918,7 @@ function generatePrintPages() {
       pageHtml += `<td class="summary">${total.toFixed(1)}</td>`;
       pageHtml += `<td class="summary">${(total/4).toFixed(1)}</td>`;
       pageHtml += `<td class="summary">${(total/getMonthlyStandard(f)).toFixed(2)}</td>`;
+      pageHtml += `<td class="left-align">${wakaWa(s.concurrentDuty || '')}</td>`;
       pageHtml += `<td class="left-align">${wakaWa(s.note)}</td>`;
       pageHtml += '</tr>';
     });
@@ -1926,7 +1936,7 @@ function generatePrintPages() {
     pageHtml += `<td>${grandTotal.toFixed(1)}</td>`;
     pageHtml += `<td>${(grandTotal/4).toFixed(1)}</td>`;
     pageHtml += `<td>${(grandTotal/getMonthlyStandard(f)).toFixed(2)}</td>`;
-    pageHtml += '<td></td>';
+    pageHtml += '<td></td><td></td>';
     pageHtml += '</tr></tfoot></table>';
 
     // 勤務形態の区分 凡例
