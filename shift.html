@@ -162,6 +162,26 @@
     }
     .unit-tab-add:hover { color: var(--gold); border-color: var(--gold); }
 
+    /* 当該単位のサービス提供時間 */
+    .service-time-bar {
+      background: var(--gold-pale); border: 1px solid var(--line);
+      padding: 10px 16px; display: flex; align-items: center;
+      gap: 10px; font-size: 13px; flex-wrap: wrap;
+    }
+    .service-time-bar .lbl {
+      font-family: 'Noto Serif JP', serif; font-weight: 600; color: var(--ink);
+    }
+    .service-time-bar input[type="time"] {
+      border: 1px solid var(--line); padding: 4px 6px; border-radius: 3px;
+      font-size: 13px; width: 110px; background: #fff;
+    }
+    .service-time-bar .total {
+      margin-left: 6px; font-weight: 600; color: var(--gold);
+    }
+    .service-time-bar .hint {
+      margin-left: auto; font-size: 11px; color: var(--ink-mute);
+    }
+
     /* 月選択 */
     .month-selector {
       background: #fff; border: 1px solid var(--line);
@@ -536,6 +556,9 @@
   <!-- 単位タブ -->
   <div class="unit-tabs" id="unit-tabs"></div>
 
+  <!-- 当該単位のサービス提供時間（様式2 (5)） -->
+  <div class="service-time-bar" id="service-time-bar"></div>
+
   <!-- 月選択 -->
   <div class="month-selector">
     <span class="label">基準年月：</span>
@@ -756,7 +779,7 @@ const DAY_LABELS = ['日','月','火','水','木','金','土'];
 function makeDefaultFacilityState(facility) {
   const data = {};
   for (const u of facility.units) {
-    data[u] = { staff: JSON.parse(JSON.stringify(DEFAULT_STAFF)), schedule: {} };
+    data[u] = { staff: JSON.parse(JSON.stringify(DEFAULT_STAFF)), schedule: {}, serviceStart: '', serviceEnd: '' };
   }
   return {
     info: facility.info,
@@ -998,6 +1021,7 @@ function renderAll() {
   renderFacilityTabs();
   renderFacilityInfo();
   renderUnitTabs();
+  renderServiceTimeBar();
   renderPatterns();
   renderShiftTable();
   // 月セレクタを現在の事業所の年月に合わせる
@@ -1081,7 +1105,7 @@ window.addUnit = function() {
   const next = `${f.units.length + 1}単位目`;
   if (f.units.includes(next)) return;
   f.units.push(next);
-  f.data[next] = { staff: JSON.parse(JSON.stringify(DEFAULT_STAFF)), schedule: {} };
+  f.data[next] = { staff: JSON.parse(JSON.stringify(DEFAULT_STAFF)), schedule: {}, serviceStart: '', serviceEnd: '' };
   f.currentUnit = next;
   scheduleSave();
   renderAll();
@@ -1105,6 +1129,52 @@ window.removeUnit = function(unit) {
   if (f.currentUnit === unit) f.currentUnit = f.units[0];
   scheduleSave();
   renderAll();
+};
+
+// ===== サービス提供時間（単位ごと） =====
+function timeToMinutes(t) {
+  if (!t) return null;
+  const m = String(t).match(/^(\d{1,2}):(\d{2})$/);
+  if (!m) return null;
+  return parseInt(m[1],10) * 60 + parseInt(m[2],10);
+}
+
+function calcServiceHours(start, end) {
+  const s = timeToMinutes(start), e = timeToMinutes(end);
+  if (s == null || e == null) return null;
+  let diff = e - s;
+  if (diff < 0) diff += 24 * 60;
+  return diff / 60;
+}
+
+function renderServiceTimeBar() {
+  const wrap = document.getElementById('service-time-bar');
+  const f = curFacility();
+  const u = f.currentUnit;
+  const ud = f.data[u];
+  if (!ud) { wrap.style.display = 'none'; return; }
+  if (typeof ud.serviceStart !== 'string') ud.serviceStart = '';
+  if (typeof ud.serviceEnd !== 'string') ud.serviceEnd = '';
+  const total = calcServiceHours(ud.serviceStart, ud.serviceEnd);
+  const totalText = total != null ? `（計 ${total.toFixed(2)} 時間）` : '';
+  wrap.style.display = 'flex';
+  wrap.innerHTML = `
+    <span class="lbl">当該単位（${escape(u)}）のサービス提供時間：</span>
+    <input type="time" value="${escape(ud.serviceStart)}" onchange="updateServiceTime('serviceStart', this.value)">
+    <span>〜</span>
+    <input type="time" value="${escape(ud.serviceEnd)}" onchange="updateServiceTime('serviceEnd', this.value)">
+    <span class="total">${totalText}</span>
+    <span class="hint">※ 様式2 (5) — 利用者にサービスを提供する時間帯（送迎時間は含まない）</span>
+  `;
+}
+
+window.updateServiceTime = function(key, value) {
+  const f = curFacility();
+  const ud = f.data[f.currentUnit];
+  if (!ud) return;
+  ud[key] = value;
+  scheduleSave();
+  renderServiceTimeBar();
 };
 
 function switchFacility(fid) {
@@ -1435,11 +1505,16 @@ window.exportXlsx = async function() {
     ws.getCell(1, totalCols - 3).alignment = { horizontal: 'right', vertical: 'middle', indent: 1 };
     ws.getRow(1).height = 32;
 
-    // 2-4行目: メタ情報（事業所名・サービス種別・所在地・基準年月・単位・定員）
+    // 2-4行目: メタ情報（事業所名・サービス種別・所在地・基準年月・単位・定員・サービス提供時間）
+    const ud0 = f.data[u] || {};
+    const svcTotal = calcServiceHours(ud0.serviceStart, ud0.serviceEnd);
+    const svcTimeText = (ud0.serviceStart && ud0.serviceEnd)
+      ? `${ud0.serviceStart} 〜 ${ud0.serviceEnd}（計 ${svcTotal != null ? svcTotal.toFixed(2) : '-'} 時間）`
+      : '未設定';
     const metaItems = [
       ['事業所名', f.info.name, '基準年月', `令和${f.year - 2018}年（${f.year}年） ${f.month}月`],
       ['サービス種別', f.info.service, '単位', u],
-      ['所在地', f.info.address, '利用定員', `1日 ${f.info.capacity}名`],
+      ['所在地', f.info.address, 'サービス提供時間', svcTimeText],
     ];
     metaItems.forEach((row, idx) => {
       const r = idx + 2;
@@ -1675,6 +1750,13 @@ function generatePrintPages() {
           <div class="lbl">単位</div><div class="val"><strong>${wakaWa(u)}</strong></div>
           <div class="lbl">所在地</div><div class="val">${wakaWa(f.info.address)}</div>
           <div class="lbl">利用定員</div><div class="val">1日 ${f.info.capacity}名</div>
+          <div class="lbl">サービス提供時間</div><div class="val" style="grid-column:span 3">${(() => {
+            const ud = f.data[u] || {};
+            const t = calcServiceHours(ud.serviceStart, ud.serviceEnd);
+            return (ud.serviceStart && ud.serviceEnd)
+              ? `${wakaWa(ud.serviceStart)} 〜 ${wakaWa(ud.serviceEnd)}　<strong>（計 ${t != null ? t.toFixed(2) : '-'} 時間）</strong>`
+              : '<span style="color:var(--ink-mute)">未設定</span>';
+          })()}</div>
         </div>
       </div>`;
 
