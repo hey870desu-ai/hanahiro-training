@@ -9,7 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -306,24 +307,151 @@
     .save-status.saving { color: var(--gold); }
     .save-status.error { color: #c0392b; }
 
-    /* 印刷 */
-    @page { size: A3 landscape; margin: 8mm; }
+    /* 印刷用専用ページ（行政提出向け） */
+    .print-only-pages { display: none; }
+    @page { size: A3 landscape; margin: 12mm 10mm; }
     @media print {
-      .topbar, .actions-bar, details, .month-selector button, .facility-tabs { display: none !important; }
-      body { background: #fff; padding: 0; font-size: 9pt; }
-      .container { padding: 0; max-width: 100%; }
-      .doc-head { padding: 4mm 0; }
-      .doc-title { font-size: 18pt; }
-      .facility-info { font-size: 9pt; padding: 8px 12px; }
-      .month-selector { padding: 6px 12px; font-size: 9pt; }
-      .month-selector select { border: none; padding: 0; font-size: 11pt; font-weight: bold; color: var(--ink); }
-      .section-head { padding: 6px 10px; font-size: 11pt; }
-      .shift-table { font-size: 9pt; }
-      .shift-table thead th { padding: 4px 2px; font-size: 9pt; position: static; }
-      .shift-table tbody td.shift-cell select { font-size: 10pt; -webkit-appearance: none; appearance: none; }
-      .shift-table tfoot td { font-size: 9pt; }
-      select { background: transparent !important; }
-      .del-row-btn, .del-btn, .add-row-btn { display: none !important; }
+      /* 画面UIをすべて隠す */
+      .topbar, .actions-bar, details, .month-selector, .facility-tabs,
+      .unit-tabs, .facility-info, .doc-head, .section { display: none !important; }
+      body { background: #fff; padding: 0; font-size: 9pt; color: var(--ink); }
+      .container { padding: 0; max-width: 100%; margin: 0; }
+
+      /* 印刷専用ページを表示 */
+      .print-only-pages { display: block !important; }
+      .print-page {
+        page-break-after: always;
+        page-break-inside: avoid;
+        padding: 0;
+      }
+      .print-page:last-child { page-break-after: auto; }
+
+      /* 印刷ヘッダー（公的書式風） */
+      .print-header {
+        border: 1px solid var(--ink);
+        padding: 0;
+        margin-bottom: 4mm;
+      }
+      .print-header-top {
+        background: var(--ink);
+        color: #fff;
+        padding: 3mm 6mm;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .print-header-corp {
+        font-family: 'Noto Serif JP', serif;
+        font-size: 11pt;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+      }
+      .print-header-title {
+        font-family: 'Noto Serif JP', serif;
+        font-size: 18pt;
+        font-weight: 700;
+        letter-spacing: 0.3em;
+      }
+      .print-header-stamp {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 9pt;
+        letter-spacing: 0.2em;
+        color: var(--gold-soft);
+      }
+      .print-header-meta {
+        display: grid;
+        grid-template-columns: auto 1fr auto 1fr;
+        gap: 0;
+      }
+      .print-header-meta .lbl {
+        background: var(--gold-pale);
+        padding: 2.5mm 5mm;
+        font-weight: 600;
+        font-size: 9.5pt;
+        color: var(--ink-soft);
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      .print-header-meta .val {
+        padding: 2.5mm 5mm;
+        font-size: 9.5pt;
+        color: var(--ink);
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+      .print-header-meta .val:last-child { border-right: none; }
+      .print-header-meta > div:nth-last-child(-n+4) { border-bottom: none; }
+
+      /* 印刷シフト表 */
+      .print-shift-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 8.5pt;
+        font-family: 'Yu Gothic', 'Noto Sans JP', sans-serif;
+      }
+      .print-shift-table th, .print-shift-table td {
+        border: 0.5pt solid var(--ink-soft);
+        padding: 1.5mm 1mm;
+        text-align: center;
+        vertical-align: middle;
+      }
+      .print-shift-table thead th {
+        background: var(--ink);
+        color: #fff;
+        font-weight: 600;
+        font-size: 8.5pt;
+      }
+      .print-shift-table thead .day-sat { background: #2c4159; }
+      .print-shift-table thead .day-sun { background: #5a3338; }
+      .print-shift-table tbody td.weekend { background: var(--weekend); }
+      .print-shift-table tbody td.summary {
+        background: var(--gold-pale);
+        font-weight: 700;
+      }
+      .print-shift-table tbody td.left-align { text-align: left; padding-left: 2mm; }
+      .print-shift-table tfoot td {
+        background: var(--gold-pale);
+        font-weight: 700;
+        font-size: 9pt;
+      }
+      .print-shift-table .week-divider { border-left: 1.5pt solid var(--gold); }
+
+      /* 印刷フッター（提出用署名欄） */
+      .print-footer {
+        margin-top: 4mm;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        font-size: 9pt;
+      }
+      .print-footer .meta-left {
+        color: var(--ink-soft);
+        font-size: 8.5pt;
+      }
+      .print-footer .signature-area {
+        display: flex;
+        gap: 6mm;
+      }
+      .print-signature-box {
+        border: 1px solid var(--ink);
+        width: 28mm;
+        height: 22mm;
+        position: relative;
+      }
+      .print-signature-box .role {
+        background: var(--gold-pale);
+        padding: 1mm 2mm;
+        font-size: 8pt;
+        font-weight: 600;
+        border-bottom: 1px solid var(--ink);
+        text-align: center;
+      }
+      .print-signature-box .name {
+        padding: 1mm 2mm;
+        font-size: 9pt;
+        text-align: center;
+      }
     }
   </style>
 </head>
@@ -422,7 +550,8 @@
 
   <!-- バックアップ -->
   <div class="actions-bar">
-    <button onclick="exportXlsx()">📊 Excel書き出し</button>
+    <button onclick="exportXlsx()">📊 Excel書き出し（行政書式）</button>
+    <button class="secondary" onclick="window.print()">🖨️ PDF / 印刷（行政書式）</button>
     <button class="secondary" onclick="exportJson()">💾 JSONバックアップ</button>
     <button class="secondary" onclick="document.getElementById('json-import').click()">📥 JSON読み込み</button>
     <input type="file" id="json-import" accept=".json" style="display:none" onchange="importJson(event)">
@@ -432,6 +561,9 @@
 </div>
 
 </div><!-- /main-app -->
+
+<!-- 印刷専用ページ（beforeprintで動的生成） -->
+<div class="print-only-pages" id="print-only-pages"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -1016,48 +1148,444 @@ function renderShiftTable() {
   document.getElementById('day-info').textContent = `${days}日 / 1日(月初) ${DAY_LABELS[getDayOfWeek(f.year, f.month, 1)]}曜`;
 }
 
-// ===== Excel書き出し =====
-window.exportXlsx = function() {
+// ===== Excel書き出し（ExcelJS / 行政提出書式） =====
+window.exportXlsx = async function() {
   const f = curFacility();
   const days = daysInMonth(f.year, f.month);
-  const wb = XLSX.utils.book_new();
+  const wb = new ExcelJS.Workbook();
+  wb.creator = '株式会社はなひろ';
+  wb.created = new Date();
 
-  // シフトパターン
-  const pData = [['コード','シフト名','開始','終了','休憩','実働(h)','備考']];
-  f.patterns.forEach(p => pData.push([p.code, p.name, p.start, p.end, p.breakTime, p.hours, p.note]));
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(pData), 'シフトパターン');
+  // 共通スタイル
+  const FONT = { name: 'Yu Gothic' };
+  const INK_COLOR = { argb: 'FF1F2933' };
+  const GOLD_COLOR = { argb: 'FFA87827' };
+  const GOLD_PALE_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF4EAD6' } };
+  const HEADER_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1F2933' } };
+  const SAT_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF2C4159' } };
+  const SUN_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF5A3338' } };
+  const WEEKEND_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF4EC' } };
+  const THIN_BORDER = { style: 'thin', color: { argb: 'FF888888' } };
+  const ALL_BORDER = { top: THIN_BORDER, left: THIN_BORDER, bottom: THIN_BORDER, right: THIN_BORDER };
+  const CENTER = { horizontal: 'center', vertical: 'middle', wrapText: true };
+  const LEFT = { horizontal: 'left', vertical: 'middle', wrapText: true };
 
-  // 各単位ごとに1シート
+  // ----- シフトパターン シート -----
+  const wsP = wb.addWorksheet('シフトパターン', { pageSetup: { paperSize: 9, orientation: 'portrait', fitToPage: true, fitToWidth: 1 } });
+  wsP.columns = [
+    { header: 'コード', key: 'code', width: 10 },
+    { header: 'シフト名', key: 'name', width: 22 },
+    { header: '開始', key: 'start', width: 12 },
+    { header: '終了', key: 'end', width: 12 },
+    { header: '休憩', key: 'br', width: 10 },
+    { header: '実働(h)', key: 'h', width: 12 },
+    { header: '備考', key: 'note', width: 32 },
+  ];
+  const phRow = wsP.getRow(1);
+  phRow.eachCell(c => { c.font = { ...FONT, bold: true, color: { argb: 'FFFFFFFF' } }; c.fill = HEADER_FILL; c.alignment = CENTER; c.border = ALL_BORDER; });
+  phRow.height = 24;
+  f.patterns.forEach(p => {
+    const r = wsP.addRow({ code: p.code, name: p.name, start: p.start, end: p.end, br: p.breakTime, h: p.hours, note: p.note });
+    r.eachCell(c => { c.font = FONT; c.alignment = CENTER; c.border = ALL_BORDER; });
+    r.getCell('h').numFmt = '0.0';
+    r.getCell('h').fill = GOLD_PALE_FILL;
+    r.getCell('h').font = { ...FONT, bold: true };
+    r.getCell('name').alignment = LEFT;
+    r.getCell('note').alignment = LEFT;
+    r.height = 22;
+  });
+
+  // ----- 各単位ごとに1シート -----
   for (const u of f.units) {
-    const main = [];
-    main.push([`【${f.info.name}】 ${u} 勤務形態一覧表 ${f.year}年${f.month}月`]);
-    main.push([]);
-    const hdr = ['No.','職種','雇用形態','氏名'];
-    for (let d = 1; d <= days; d++) {
-      hdr.push(`${d}\n${DAY_LABELS[getDayOfWeek(f.year, f.month, d)]}`);
-    }
-    hdr.push('月合計(h)','月平均(h/週)','常勤換算(月/160h)','備考');
-    main.push(hdr);
+    const sheetName = u.length > 31 ? u.slice(0, 31) : u;  // Excelシート名31文字制限
+    const ws = wb.addWorksheet(sheetName, {
+      pageSetup: {
+        paperSize: 8,  // A3
+        orientation: 'landscape',
+        fitToPage: true,
+        fitToWidth: 1,
+        fitToHeight: 0,
+        margins: { left: 0.4, right: 0.4, top: 0.5, bottom: 0.5, header: 0.3, footer: 0.3 },
+      },
+    });
 
+    // 列幅
+    ws.getColumn(1).width = 4;
+    ws.getColumn(2).width = 14;
+    ws.getColumn(3).width = 11;
+    ws.getColumn(4).width = 14;
+    for (let d = 1; d <= days; d++) {
+      ws.getColumn(4 + d).width = 4.5;
+    }
+    ws.getColumn(4 + days + 1).width = 9;
+    ws.getColumn(4 + days + 2).width = 9;
+    ws.getColumn(4 + days + 3).width = 10;
+    ws.getColumn(4 + days + 4).width = 14;
+    const totalCols = 4 + days + 4;
+
+    // === ヘッダー（公的書式風） ===
+    // 1行目: 法人名（左）/ タイトル（中央）/ 提出日（右）
+    ws.mergeCells(1, 1, 1, 4);
+    ws.getCell('A1').value = '株式会社はなひろ';
+    ws.getCell('A1').font = { ...FONT, size: 12, bold: true };
+    ws.getCell('A1').fill = HEADER_FILL;
+    ws.getCell('A1').font = { ...FONT, size: 12, bold: true, color: { argb: 'FFFFFFFF' } };
+    ws.getCell('A1').alignment = { horizontal: 'left', vertical: 'middle', indent: 1 };
+
+    ws.mergeCells(1, 5, 1, totalCols - 4);
+    ws.getCell(1, 5).value = '勤 務 形 態 一 覧 表';
+    ws.getCell(1, 5).font = { ...FONT, size: 16, bold: true, color: { argb: 'FFFFFFFF' } };
+    ws.getCell(1, 5).fill = HEADER_FILL;
+    ws.getCell(1, 5).alignment = { horizontal: 'center', vertical: 'middle' };
+
+    ws.mergeCells(1, totalCols - 3, 1, totalCols);
+    ws.getCell(1, totalCols - 3).value = `提出日：令和${f.year - 2018}年 ${f.month}月`;
+    ws.getCell(1, totalCols - 3).font = { ...FONT, size: 10, color: { argb: 'FFFFFFFF' } };
+    ws.getCell(1, totalCols - 3).fill = HEADER_FILL;
+    ws.getCell(1, totalCols - 3).alignment = { horizontal: 'right', vertical: 'middle', indent: 1 };
+    ws.getRow(1).height = 32;
+
+    // 2-4行目: メタ情報（事業所名・サービス種別・所在地・基準年月・単位・定員）
+    const metaItems = [
+      ['事業所名', f.info.name, '基準年月', `令和${f.year - 2018}年（${f.year}年） ${f.month}月`],
+      ['サービス種別', f.info.service, '単位', u],
+      ['所在地', f.info.address, '利用定員', `1日 ${f.info.capacity}名`],
+    ];
+    metaItems.forEach((row, idx) => {
+      const r = idx + 2;
+      const halfA = Math.floor((totalCols - 2) / 2);
+      ws.getCell(r, 1).value = row[0];
+      ws.mergeCells(r, 2, r, halfA);
+      ws.getCell(r, 2).value = row[1];
+      ws.getCell(r, halfA + 1).value = row[2];
+      ws.mergeCells(r, halfA + 2, r, totalCols);
+      ws.getCell(r, halfA + 2).value = row[3];
+
+      [1, halfA + 1].forEach(c => {
+        ws.getCell(r, c).font = { ...FONT, bold: true, size: 10 };
+        ws.getCell(r, c).fill = GOLD_PALE_FILL;
+        ws.getCell(r, c).alignment = CENTER;
+        ws.getCell(r, c).border = ALL_BORDER;
+      });
+      [2, halfA + 2].forEach(c => {
+        ws.getCell(r, c).font = { ...FONT, size: 10 };
+        ws.getCell(r, c).alignment = LEFT;
+        ws.getCell(r, c).border = ALL_BORDER;
+      });
+      ws.getRow(r).height = 20;
+    });
+
+    // 表ヘッダー（2段組）
+    const tHead1 = 6;
+    const tHead2 = 7;
+    ws.getRow(tHead1).height = 20;
+    ws.getRow(tHead2).height = 20;
+
+    // 固定情報（縦結合）
+    ['No.', '職種', '雇用形態', '氏名'].forEach((label, i) => {
+      ws.mergeCells(tHead1, i + 1, tHead2, i + 1);
+      const c = ws.getCell(tHead1, i + 1);
+      c.value = label;
+      c.font = { ...FONT, bold: true, size: 10, color: { argb: 'FFFFFFFF' } };
+      c.fill = HEADER_FILL;
+      c.alignment = CENTER;
+      c.border = ALL_BORDER;
+    });
+
+    // 第1〜4週 ラベル（横結合）
+    let weekStart = 1;
+    let weekIdx = 1;
+    while (weekStart <= days) {
+      const weekEnd = Math.min(weekStart + 6, days);
+      const span = weekEnd - weekStart + 1;
+      ws.mergeCells(tHead1, 4 + weekStart, tHead1, 4 + weekEnd);
+      const c = ws.getCell(tHead1, 4 + weekStart);
+      c.value = `第${weekIdx}週`;
+      c.font = { ...FONT, bold: true, size: 10, color: { argb: 'FFFFFFFF' } };
+      c.fill = { type: 'pattern', pattern: 'solid', fgColor: GOLD_COLOR };
+      c.alignment = CENTER;
+      c.border = ALL_BORDER;
+      weekStart = weekEnd + 1;
+      weekIdx++;
+    }
+
+    // 曜日（28日分）
+    for (let d = 1; d <= days; d++) {
+      const dow = getDayOfWeek(f.year, f.month, d);
+      const c = ws.getCell(tHead2, 4 + d);
+      c.value = `${d}\n${DAY_LABELS[dow]}`;
+      c.font = { ...FONT, size: 9, color: { argb: 'FFFFFFFF' } };
+      c.fill = dow === 6 ? SAT_FILL : (dow === 0 ? SUN_FILL : HEADER_FILL);
+      c.alignment = CENTER;
+      c.border = ALL_BORDER;
+    }
+
+    // サマリー列ヘッダー（縦結合）
+    const summaryLabels = ['月合計\n(h)', '月平均\n(h/週)', '常勤換算\n(月/160h)', '備考'];
+    summaryLabels.forEach((label, i) => {
+      const col = 4 + days + 1 + i;
+      ws.mergeCells(tHead1, col, tHead2, col);
+      const c = ws.getCell(tHead1, col);
+      c.value = label;
+      c.font = { ...FONT, bold: true, size: 9, color: { argb: 'FFFFFFFF' } };
+      c.fill = HEADER_FILL;
+      c.alignment = CENTER;
+      c.border = ALL_BORDER;
+    });
+
+    // データ行
     const unitData = f.data[u];
+    const k = `${f.year}-${String(f.month).padStart(2,'0')}`;
+    let dataStartRow = tHead2 + 1;
     unitData.staff.forEach((s, i) => {
-      const row = [i+1, s.jobTitle, s.employmentType, s.name];
-      const k = `${f.year}-${String(f.month).padStart(2,'0')}`;
+      const r = dataStartRow + i;
+      ws.getCell(r, 1).value = i + 1;
+      ws.getCell(r, 2).value = s.jobTitle;
+      ws.getCell(r, 3).value = s.employmentType;
+      ws.getCell(r, 4).value = s.name;
       let total = 0;
       for (let d = 1; d <= days; d++) {
         const code = (unitData.schedule[k] && unitData.schedule[k][i] && unitData.schedule[k][i][d]) || '';
-        row.push(code);
+        const c = ws.getCell(r, 4 + d);
+        c.value = code;
+        c.font = { ...FONT, size: 9 };
+        c.alignment = CENTER;
+        c.border = ALL_BORDER;
+        const dow = getDayOfWeek(f.year, f.month, d);
+        if (dow === 6 || dow === 0) c.fill = WEEKEND_FILL;
         const p = f.patterns.find(pp => pp.code === code);
         if (p) total += p.hours;
       }
-      row.push(total, total/4, total/160, s.note);
-      main.push(row);
+      // 月合計、月平均、常勤換算
+      const sumCol = 4 + days + 1;
+      const avgCol = 4 + days + 2;
+      const fteCol = 4 + days + 3;
+      const noteCol = 4 + days + 4;
+      ws.getCell(r, sumCol).value = total;
+      ws.getCell(r, sumCol).numFmt = '0.0';
+      ws.getCell(r, avgCol).value = total / 4;
+      ws.getCell(r, avgCol).numFmt = '0.0';
+      ws.getCell(r, fteCol).value = total / 160;
+      ws.getCell(r, fteCol).numFmt = '0.00';
+      ws.getCell(r, noteCol).value = s.note;
+      [sumCol, avgCol, fteCol].forEach(c => {
+        ws.getCell(r, c).font = { ...FONT, bold: true, size: 10 };
+        ws.getCell(r, c).fill = GOLD_PALE_FILL;
+        ws.getCell(r, c).alignment = CENTER;
+        ws.getCell(r, c).border = ALL_BORDER;
+      });
+      // 固定列スタイル
+      [1, 2, 3, 4].forEach(c => {
+        const cell = ws.getCell(r, c);
+        cell.font = { ...FONT, size: 10 };
+        cell.alignment = c === 1 ? CENTER : LEFT;
+        cell.border = ALL_BORDER;
+      });
+      ws.getCell(r, noteCol).font = { ...FONT, size: 9 };
+      ws.getCell(r, noteCol).alignment = LEFT;
+      ws.getCell(r, noteCol).border = ALL_BORDER;
+      ws.getRow(r).height = 22;
     });
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(main), u);
+
+    // 合計行
+    const totalRow = dataStartRow + unitData.staff.length;
+    ws.mergeCells(totalRow, 1, totalRow, 4);
+    ws.getCell(totalRow, 1).value = '合計';
+    ws.getCell(totalRow, 1).font = { ...FONT, bold: true, size: 11 };
+    ws.getCell(totalRow, 1).fill = GOLD_PALE_FILL;
+    ws.getCell(totalRow, 1).alignment = { horizontal: 'right', vertical: 'middle', indent: 1 };
+    ws.getCell(totalRow, 1).border = ALL_BORDER;
+    let grandTotal = 0;
+    for (let d = 1; d <= days; d++) {
+      let dayTotal = 0;
+      unitData.staff.forEach((_, i) => {
+        const code = (unitData.schedule[k] && unitData.schedule[k][i] && unitData.schedule[k][i][d]) || '';
+        const p = f.patterns.find(pp => pp.code === code);
+        if (p) dayTotal += p.hours;
+      });
+      const c = ws.getCell(totalRow, 4 + d);
+      c.value = dayTotal;
+      c.numFmt = '0.0;-0.0;""';
+      c.font = { ...FONT, bold: true, size: 9 };
+      c.fill = GOLD_PALE_FILL;
+      c.alignment = CENTER;
+      c.border = ALL_BORDER;
+      grandTotal += dayTotal;
+    }
+    [4 + days + 1, 4 + days + 2, 4 + days + 3].forEach((col, i) => {
+      const c = ws.getCell(totalRow, col);
+      c.value = i === 0 ? grandTotal : (i === 1 ? grandTotal / 4 : grandTotal / 160);
+      c.numFmt = i === 2 ? '0.00' : '0.0';
+      c.font = { ...FONT, bold: true, size: 10 };
+      c.fill = GOLD_PALE_FILL;
+      c.alignment = CENTER;
+      c.border = ALL_BORDER;
+    });
+    ws.getCell(totalRow, 4 + days + 4).fill = GOLD_PALE_FILL;
+    ws.getCell(totalRow, 4 + days + 4).border = ALL_BORDER;
+    ws.getRow(totalRow).height = 24;
+
+    // 署名欄（合計行の3行下）
+    const sigRow = totalRow + 3;
+    ws.mergeCells(sigRow, 1, sigRow, 4);
+    ws.getCell(sigRow, 1).value = `作成日：${new Date().toLocaleDateString('ja-JP')}`;
+    ws.getCell(sigRow, 1).font = { ...FONT, size: 9, italic: true };
+
+    ws.mergeCells(sigRow, totalCols - 7, sigRow + 2, totalCols - 5);
+    const repBox = ws.getCell(sigRow, totalCols - 7);
+    repBox.value = '代表取締役\n塙 啓之';
+    repBox.font = { ...FONT, size: 10, bold: true };
+    repBox.alignment = CENTER;
+    repBox.border = { top: { style: 'medium' }, left: { style: 'medium' }, bottom: { style: 'medium' }, right: { style: 'medium' } };
+
+    ws.mergeCells(sigRow, totalCols - 4, sigRow + 2, totalCols - 2);
+    const mgrBox = ws.getCell(sigRow, totalCols - 4);
+    mgrBox.value = '管理者\n（氏名）';
+    mgrBox.font = { ...FONT, size: 10, bold: true };
+    mgrBox.alignment = CENTER;
+    mgrBox.border = { top: { style: 'medium' }, left: { style: 'medium' }, bottom: { style: 'medium' }, right: { style: 'medium' } };
+
+    ws.mergeCells(sigRow, totalCols - 1, sigRow + 2, totalCols);
+    const stampBox = ws.getCell(sigRow, totalCols - 1);
+    stampBox.value = '印';
+    stampBox.font = { ...FONT, size: 14, bold: true, color: { argb: 'FFC0392B' } };
+    stampBox.alignment = CENTER;
+    stampBox.border = { top: { style: 'medium' }, left: { style: 'medium' }, bottom: { style: 'medium' }, right: { style: 'medium' } };
   }
-  const fname = `${f.info.name.replace(/[／\/]/g,'_')}_勤務形態${f.year}年${f.month}月.xlsx`;
-  XLSX.writeFile(wb, fname);
+
+  const buf = await wb.xlsx.writeBuffer();
+  const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const fname = `勤務形態一覧表_${f.shortName}_${f.year}年${f.month}月.xlsx`;
+  saveAs(blob, fname);
 };
+
+// ===== 印刷用ページの動的生成 =====
+function generatePrintPages() {
+  const f = curFacility();
+  const days = daysInMonth(f.year, f.month);
+  const k = `${f.year}-${String(f.month).padStart(2,'0')}`;
+  const wakaWa = (str) => String(str || '').replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":"&#39;"}[c]));
+
+  let html = '';
+  for (const u of f.units) {
+    const unitData = f.data[u];
+
+    // ヘッダー
+    let pageHtml = `<div class="print-page">
+      <div class="print-header">
+        <div class="print-header-top">
+          <span class="print-header-corp">株式会社はなひろ</span>
+          <span class="print-header-title">勤 務 形 態 一 覧 表</span>
+          <span class="print-header-stamp">CORPORATE PROFILE</span>
+        </div>
+        <div class="print-header-meta">
+          <div class="lbl">事業所名</div><div class="val">${wakaWa(f.info.name)}</div>
+          <div class="lbl">基準年月</div><div class="val">令和${f.year - 2018}年（${f.year}年） ${f.month}月</div>
+          <div class="lbl">サービス種別</div><div class="val">${wakaWa(f.info.service)}</div>
+          <div class="lbl">単位</div><div class="val"><strong>${wakaWa(u)}</strong></div>
+          <div class="lbl">所在地</div><div class="val">${wakaWa(f.info.address)}</div>
+          <div class="lbl">利用定員</div><div class="val">1日 ${f.info.capacity}名</div>
+        </div>
+      </div>`;
+
+    // 表
+    pageHtml += '<table class="print-shift-table"><thead>';
+    pageHtml += '<tr>';
+    pageHtml += '<th rowspan="2">No.</th><th rowspan="2">職種</th><th rowspan="2">雇用形態</th><th rowspan="2">氏名</th>';
+    let weekStart = 1, weekIdx = 1;
+    while (weekStart <= days) {
+      const weekEnd = Math.min(weekStart + 6, days);
+      const span = weekEnd - weekStart + 1;
+      pageHtml += `<th colspan="${span}" style="background:var(--gold)">第${weekIdx}週</th>`;
+      weekStart = weekEnd + 1;
+      weekIdx++;
+    }
+    pageHtml += '<th rowspan="2">月合計<br>(h)</th><th rowspan="2">月平均<br>(h/週)</th><th rowspan="2">常勤換算<br>(月/160h)</th><th rowspan="2">備考</th>';
+    pageHtml += '</tr><tr>';
+    for (let d = 1; d <= days; d++) {
+      const dow = getDayOfWeek(f.year, f.month, d);
+      let cls = '';
+      if (dow === 6) cls = ' class="day-sat"';
+      if (dow === 0) cls = ' class="day-sun"';
+      pageHtml += `<th${cls}>${d}<br>${DAY_LABELS[dow]}</th>`;
+    }
+    pageHtml += '</tr></thead><tbody>';
+
+    // 各職員
+    let grandTotal = 0;
+    unitData.staff.forEach((s, i) => {
+      let total = 0;
+      pageHtml += '<tr>';
+      pageHtml += `<td>${i+1}</td>`;
+      pageHtml += `<td class="left-align">${wakaWa(s.jobTitle)}</td>`;
+      pageHtml += `<td>${wakaWa(s.employmentType)}</td>`;
+      pageHtml += `<td class="left-align">${wakaWa(s.name)}</td>`;
+      for (let d = 1; d <= days; d++) {
+        const dow = getDayOfWeek(f.year, f.month, d);
+        const code = (unitData.schedule[k] && unitData.schedule[k][i] && unitData.schedule[k][i][d]) || '';
+        const p = f.patterns.find(pp => pp.code === code);
+        if (p) total += p.hours;
+        let cls = '';
+        if (dow === 6 || dow === 0) cls = ' class="weekend"';
+        pageHtml += `<td${cls}>${wakaWa(code)}</td>`;
+      }
+      grandTotal += total;
+      pageHtml += `<td class="summary">${total.toFixed(1)}</td>`;
+      pageHtml += `<td class="summary">${(total/4).toFixed(1)}</td>`;
+      pageHtml += `<td class="summary">${(total/160).toFixed(2)}</td>`;
+      pageHtml += `<td class="left-align">${wakaWa(s.note)}</td>`;
+      pageHtml += '</tr>';
+    });
+    pageHtml += '</tbody><tfoot><tr>';
+    pageHtml += '<td colspan="4" style="text-align:right;padding-right:3mm">合計</td>';
+    for (let d = 1; d <= days; d++) {
+      let dayTotal = 0;
+      unitData.staff.forEach((_, i) => {
+        const code = (unitData.schedule[k] && unitData.schedule[k][i] && unitData.schedule[k][i][d]) || '';
+        const p = f.patterns.find(pp => pp.code === code);
+        if (p) dayTotal += p.hours;
+      });
+      pageHtml += `<td>${dayTotal > 0 ? dayTotal.toFixed(1) : '-'}</td>`;
+    }
+    pageHtml += `<td>${grandTotal.toFixed(1)}</td>`;
+    pageHtml += `<td>${(grandTotal/4).toFixed(1)}</td>`;
+    pageHtml += `<td>${(grandTotal/160).toFixed(2)}</td>`;
+    pageHtml += '<td></td>';
+    pageHtml += '</tr></tfoot></table>';
+
+    // フッター
+    pageHtml += `<div class="print-footer">
+      <div class="meta-left">
+        作成日：${new Date().toLocaleDateString('ja-JP')}<br>
+        <span style="color:var(--ink-mute);font-size:8pt">勤務形態一覧表 ／ ${wakaWa(f.info.name)} ／ ${wakaWa(u)}</span>
+      </div>
+      <div class="signature-area">
+        <div class="print-signature-box">
+          <div class="role">代表取締役</div>
+          <div class="name">塙 啓之</div>
+        </div>
+        <div class="print-signature-box">
+          <div class="role">管理者</div>
+          <div class="name">　</div>
+        </div>
+        <div class="print-signature-box">
+          <div class="role">印</div>
+          <div class="name" style="color:#c0392b;font-size:18pt;font-weight:bold;padding-top:2mm">　</div>
+        </div>
+      </div>
+    </div>`;
+
+    pageHtml += '</div>'; // /.print-page
+    html += pageHtml;
+  }
+
+  document.getElementById('print-only-pages').innerHTML = html;
+}
+
+window.addEventListener('beforeprint', generatePrintPages);
+window.addEventListener('afterprint', () => {
+  document.getElementById('print-only-pages').innerHTML = '';
+});
 
 window.exportJson = function() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
