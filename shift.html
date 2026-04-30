@@ -113,6 +113,37 @@
       font-family: 'Noto Serif JP', serif;
     }
 
+    /* 単位タブ */
+    .unit-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 8px;
+      border-bottom: 2px solid var(--gold);
+      padding: 0 4px;
+      align-items: center;
+    }
+    .unit-tab {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-bottom: none;
+      padding: 10px 24px;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink-soft);
+      cursor: pointer;
+      border-radius: 8px 8px 0 0;
+      transition: all 0.15s;
+      position: relative;
+      bottom: -2px;
+    }
+    .unit-tab:hover { color: var(--ink); }
+    .unit-tab.active {
+      background: var(--gold);
+      color: #fff;
+      border-color: var(--gold);
+    }
+
     /* 月選択 */
     .month-selector {
       background: #fff;
@@ -405,6 +436,13 @@
     <div class="row"><span class="lbl">利用定員</span><span>1日 18名</span></div>
   </div>
 
+  <!-- 単位切り替えタブ -->
+  <div class="unit-tabs">
+    <button class="unit-tab" data-unit="午前の部" onclick="switchUnit('午前の部')">🌅 午前の部</button>
+    <button class="unit-tab" data-unit="午後の部" onclick="switchUnit('午後の部')">🌆 午後の部</button>
+    <span style="margin-left:auto;font-size:12px;color:var(--ink-mute)">※ 各単位ごとに職員と勤務予定を独立管理／Excel書き出し時は両方が出力されます</span>
+  </div>
+
   <!-- 月選択 -->
   <div class="month-selector">
     <span class="label">基準年月：</span>
@@ -503,14 +541,46 @@ const DEFAULT_STAFF = [
   { jobTitle: '介護職員',        employmentType: '非常勤専従', name: '', note: '' },
 ];
 
+const UNITS = ['午前の部', '午後の部'];
+const DEFAULT_UNIT_DATA = () => ({
+  staff: JSON.parse(JSON.stringify(DEFAULT_STAFF)),
+  schedule: {},
+});
+
 let state = {
   year: 2026,
   month: 6,
+  currentUnit: '午前の部',
   patterns: JSON.parse(JSON.stringify(DEFAULT_PATTERNS)),
-  staff: JSON.parse(JSON.stringify(DEFAULT_STAFF)),
-  // schedule[year-month][staffIndex][day] = code
-  schedule: {},
+  units: {
+    '午前の部': DEFAULT_UNIT_DATA(),
+    '午後の部': DEFAULT_UNIT_DATA(),
+  },
 };
+
+// 旧データ構造（staff/schedule 直下）からのマイグレーション
+function migrateLegacy(obj) {
+  if (obj.staff || obj.schedule) {
+    const legacyStaff = obj.staff || JSON.parse(JSON.stringify(DEFAULT_STAFF));
+    const legacySchedule = obj.schedule || {};
+    obj.units = {
+      '午前の部': { staff: legacyStaff, schedule: legacySchedule },
+      '午後の部': DEFAULT_UNIT_DATA(),
+    };
+    delete obj.staff;
+    delete obj.schedule;
+  }
+  if (!obj.currentUnit) obj.currentUnit = '午前の部';
+  if (!obj.units) obj.units = { '午前の部': DEFAULT_UNIT_DATA(), '午後の部': DEFAULT_UNIT_DATA() };
+  for (const u of UNITS) {
+    if (!obj.units[u]) obj.units[u] = DEFAULT_UNIT_DATA();
+  }
+  return obj;
+}
+
+// 現在の単位の便利ゲッター
+function curStaff() { return state.units[state.currentUnit].staff; }
+function curSchedule() { return state.units[state.currentUnit].schedule; }
 
 // ===== 永続化 =====
 function save() {
@@ -527,8 +597,22 @@ function load() {
     if (raw) {
       const obj = JSON.parse(raw);
       state = Object.assign(state, obj);
+      state = migrateLegacy(state);
     }
   } catch(e) { console.error(e); }
+}
+
+function switchUnit(unit) {
+  if (!UNITS.includes(unit)) return;
+  state.currentUnit = unit;
+  save();
+  updateUnitTabs();
+  render();
+}
+function updateUnitTabs() {
+  document.querySelectorAll('.unit-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.unit === state.currentUnit);
+  });
 }
 function updateSaveStatus(msg) {
   document.getElementById('save-status').textContent = msg;
@@ -537,14 +621,16 @@ function updateSaveStatus(msg) {
 // ===== 月キー =====
 function monthKey() { return `${state.year}-${String(state.month).padStart(2,'0')}`; }
 function getSchedule(staffIdx, day) {
+  const sch = curSchedule();
   const k = monthKey();
-  return (state.schedule[k] && state.schedule[k][staffIdx] && state.schedule[k][staffIdx][day]) || '';
+  return (sch[k] && sch[k][staffIdx] && sch[k][staffIdx][day]) || '';
 }
 function setSchedule(staffIdx, day, value) {
+  const sch = curSchedule();
   const k = monthKey();
-  if (!state.schedule[k]) state.schedule[k] = {};
-  if (!state.schedule[k][staffIdx]) state.schedule[k][staffIdx] = {};
-  state.schedule[k][staffIdx][day] = value;
+  if (!sch[k]) sch[k] = {};
+  if (!sch[k][staffIdx]) sch[k][staffIdx] = {};
+  sch[k][staffIdx][day] = value;
 }
 
 // ===== カレンダー計算 =====
@@ -664,7 +750,7 @@ function buildShiftTbody(days) {
   const optionsHtml = '<option value=""></option>' +
     state.patterns.map(p => `<option value="${escape(p.code)}">${escape(p.code)}</option>`).join('');
 
-  state.staff.forEach((s, i) => {
+  curStaff().forEach((s, i) => {
     const tr = document.createElement('tr');
     let html = '';
     html += `<td class="row-num">${i+1}</td>`;
@@ -706,7 +792,7 @@ function buildShiftTfoot(days) {
   // 各日の合計
   for (let d = 1; d <= days; d++) {
     let dayTotal = 0;
-    state.staff.forEach((_, i) => {
+    curStaff().forEach((_, i) => {
       const code = getSchedule(i, d);
       const p = state.patterns.find(p => p.code === code);
       if (p) dayTotal += p.hours;
@@ -716,7 +802,7 @@ function buildShiftTfoot(days) {
 
   // 月合計の総合計
   let grandTotal = 0;
-  state.staff.forEach((_, i) => grandTotal += calcMonthTotal(i, days));
+  curStaff().forEach((_, i) => grandTotal += calcMonthTotal(i, days));
   html += `<td>${grandTotal.toFixed(1)}</td>`;
   html += `<td>${(grandTotal/4).toFixed(1)}</td>`;
   html += `<td>${(grandTotal/160).toFixed(2)}</td>`;
@@ -724,10 +810,17 @@ function buildShiftTfoot(days) {
   html += '</tr>';
   tfoot.innerHTML = html;
 }
-function calcMonthTotal(staffIdx, days) {
+function calcMonthTotal(staffIdx, days, scheduleObj) {
+  // scheduleObj が指定されたら（Excel書き出し時の他単位用）、そちらを使う
   let total = 0;
   for (let d = 1; d <= days; d++) {
-    const code = getSchedule(staffIdx, d);
+    let code;
+    if (scheduleObj) {
+      const k = monthKey();
+      code = (scheduleObj[k] && scheduleObj[k][staffIdx] && scheduleObj[k][staffIdx][d]) || '';
+    } else {
+      code = getSchedule(staffIdx, d);
+    }
     const p = state.patterns.find(p => p.code === code);
     if (p) total += p.hours;
   }
@@ -739,19 +832,19 @@ function setShiftCell(staffIdx, day, code) {
   renderShiftTable(); // 再計算
 }
 function updateStaff(i, key, value) {
-  state.staff[i][key] = value;
+  curStaff()[i][key] = value;
   save();
 }
 function addStaff() {
-  state.staff.push({ jobTitle: '', employmentType: '', name: '', note: '' });
+  curStaff().push({ jobTitle: '', employmentType: '', name: '', note: '' });
   save(); renderShiftTable();
 }
 function removeStaff(i) {
-  if (!confirm('この職員を削除しますか？\n（その職員の月のシフトデータも削除されます）')) return;
-  state.staff.splice(i, 1);
-  // schedule 内のその職員データもクリア
-  Object.keys(state.schedule).forEach(k => {
-    if (state.schedule[k][i]) delete state.schedule[k][i];
+  if (!confirm(`【${state.currentUnit}】 この職員を削除しますか？\n（その職員の月のシフトデータも削除されます）`)) return;
+  curStaff().splice(i, 1);
+  const sch = curSchedule();
+  Object.keys(sch).forEach(k => {
+    if (sch[k][i]) delete sch[k][i];
   });
   save(); renderShiftTable();
 }
@@ -782,27 +875,33 @@ function exportXlsx() {
   const wsPattern = XLSX.utils.aoa_to_sheet(patternData);
   XLSX.utils.book_append_sheet(wb, wsPattern, 'シフトパターン');
 
-  // シート2: 勤務形態一覧表
-  const main = [];
-  // ヘッダー
-  const dayHeader = ['No.', '職種', '雇用形態', '氏名'];
-  for (let d = 1; d <= days; d++) {
-    dayHeader.push(`${d}\n${DAY_LABELS[getDayOfWeek(state.year, state.month, d)]}`);
-  }
-  dayHeader.push('月合計(h)', '月平均(h/週)', '常勤換算(月/160h)', '備考');
-  main.push(dayHeader);
-
-  state.staff.forEach((s, i) => {
-    const row = [i+1, s.jobTitle, s.employmentType, s.name];
+  // 各単位ごとに1シート
+  for (const unit of UNITS) {
+    const unitData = state.units[unit];
+    const main = [];
+    main.push([`【${unit}】 勤務形態一覧表 ${state.year}年${state.month}月`]);
+    main.push([]);
+    const dayHeader = ['No.', '職種', '雇用形態', '氏名'];
     for (let d = 1; d <= days; d++) {
-      row.push(getSchedule(i, d));
+      dayHeader.push(`${d}\n${DAY_LABELS[getDayOfWeek(state.year, state.month, d)]}`);
     }
-    const total = calcMonthTotal(i, days);
-    row.push(total, total/4, total/160, s.note);
-    main.push(row);
-  });
-  const wsMain = XLSX.utils.aoa_to_sheet(main);
-  XLSX.utils.book_append_sheet(wb, wsMain, `勤務形態${state.year}年${state.month}月`);
+    dayHeader.push('月合計(h)', '月平均(h/週)', '常勤換算(月/160h)', '備考');
+    main.push(dayHeader);
+
+    unitData.staff.forEach((s, i) => {
+      const row = [i+1, s.jobTitle, s.employmentType, s.name];
+      const k = monthKey();
+      for (let d = 1; d <= days; d++) {
+        const code = (unitData.schedule[k] && unitData.schedule[k][i] && unitData.schedule[k][i][d]) || '';
+        row.push(code);
+      }
+      const total = calcMonthTotal(i, days, unitData.schedule);
+      row.push(total, total/4, total/160, s.note);
+      main.push(row);
+    });
+    const ws = XLSX.utils.aoa_to_sheet(main);
+    XLSX.utils.book_append_sheet(wb, ws, unit);
+  }
 
   XLSX.writeFile(wb, `勤務形態一覧表_${state.year}年${state.month}月.xlsx`);
 }
@@ -837,12 +936,16 @@ function resetAll() {
   state = {
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
+    currentUnit: '午前の部',
     patterns: JSON.parse(JSON.stringify(DEFAULT_PATTERNS)),
-    staff: JSON.parse(JSON.stringify(DEFAULT_STAFF)),
-    schedule: {},
+    units: {
+      '午前の部': DEFAULT_UNIT_DATA(),
+      '午後の部': DEFAULT_UNIT_DATA(),
+    },
   };
   document.getElementById('year').value = state.year;
   document.getElementById('month').value = state.month;
+  updateUnitTabs();
   save(); render();
 }
 
@@ -857,6 +960,7 @@ function escape(s) {
 window.addEventListener('DOMContentLoaded', () => {
   load();
   buildMonthSelector();
+  updateUnitTabs();
   render();
 });
 
