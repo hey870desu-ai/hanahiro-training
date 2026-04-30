@@ -162,6 +162,24 @@
     }
     .unit-tab-add:hover { color: var(--gold); border-color: var(--gold); }
 
+    /* 事業所の勤務時間基準（常勤者の所定労働時間） */
+    .facility-config-bar {
+      background: #fff; border: 1px solid var(--line);
+      border-bottom: 1px solid var(--gold-pale);
+      padding: 8px 16px; display: flex; align-items: center;
+      gap: 8px; font-size: 12.5px; flex-wrap: wrap;
+    }
+    .facility-config-bar .lbl {
+      font-family: 'Noto Serif JP', serif; font-weight: 600; color: var(--ink);
+    }
+    .facility-config-bar input[type="number"] {
+      border: 1px solid var(--line); padding: 3px 6px; border-radius: 3px;
+      font-size: 13px; width: 64px; background: #fff; text-align: right;
+    }
+    .facility-config-bar .hint {
+      margin-left: auto; font-size: 11px; color: var(--ink-mute);
+    }
+
     /* 当該単位のサービス提供時間 */
     .service-time-bar {
       background: var(--gold-pale); border: 1px solid var(--line);
@@ -553,6 +571,9 @@
   <!-- 事業所情報 -->
   <div class="facility-info" id="facility-info"></div>
 
+  <!-- 事業所の勤務時間基準（様式2 (3)） -->
+  <div class="facility-config-bar" id="facility-config-bar"></div>
+
   <!-- 単位タブ -->
   <div class="unit-tabs" id="unit-tabs"></div>
 
@@ -799,6 +820,8 @@ function makeDefaultFacilityState(facility) {
     currentUnit: facility.units[0],
     year: 2026,
     month: 6,
+    weeklyStandard: 40,
+    monthlyStandard: 160,
     data,
     updatedAt: 0,
   };
@@ -890,6 +913,9 @@ async function subscribeFacility(facilityId) {
           }
         }
       } catch (e) { console.warn('migrate employmentType', e); }
+      // 常勤者の所定労働時間（無ければデフォルト）
+      if (typeof data.weeklyStandard !== 'number') data.weeklyStandard = 40;
+      if (typeof data.monthlyStandard !== 'number') data.monthlyStandard = 160;
       // 旧単位名（午前の部 / 午後の部 / 1日）→ N単位目 にマイグレーション
       try {
         if (Array.isArray(data.units) && data.data) {
@@ -1031,6 +1057,7 @@ async function initApp() {
 function renderAll() {
   renderFacilityTabs();
   renderFacilityInfo();
+  renderFacilityConfigBar();
   renderUnitTabs();
   renderServiceTimeBar();
   renderPatterns();
@@ -1140,6 +1167,41 @@ window.removeUnit = function(unit) {
   if (f.currentUnit === unit) f.currentUnit = f.units[0];
   scheduleSave();
   renderAll();
+};
+
+// ===== 事業所の勤務時間基準（様式2 (3) 常勤者の所定労働時間） =====
+function getMonthlyStandard(f) {
+  const v = f && f.monthlyStandard;
+  return (typeof v === 'number' && v > 0) ? v : 160;
+}
+function getWeeklyStandard(f) {
+  const v = f && f.weeklyStandard;
+  return (typeof v === 'number' && v > 0) ? v : 40;
+}
+function renderFacilityConfigBar() {
+  const wrap = document.getElementById('facility-config-bar');
+  const f = curFacility();
+  if (!f) { wrap.style.display = 'none'; return; }
+  if (typeof f.weeklyStandard !== 'number') f.weeklyStandard = 40;
+  if (typeof f.monthlyStandard !== 'number') f.monthlyStandard = 160;
+  wrap.style.display = 'flex';
+  wrap.innerHTML = `
+    <span class="lbl">事業所における常勤の従業者が勤務すべき時間数：</span>
+    <input type="number" min="1" max="80" step="0.5" value="${f.weeklyStandard}" onchange="updateFacilityConfig('weeklyStandard', this.value)">
+    <span>時間/週</span>
+    <input type="number" min="1" max="320" step="0.5" value="${f.monthlyStandard}" onchange="updateFacilityConfig('monthlyStandard', this.value)">
+    <span>時間/月</span>
+    <span class="hint">※ 様式2 (3) — 常勤換算（月合計 ÷ 月時間数）の分母として使用</span>
+  `;
+}
+window.updateFacilityConfig = function(key, value) {
+  const f = curFacility();
+  if (!f) return;
+  const num = parseFloat(value);
+  if (isNaN(num) || num <= 0) return;
+  f[key] = num;
+  scheduleSave();
+  renderShiftTable(); // 常勤換算の再計算が必要
 };
 
 // ===== サービス提供時間（単位ごと） =====
@@ -1285,7 +1347,7 @@ function buildShiftHead(days) {
   }
   h1 += '<th rowspan="2" style="min-width:60px">月合計<br>(h)</th>';
   h1 += '<th rowspan="2" style="min-width:60px">月平均<br>(h/週)</th>';
-  h1 += '<th rowspan="2" style="min-width:70px">常勤換算<br>(月/160h)</th>';
+  h1 += `<th rowspan="2" style="min-width:70px">常勤換算<br>(月/${getMonthlyStandard(f)}h)</th>`;
   h1 += '<th rowspan="2" style="min-width:90px">備考</th>';
   h1 += '<th rowspan="2" style="min-width:30px"></th>';
   h1 += '</tr>';
@@ -1332,7 +1394,7 @@ function buildShiftTbody(days) {
     const total = calcMonthTotal(i, days);
     html += `<td class="summary">${total.toFixed(1)}</td>`;
     html += `<td class="summary">${(total/4).toFixed(1)}</td>`;
-    html += `<td class="summary">${(total/160).toFixed(2)}</td>`;
+    html += `<td class="summary">${(total/getMonthlyStandard(f)).toFixed(2)}</td>`;
     html += `<td class="note"><input value="${escape(s.note)}" oninput="updateStaff(${i},'note',this.value)"></td>`;
     html += `<td><button class="del-row-btn" onclick="removeStaff(${i})" title="削除">×</button></td>`;
     tr.innerHTML = html;
@@ -1357,7 +1419,7 @@ function buildShiftTfoot(days) {
   curStaff().forEach((_, i) => grandTotal += calcMonthTotal(i, days));
   html += `<td>${grandTotal.toFixed(1)}</td>`;
   html += `<td>${(grandTotal/4).toFixed(1)}</td>`;
-  html += `<td>${(grandTotal/160).toFixed(2)}</td>`;
+  html += `<td>${(grandTotal/getMonthlyStandard(f)).toFixed(2)}</td>`;
   html += '<td colspan="2"></td>';
   html += '</tr>';
   tfoot.innerHTML = html;
@@ -1553,6 +1615,7 @@ window.exportXlsx = async function() {
       ['事業所名', f.info.name, '基準年月', `令和${f.year - 2018}年（${f.year}年） ${f.month}月`],
       ['サービス種別', f.info.service, '単位', u],
       ['所在地', f.info.address, 'サービス提供時間', svcTimeText],
+      ['常勤者の勤務時間', `${getWeeklyStandard(f)} 時間/週　${getMonthlyStandard(f)} 時間/月`, '利用定員', `1日 ${f.info.capacity}名`],
     ];
     metaItems.forEach((row, idx) => {
       const r = idx + 2;
@@ -1624,7 +1687,7 @@ window.exportXlsx = async function() {
     }
 
     // サマリー列ヘッダー（縦結合）
-    const summaryLabels = ['月合計\n(h)', '月平均\n(h/週)', '常勤換算\n(月/160h)', '備考'];
+    const summaryLabels = ['月合計\n(h)', '月平均\n(h/週)', `常勤換算\n(月/${getMonthlyStandard(f)}h)`, '備考'];
     summaryLabels.forEach((label, i) => {
       const col = 5 + days + 1 + i;
       ws.mergeCells(tHead1, col, tHead2, col);
@@ -1669,7 +1732,7 @@ window.exportXlsx = async function() {
       ws.getCell(r, sumCol).numFmt = '0.0';
       ws.getCell(r, avgCol).value = total / 4;
       ws.getCell(r, avgCol).numFmt = '0.0';
-      ws.getCell(r, fteCol).value = total / 160;
+      ws.getCell(r, fteCol).value = total / getMonthlyStandard(f);
       ws.getCell(r, fteCol).numFmt = '0.00';
       ws.getCell(r, noteCol).value = s.note;
       [sumCol, avgCol, fteCol].forEach(c => {
@@ -1718,7 +1781,7 @@ window.exportXlsx = async function() {
     }
     [5 + days + 1, 5 + days + 2, 5 + days + 3].forEach((col, i) => {
       const c = ws.getCell(totalRow, col);
-      c.value = i === 0 ? grandTotal : (i === 1 ? grandTotal / 4 : grandTotal / 160);
+      c.value = i === 0 ? grandTotal : (i === 1 ? grandTotal / 4 : grandTotal / getMonthlyStandard(f));
       c.numFmt = i === 2 ? '0.00' : '0.0';
       c.font = { ...FONT, bold: true, size: 10 };
       c.fill = GOLD_PALE_FILL;
@@ -1789,13 +1852,14 @@ function generatePrintPages() {
           <div class="lbl">単位</div><div class="val"><strong>${wakaWa(u)}</strong></div>
           <div class="lbl">所在地</div><div class="val">${wakaWa(f.info.address)}</div>
           <div class="lbl">利用定員</div><div class="val">1日 ${f.info.capacity}名</div>
-          <div class="lbl">サービス提供時間</div><div class="val" style="grid-column:span 3">${(() => {
+          <div class="lbl">サービス提供時間</div><div class="val">${(() => {
             const ud = f.data[u] || {};
             const t = calcServiceHours(ud.serviceStart, ud.serviceEnd);
             return (ud.serviceStart && ud.serviceEnd)
-              ? `${wakaWa(ud.serviceStart)} 〜 ${wakaWa(ud.serviceEnd)}　<strong>（計 ${t != null ? t.toFixed(2) : '-'} 時間）</strong>`
+              ? `${wakaWa(ud.serviceStart)} 〜 ${wakaWa(ud.serviceEnd)}　<strong>（計 ${t != null ? t.toFixed(2) : '-'}h）</strong>`
               : '<span style="color:var(--ink-mute)">未設定</span>';
           })()}</div>
+          <div class="lbl">常勤者の勤務時間</div><div class="val"><strong>${getWeeklyStandard(f)}</strong> 時間/週　/　<strong>${getMonthlyStandard(f)}</strong> 時間/月</div>
         </div>
       </div>`;
 
@@ -1811,7 +1875,7 @@ function generatePrintPages() {
       weekStart = weekEnd + 1;
       weekIdx++;
     }
-    pageHtml += '<th rowspan="2">月合計<br>(h)</th><th rowspan="2">月平均<br>(h/週)</th><th rowspan="2">常勤換算<br>(月/160h)</th><th rowspan="2">備考</th>';
+    pageHtml += `<th rowspan="2">月合計<br>(h)</th><th rowspan="2">月平均<br>(h/週)</th><th rowspan="2">常勤換算<br>(月/${getMonthlyStandard(f)}h)</th><th rowspan="2">備考</th>`;
     pageHtml += '</tr><tr>';
     for (let d = 1; d <= days; d++) {
       const dow = getDayOfWeek(f.year, f.month, d);
@@ -1844,7 +1908,7 @@ function generatePrintPages() {
       grandTotal += total;
       pageHtml += `<td class="summary">${total.toFixed(1)}</td>`;
       pageHtml += `<td class="summary">${(total/4).toFixed(1)}</td>`;
-      pageHtml += `<td class="summary">${(total/160).toFixed(2)}</td>`;
+      pageHtml += `<td class="summary">${(total/getMonthlyStandard(f)).toFixed(2)}</td>`;
       pageHtml += `<td class="left-align">${wakaWa(s.note)}</td>`;
       pageHtml += '</tr>';
     });
@@ -1861,7 +1925,7 @@ function generatePrintPages() {
     }
     pageHtml += `<td>${grandTotal.toFixed(1)}</td>`;
     pageHtml += `<td>${(grandTotal/4).toFixed(1)}</td>`;
-    pageHtml += `<td>${(grandTotal/160).toFixed(2)}</td>`;
+    pageHtml += `<td>${(grandTotal/getMonthlyStandard(f)).toFixed(2)}</td>`;
     pageHtml += '<td></td>';
     pageHtml += '</tr></tfoot></table>';
 
