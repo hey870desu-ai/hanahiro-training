@@ -170,38 +170,34 @@
 
     .legend-block {
       margin-top: 28px;
-      padding: 18px 22px;
+      padding: 14px 22px;
       background: #fff;
       border: 1px solid var(--line);
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
-    }
-    .legend-block .label {
-      font-family: 'Noto Serif JP', serif;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--ink);
     }
     .legend-block .swatch {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 12.5px;
+      gap: 8px;
+      font-size: 13px;
       color: var(--ink);
     }
     .legend-block .swatch::before {
       content: "";
       display: inline-block;
-      width: 14px; height: 14px;
+      width: 16px; height: 16px;
       border-radius: 50%;
-      border: 1px solid var(--gold);
+      border: 1.5px solid var(--gold);
+      background: rgba(168,120,39,0.38);
     }
-    .legend-block .s10::before { background: rgba(168,120,39,0.63); }
-    .legend-block .s15::before { background: rgba(168,120,39,0.44); }
-    .legend-block .s20::before { background: rgba(168,120,39,0.25); }
+    .legend-block .note {
+      font-size: 11.5px;
+      color: var(--ink-mute);
+    }
 
     .doc-footer {
       text-align: center;
@@ -276,11 +272,8 @@
     </div>
 
     <div class="legend-block">
-      <span class="label">車での実際の到達時間</span>
-      <span class="swatch s10">約10分以内</span>
-      <span class="swatch s15">約15分以内</span>
-      <span class="swatch s20">約20分以内</span>
-      <span style="font-size:11px;color:var(--ink-mute)">※ OpenStreetMap 道路網 / OpenRouteService isochrone</span>
+      <span class="swatch">送迎範囲</span>
+      <span class="note">※ 範囲外もお気軽にご相談ください ／ 地図データ © OpenStreetMap / OpenRouteService</span>
     </div>
 
     <div class="areas-grid" style="margin-top:22px">

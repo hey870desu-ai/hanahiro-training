@@ -87,11 +87,11 @@ FACILITIES = [
 
 
 def fetch_isochrones(lat, lng):
-    """OpenRouteService から isochrone (10/15/20分) を取得"""
+    """OpenRouteService から isochrone (片道10分) を取得"""
     url = "https://api.openrouteservice.org/v2/isochrones/driving-car"
     body = json.dumps({
         "locations": [[lng, lat]],
-        "range": [600, 900, 1200],
+        "range": [600],
         "range_type": "time",
     }).encode('utf-8')
     req = urllib.request.Request(url, data=body, headers={
@@ -142,14 +142,10 @@ def render_facility(fac, output_dir, zoom=12, w=1400, h=900):
     m = StaticMap(w, h, url_template='https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
                   padding_x=20, padding_y=20)
 
-    # isochrone polygons (外→内、薄→濃)
-    # alpha値を高めにして視認性UP（aa=170/ff=85, b3=180, c8=200）
-    fills = {1200: '#b8883540', 900: '#b8883570', 600: '#b88835a0'}
+    # 送迎範囲ポリゴン（単色塗り）
     for f in features:
         coords = f['geometry']['coordinates'][0]
-        v = f['properties']['value']
-        color = fills.get(v, '#b8883540')
-        m.add_polygon(Polygon(coords, color, '#b88835', simplify=False))
+        m.add_polygon(Polygon(coords, '#b8883560', '#a87827', simplify=False))
 
     # 中心マーカー
     m.add_marker(CircleMarker((fac['lng'], fac['lat']), '#1f2933', 30))
@@ -202,17 +198,13 @@ def render_facility(fac, output_dir, zoom=12, w=1400, h=900):
     draw.rectangle([22, 22, tw + 60, 84], fill='#1f2933')
     draw.text((40, 30), title, fill='#fff', font=font_title)
 
-    # 凡例
-    lx, ly = w - 320, h - 200
-    lw, lh = 300, 180
+    # 凡例（送迎範囲のみ）
+    lx, ly = w - 320, h - 110
+    lw, lh = 300, 88
     draw.rectangle([lx, ly, lx + lw, ly + lh], fill='#fff', outline='#b88835', width=2)
-    draw.text((lx + 16, ly + 14), '車での実際の到達時間', fill='#1f2933', font=font_legend)
-    items = [('約10分以内', '#b88835a0'), ('約15分以内', '#b8883570'), ('約20分以内', '#b8883540')]
-    for i, (lbl, c) in enumerate(items):
-        cy_ = ly + 60 + i * 32
-        draw.ellipse([lx + 20, cy_, lx + 40, cy_ + 20], fill=c, outline='#b88835')
-        draw.text((lx + 50, cy_ - 1), lbl, fill='#1f2933', font=font_note)
-    draw.text((lx + 16, ly + lh - 28), '※ OpenStreetMap道路網ベース', fill='#8b8e95', font=font_small)
+    draw.ellipse([lx + 18, ly + 18, lx + 38, ly + 38], fill='#b8883560', outline='#a87827', width=2)
+    draw.text((lx + 50, ly + 16), '送迎範囲', fill='#1f2933', font=font_legend)
+    draw.text((lx + 18, ly + 50), '※ OpenStreetMap道路網ベース', fill='#8b8e95', font=font_small)
 
     out = os.path.join(output_dir, f"sougei-area-{fac['slug']}.png")
     img.save(out, 'PNG', optimize=True)
