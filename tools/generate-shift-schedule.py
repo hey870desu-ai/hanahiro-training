@@ -279,9 +279,10 @@ def build_main_sheet(wb, shift_last_row):
         c.alignment = CENTER
         c.border = BORDER_DARK
 
-    # ドロップダウン用データ検証（Numbers互換のため直接範囲参照）
-    code_range_ref = f"=シフトパターン!$A$5:$A${shift_last_row}"
-    dv = DataValidation(type='list', formula1=code_range_ref, allow_blank=True)
+    # ドロップダウン用データ検証（インラインリストで最大互換性確保）
+    # Google Sheets / Numbers / Excel すべてで動作するよう、選択肢を直接埋め込む
+    inline_codes = ','.join(p[0] for p in SHIFT_PATTERNS)
+    dv = DataValidation(type='list', formula1=f'"{inline_codes}"', allow_blank=True)
     dv.error = 'シフトパターンに登録されたコードを選択してください'
     dv.errorTitle = '無効なシフトコード'
     dv.prompt = 'シフトコードを選択'
