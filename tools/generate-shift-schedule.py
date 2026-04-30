@@ -151,11 +151,8 @@ def build_shift_patterns(wb):
             cc.font = INK_NORMAL_10
         ws.row_dimensions[r].height = 22
 
-    # 名前付き範囲（コード列）を定義 → ドロップダウンで使う
+    # 名前付き範囲は Numbers が苦手なので、直接範囲を返す関数で代用する設計
     last_row = HEADER_ROW + len(SHIFT_PATTERNS) + 5
-    code_range = f"'シフトパターン'!$A${HEADER_ROW + 1}:$A${last_row}"
-    defined = DefinedName('シフトコード', attr_text=code_range)
-    wb.defined_names['シフトコード'] = defined
 
     # 印刷設定
     ws.print_options.horizontalCentered = True
@@ -282,8 +279,9 @@ def build_main_sheet(wb, shift_last_row):
         c.alignment = CENTER
         c.border = BORDER_DARK
 
-    # ドロップダウン用データ検証
-    dv = DataValidation(type='list', formula1='=シフトコード', allow_blank=True)
+    # ドロップダウン用データ検証（Numbers互換のため直接範囲参照）
+    code_range_ref = f"=シフトパターン!$A$5:$A${shift_last_row}"
+    dv = DataValidation(type='list', formula1=code_range_ref, allow_blank=True)
     dv.error = 'シフトパターンに登録されたコードを選択してください'
     dv.errorTitle = '無効なシフトコード'
     dv.prompt = 'シフトコードを選択'
@@ -334,10 +332,11 @@ def build_main_sheet(wb, shift_last_row):
         last_day_col = get_column_letter(32)
         dv.add(f'{first_day_col}{r}:{last_day_col}{r}')
 
-        # 月合計（SUMPRODUCT + VLOOKUP でコードから時間を引いて合計）
-        # シフトパターン!$A:$F の F列が実働時間
-        formula = (f'=SUMPRODUCT(IFERROR(VLOOKUP({first_day_col}{r}:{last_day_col}{r},'
-                   f'シフトパターン!$A$5:$F${shift_last_row},6,FALSE),0))')
+        # 月合計：Numbers互換のため SUMPRODUCT(COUNTIF * 実働時間) 方式
+        # 各シフトコードの出現回数 × そのシフトの実働時間 を合計
+        formula = (f'=SUMPRODUCT(COUNTIF({first_day_col}{r}:{last_day_col}{r},'
+                   f'シフトパターン!$A$5:$A${shift_last_row}),'
+                   f'シフトパターン!$F$5:$F${shift_last_row})')
         c = ws.cell(row=r, column=33, value=formula)
         c.font = INK_BOLD_10
         c.fill = GOLD_FILL
