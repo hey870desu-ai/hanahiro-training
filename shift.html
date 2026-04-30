@@ -627,6 +627,7 @@
         <tfoot id="shift-tfoot"></tfoot>
       </table>
     </div>
+    <datalist id="qualifications-list"></datalist>
   </div>
 
   <!-- バックアップ -->
@@ -766,12 +767,22 @@ function employmentLabel(code) {
   return t ? `${t.code}（${t.label}）` : (code || '');
 }
 
+// よくある資格（datalist候補）
+const QUALIFICATIONS = [
+  '介護福祉士', '実務者研修', '初任者研修',
+  '看護師', '准看護師',
+  '社会福祉士', '介護支援専門員',
+  '理学療法士', '作業療法士', '言語聴覚士',
+  '機能訓練指導員', '管理栄養士', '栄養士',
+  '調理師', '事務員（資格なし）', 'なし',
+];
+
 const DEFAULT_STAFF = [
-  { jobTitle: '管理者', employmentType: 'A', name: '', note: '' },
-  { jobTitle: '生活相談員', employmentType: 'A', name: '', note: '' },
-  { jobTitle: '看護職員', employmentType: 'A', name: '', note: '' },
-  { jobTitle: '機能訓練指導員', employmentType: 'A', name: '', note: '' },
-  { jobTitle: '介護職員', employmentType: 'A', name: '', note: '' },
+  { jobTitle: '管理者', employmentType: 'A', qualification: '', name: '', note: '' },
+  { jobTitle: '生活相談員', employmentType: 'A', qualification: '', name: '', note: '' },
+  { jobTitle: '看護職員', employmentType: 'A', qualification: '看護師', name: '', note: '' },
+  { jobTitle: '機能訓練指導員', employmentType: 'A', qualification: '理学療法士', name: '', note: '' },
+  { jobTitle: '介護職員', employmentType: 'A', qualification: '介護福祉士', name: '', note: '' },
 ];
 
 const DAY_LABELS = ['日','月','火','水','木','金','土'];
@@ -1263,6 +1274,7 @@ function buildShiftHead(days) {
   h1 += '<th rowspan="2" style="min-width:30px">No.</th>';
   h1 += '<th rowspan="2" style="min-width:100px">職種</th>';
   h1 += '<th rowspan="2" style="min-width:80px" title="A:常勤で専従／B:常勤で兼務／C:非常勤で専従／D:非常勤で兼務">勤務形態<br>の区分</th>';
+  h1 += '<th rowspan="2" style="min-width:120px">資格</th>';
   h1 += '<th rowspan="2" style="min-width:120px">氏名</th>';
   let weekStart = 1;
   while (weekStart <= days) {
@@ -1304,6 +1316,7 @@ function buildShiftTbody(days) {
     const empOpts = '<option value=""></option>' +
       EMPLOYMENT_TYPES.map(e => `<option value="${e.code}"${emp===e.code?' selected':''}>${e.code}（${e.label}）</option>`).join('');
     html += `<td class="staff-info col-emp"><select onchange="updateStaff(${i},'employmentType',this.value)" title="勤務形態の区分">${empOpts}</select></td>`;
+    html += `<td class="staff-info col-qual"><input list="qualifications-list" value="${escape(s.qualification || '')}" oninput="updateStaff(${i},'qualification',this.value)" placeholder="資格"></td>`;
     html += `<td class="staff-info col-name"><input value="${escape(s.name)}" oninput="updateStaff(${i},'name',this.value)"></td>`;
     for (let d = 1; d <= days; d++) {
       const dow = getDayOfWeek(f.year, f.month, d);
@@ -1330,7 +1343,7 @@ function buildShiftTfoot(days) {
   const f = curFacility();
   const tfoot = document.getElementById('shift-tfoot');
   let html = '<tr>';
-  html += '<td colspan="4" style="text-align:right;padding-right:10px">合計</td>';
+  html += '<td colspan="5" style="text-align:right;padding-right:10px">合計</td>';
   for (let d = 1; d <= days; d++) {
     let dayTotal = 0;
     curStaff().forEach((_, i) => {
@@ -1369,7 +1382,7 @@ window.updateStaff = function(i, key, value) {
   scheduleSave();
 };
 window.addStaff = function() {
-  curStaff().push({ jobTitle: '', employmentType: '', name: '', note: '' });
+  curStaff().push({ jobTitle: '', employmentType: '', qualification: '', name: '', note: '' });
   scheduleSave(); renderShiftTable();
 };
 window.removeStaff = function(i) {
@@ -1382,6 +1395,9 @@ window.removeStaff = function(i) {
 function renderShiftTable() {
   const f = curFacility();
   const days = daysInMonth(f.year, f.month);
+  // 資格 datalist
+  const dl = document.getElementById('qualifications-list');
+  if (dl) dl.innerHTML = QUALIFICATIONS.map(q => `<option value="${escape(q)}">`).join('');
   buildShiftHead(days);
   buildShiftTbody(days);
   buildShiftTfoot(days);
@@ -1470,33 +1486,34 @@ window.exportXlsx = async function() {
     });
 
     // 列幅
-    ws.getColumn(1).width = 4;
-    ws.getColumn(2).width = 14;
-    ws.getColumn(3).width = 11;
-    ws.getColumn(4).width = 14;
+    ws.getColumn(1).width = 4;   // No.
+    ws.getColumn(2).width = 14;  // 職種
+    ws.getColumn(3).width = 11;  // 勤務形態の区分
+    ws.getColumn(4).width = 12;  // 資格
+    ws.getColumn(5).width = 14;  // 氏名
     for (let d = 1; d <= days; d++) {
-      ws.getColumn(4 + d).width = 4.5;
+      ws.getColumn(5 + d).width = 4.5;
     }
-    ws.getColumn(4 + days + 1).width = 9;
-    ws.getColumn(4 + days + 2).width = 9;
-    ws.getColumn(4 + days + 3).width = 10;
-    ws.getColumn(4 + days + 4).width = 14;
-    const totalCols = 4 + days + 4;
+    ws.getColumn(5 + days + 1).width = 9;
+    ws.getColumn(5 + days + 2).width = 9;
+    ws.getColumn(5 + days + 3).width = 10;
+    ws.getColumn(5 + days + 4).width = 14;
+    const totalCols = 5 + days + 4;
 
     // === ヘッダー（公的書式風） ===
     // 1行目: 法人名（左）/ タイトル（中央）/ 提出日（右）
-    ws.mergeCells(1, 1, 1, 4);
+    ws.mergeCells(1, 1, 1, 5);
     ws.getCell('A1').value = '株式会社はなひろ';
     ws.getCell('A1').font = { ...FONT, size: 12, bold: true };
     ws.getCell('A1').fill = HEADER_FILL;
     ws.getCell('A1').font = { ...FONT, size: 12, bold: true, color: { argb: 'FFFFFFFF' } };
     ws.getCell('A1').alignment = { horizontal: 'left', vertical: 'middle', indent: 1 };
 
-    ws.mergeCells(1, 5, 1, totalCols - 4);
-    ws.getCell(1, 5).value = '勤 務 形 態 一 覧 表';
-    ws.getCell(1, 5).font = { ...FONT, size: 16, bold: true, color: { argb: 'FFFFFFFF' } };
-    ws.getCell(1, 5).fill = HEADER_FILL;
-    ws.getCell(1, 5).alignment = { horizontal: 'center', vertical: 'middle' };
+    ws.mergeCells(1, 6, 1, totalCols - 4);
+    ws.getCell(1, 6).value = '勤 務 形 態 一 覧 表';
+    ws.getCell(1, 6).font = { ...FONT, size: 16, bold: true, color: { argb: 'FFFFFFFF' } };
+    ws.getCell(1, 6).fill = HEADER_FILL;
+    ws.getCell(1, 6).alignment = { horizontal: 'center', vertical: 'middle' };
 
     ws.mergeCells(1, totalCols - 3, 1, totalCols);
     ws.getCell(1, totalCols - 3).value = `提出日：令和${f.year - 2018}年 ${f.month}月`;
@@ -1547,7 +1564,7 @@ window.exportXlsx = async function() {
     ws.getRow(tHead2).height = 20;
 
     // 固定情報（縦結合）
-    ['No.', '職種', '勤務形態の区分', '氏名'].forEach((label, i) => {
+    ['No.', '職種', '勤務形態の区分', '資格', '氏名'].forEach((label, i) => {
       ws.mergeCells(tHead1, i + 1, tHead2, i + 1);
       const c = ws.getCell(tHead1, i + 1);
       c.value = label;
@@ -1563,8 +1580,8 @@ window.exportXlsx = async function() {
     while (weekStart <= days) {
       const weekEnd = Math.min(weekStart + 6, days);
       const span = weekEnd - weekStart + 1;
-      ws.mergeCells(tHead1, 4 + weekStart, tHead1, 4 + weekEnd);
-      const c = ws.getCell(tHead1, 4 + weekStart);
+      ws.mergeCells(tHead1, 5 + weekStart, tHead1, 5 + weekEnd);
+      const c = ws.getCell(tHead1, 5 + weekStart);
       c.value = `第${weekIdx}週`;
       c.font = { ...FONT, bold: true, size: 10, color: { argb: 'FFFFFFFF' } };
       c.fill = { type: 'pattern', pattern: 'solid', fgColor: GOLD_COLOR };
@@ -1577,7 +1594,7 @@ window.exportXlsx = async function() {
     // 曜日（28日分）
     for (let d = 1; d <= days; d++) {
       const dow = getDayOfWeek(f.year, f.month, d);
-      const c = ws.getCell(tHead2, 4 + d);
+      const c = ws.getCell(tHead2, 5 + d);
       c.value = `${d}\n${DAY_LABELS[dow]}`;
       c.font = { ...FONT, size: 9, color: { argb: 'FFFFFFFF' } };
       c.fill = dow === 6 ? SAT_FILL : (dow === 0 ? SUN_FILL : HEADER_FILL);
@@ -1588,7 +1605,7 @@ window.exportXlsx = async function() {
     // サマリー列ヘッダー（縦結合）
     const summaryLabels = ['月合計\n(h)', '月平均\n(h/週)', '常勤換算\n(月/160h)', '備考'];
     summaryLabels.forEach((label, i) => {
-      const col = 4 + days + 1 + i;
+      const col = 5 + days + 1 + i;
       ws.mergeCells(tHead1, col, tHead2, col);
       const c = ws.getCell(tHead1, col);
       c.value = label;
@@ -1607,11 +1624,12 @@ window.exportXlsx = async function() {
       ws.getCell(r, 1).value = i + 1;
       ws.getCell(r, 2).value = s.jobTitle;
       ws.getCell(r, 3).value = migrateEmploymentType(s.employmentType);
-      ws.getCell(r, 4).value = s.name;
+      ws.getCell(r, 4).value = s.qualification || '';
+      ws.getCell(r, 5).value = s.name;
       let total = 0;
       for (let d = 1; d <= days; d++) {
         const code = (unitData.schedule[k] && unitData.schedule[k][i] && unitData.schedule[k][i][d]) || '';
-        const c = ws.getCell(r, 4 + d);
+        const c = ws.getCell(r, 5 + d);
         c.value = code;
         c.font = { ...FONT, size: 9 };
         c.alignment = CENTER;
@@ -1622,10 +1640,10 @@ window.exportXlsx = async function() {
         if (p) total += p.hours;
       }
       // 月合計、月平均、常勤換算
-      const sumCol = 4 + days + 1;
-      const avgCol = 4 + days + 2;
-      const fteCol = 4 + days + 3;
-      const noteCol = 4 + days + 4;
+      const sumCol = 5 + days + 1;
+      const avgCol = 5 + days + 2;
+      const fteCol = 5 + days + 3;
+      const noteCol = 5 + days + 4;
       ws.getCell(r, sumCol).value = total;
       ws.getCell(r, sumCol).numFmt = '0.0';
       ws.getCell(r, avgCol).value = total / 4;
@@ -1640,7 +1658,7 @@ window.exportXlsx = async function() {
         ws.getCell(r, c).border = ALL_BORDER;
       });
       // 固定列スタイル
-      [1, 2, 3, 4].forEach(c => {
+      [1, 2, 3, 4, 5].forEach(c => {
         const cell = ws.getCell(r, c);
         cell.font = { ...FONT, size: 10 };
         cell.alignment = c === 1 ? CENTER : LEFT;
@@ -1654,7 +1672,7 @@ window.exportXlsx = async function() {
 
     // 合計行
     const totalRow = dataStartRow + unitData.staff.length;
-    ws.mergeCells(totalRow, 1, totalRow, 4);
+    ws.mergeCells(totalRow, 1, totalRow, 5);
     ws.getCell(totalRow, 1).value = '合計';
     ws.getCell(totalRow, 1).font = { ...FONT, bold: true, size: 11 };
     ws.getCell(totalRow, 1).fill = GOLD_PALE_FILL;
@@ -1668,7 +1686,7 @@ window.exportXlsx = async function() {
         const p = f.patterns.find(pp => pp.code === code);
         if (p) dayTotal += p.hours;
       });
-      const c = ws.getCell(totalRow, 4 + d);
+      const c = ws.getCell(totalRow, 5 + d);
       c.value = dayTotal;
       c.numFmt = '0.0;-0.0;""';
       c.font = { ...FONT, bold: true, size: 9 };
@@ -1677,7 +1695,7 @@ window.exportXlsx = async function() {
       c.border = ALL_BORDER;
       grandTotal += dayTotal;
     }
-    [4 + days + 1, 4 + days + 2, 4 + days + 3].forEach((col, i) => {
+    [5 + days + 1, 5 + days + 2, 5 + days + 3].forEach((col, i) => {
       const c = ws.getCell(totalRow, col);
       c.value = i === 0 ? grandTotal : (i === 1 ? grandTotal / 4 : grandTotal / 160);
       c.numFmt = i === 2 ? '0.00' : '0.0';
@@ -1686,13 +1704,13 @@ window.exportXlsx = async function() {
       c.alignment = CENTER;
       c.border = ALL_BORDER;
     });
-    ws.getCell(totalRow, 4 + days + 4).fill = GOLD_PALE_FILL;
-    ws.getCell(totalRow, 4 + days + 4).border = ALL_BORDER;
+    ws.getCell(totalRow, 5 + days + 4).fill = GOLD_PALE_FILL;
+    ws.getCell(totalRow, 5 + days + 4).border = ALL_BORDER;
     ws.getRow(totalRow).height = 24;
 
     // 署名欄（合計行の3行下）
     const sigRow = totalRow + 3;
-    ws.mergeCells(sigRow, 1, sigRow, 4);
+    ws.mergeCells(sigRow, 1, sigRow, 5);
     ws.getCell(sigRow, 1).value = `作成日：${new Date().toLocaleDateString('ja-JP')}`;
     ws.getCell(sigRow, 1).font = { ...FONT, size: 9, italic: true };
 
@@ -1763,7 +1781,7 @@ function generatePrintPages() {
     // 表
     pageHtml += '<table class="print-shift-table"><thead>';
     pageHtml += '<tr>';
-    pageHtml += '<th rowspan="2">No.</th><th rowspan="2">職種</th><th rowspan="2">勤務形態<br>の区分</th><th rowspan="2">氏名</th>';
+    pageHtml += '<th rowspan="2">No.</th><th rowspan="2">職種</th><th rowspan="2">勤務形態<br>の区分</th><th rowspan="2">資格</th><th rowspan="2">氏名</th>';
     let weekStart = 1, weekIdx = 1;
     while (weekStart <= days) {
       const weekEnd = Math.min(weekStart + 6, days);
@@ -1791,6 +1809,7 @@ function generatePrintPages() {
       pageHtml += `<td>${i+1}</td>`;
       pageHtml += `<td class="left-align">${wakaWa(s.jobTitle)}</td>`;
       pageHtml += `<td>${wakaWa(migrateEmploymentType(s.employmentType))}</td>`;
+      pageHtml += `<td class="left-align">${wakaWa(s.qualification || '')}</td>`;
       pageHtml += `<td class="left-align">${wakaWa(s.name)}</td>`;
       for (let d = 1; d <= days; d++) {
         const dow = getDayOfWeek(f.year, f.month, d);
@@ -1809,7 +1828,7 @@ function generatePrintPages() {
       pageHtml += '</tr>';
     });
     pageHtml += '</tbody><tfoot><tr>';
-    pageHtml += '<td colspan="4" style="text-align:right;padding-right:3mm">合計</td>';
+    pageHtml += '<td colspan="5" style="text-align:right;padding-right:3mm">合計</td>';
     for (let d = 1; d <= days; d++) {
       let dayTotal = 0;
       unitData.staff.forEach((_, i) => {
