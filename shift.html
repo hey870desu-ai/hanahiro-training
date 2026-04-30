@@ -1380,6 +1380,10 @@ window.setShiftCell = function(staffIdx, day, code) {
 window.updateStaff = function(i, key, value) {
   curStaff()[i][key] = value;
   scheduleSave();
+  if (key === 'qualification') {
+    const dl = document.getElementById('qualifications-list');
+    if (dl) dl.innerHTML = getAllQualifications().map(q => `<option value="${escape(q)}">`).join('');
+  }
 };
 window.addStaff = function() {
   curStaff().push({ jobTitle: '', employmentType: '', qualification: '', name: '', note: '' });
@@ -1392,12 +1396,29 @@ window.removeStaff = function(i) {
   Object.keys(sch).forEach(k => { if (sch[k][i]) delete sch[k][i]; });
   scheduleSave(); renderShiftTable();
 };
+function getAllQualifications() {
+  const set = new Set(QUALIFICATIONS);
+  for (const fid in state.facilities) {
+    const fac = state.facilities[fid];
+    if (!fac || !fac.data) continue;
+    for (const u in fac.data) {
+      const ud = fac.data[u];
+      if (!ud || !Array.isArray(ud.staff)) continue;
+      ud.staff.forEach(s => {
+        const q = (s.qualification || '').trim();
+        if (q) set.add(q);
+      });
+    }
+  }
+  return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
+}
+
 function renderShiftTable() {
   const f = curFacility();
   const days = daysInMonth(f.year, f.month);
-  // 資格 datalist
+  // 資格 datalist（既定リスト＋全事業所で実際に入力されている値を自動収集）
   const dl = document.getElementById('qualifications-list');
-  if (dl) dl.innerHTML = QUALIFICATIONS.map(q => `<option value="${escape(q)}">`).join('');
+  if (dl) dl.innerHTML = getAllQualifications().map(q => `<option value="${escape(q)}">`).join('');
   buildShiftHead(days);
   buildShiftTbody(days);
   buildShiftTfoot(days);
