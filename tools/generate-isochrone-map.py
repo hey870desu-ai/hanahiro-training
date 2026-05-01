@@ -249,6 +249,21 @@ def render_facility(fac, output_dir, zoom=12, w=1400, h=900):
     out = os.path.join(output_dir, f"sougei-area-{fac['slug']}.png")
     img.save(out, 'PNG', optimize=True)
     print(f"  保存: {out}  ({os.path.getsize(out)//1024} KB)")
+
+    # GeoJSON も保存（Leaflet 等の対話型マップで使用）
+    geojson_out = os.path.join(output_dir, f"sougei-area-{fac['slug']}.geojson")
+    with open(geojson_out, 'w', encoding='utf-8') as gf:
+        json.dump({
+            'type': 'FeatureCollection',
+            'features': geo['features'],
+            'properties': {
+                'facility_name': fac['name'],
+                'facility_lat': fac['lat'],
+                'facility_lng': fac['lng'],
+                'range_sec': range_sec,
+            },
+        }, gf, ensure_ascii=False, indent=2)
+    print(f"  GeoJSON: {geojson_out}")
     return out
 
 

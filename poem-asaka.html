@@ -470,6 +470,26 @@
       height: auto;
       border: 1px solid var(--line);
     }
+    .sougei-area-map .map-link {
+      position: relative; display: block;
+      transition: opacity 0.15s;
+    }
+    .sougei-area-map .map-link:hover { opacity: 0.92; }
+    .sougei-area-map .map-zoom-hint {
+      position: absolute; right: 16px; bottom: 16px;
+      background: rgba(31, 41, 51, 0.92); color: #fff;
+      padding: 8px 16px; border-radius: 4px;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 0.04em;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      pointer-events: none;
+    }
+    @media (max-width: 600px) {
+      .sougei-area-map .map-zoom-hint {
+        right: 8px; bottom: 8px;
+        padding: 6px 10px; font-size: 11px;
+      }
+    }
     .sougei-area-map p {
       margin-top: 12px;
       font-size: 12px;
@@ -1134,8 +1154,12 @@
 
       <div class="sougei-area-map">
         <h4>🚐 送迎範囲マップ</h4>
-        <img src="photos/sougei-area-asaka.png" alt="送迎範囲マップ：施設を中心とした送迎可能エリア">
-        <p>※ 上記範囲外でもお気軽にご相談ください。地図データ © OpenStreetMap contributors / OpenRouteService</p>
+        <a href="sougei-area-asaka.html" target="_blank" rel="noopener" title="クリックで拡大表示（ズーム・移動可能）" class="map-link">
+          <img src="photos/sougei-area-asaka.png" alt="送迎範囲マップ：施設を中心とした送迎可能エリア">
+          <span class="map-zoom-hint">🔍 クリックで拡大マップを開く</span>
+        </a>
+        <p>※ 拡大マップではズーム・移動が自由にでき、より細かい地名も確認できます。<br>
+          上記範囲外でもお気軽にご相談ください。地図データ © OpenStreetMap contributors / OpenRouteService</p>
       </div>
 
       <div class="access-map-print">

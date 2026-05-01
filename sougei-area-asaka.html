@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>poem de riha 安積店｜送迎範囲マップ（片道7分）</title>
+<meta name="description" content="poem de riha 安積店の送迎範囲を実走行ベースで可視化したインタラクティブマップ。">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; font-family: 'Noto Sans JP', sans-serif; }
+  #map { width: 100%; height: 100vh; }
+  .topbar {
+    position: absolute; top: 12px; left: 12px; z-index: 1000;
+    background: #fff; border: 1px solid #e3dccc; padding: 10px 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08); border-radius: 4px;
+    font-size: 13px;
+  }
+  .topbar h1 {
+    margin: 0 0 4px; font-size: 14px; font-family: 'Noto Serif JP', serif;
+    color: #1f2933; letter-spacing: 0.04em;
+  }
+  .topbar .meta { font-size: 11px; color: #6b7280; }
+  .topbar a { color: #a87827; text-decoration: none; }
+  .topbar a:hover { text-decoration: underline; }
+  .legend {
+    position: absolute; bottom: 24px; right: 12px; z-index: 1000;
+    background: #fff; border: 2px solid #b88835; padding: 10px 14px;
+    border-radius: 4px; font-size: 12px;
+  }
+  .legend .swatch {
+    display: inline-block; width: 14px; height: 14px;
+    background: #b8883560; border: 2px solid #a87827; vertical-align: middle;
+    margin-right: 6px;
+  }
+  .pin-label {
+    background: #1f2933; color: #fff; padding: 4px 10px;
+    font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 600;
+    white-space: nowrap; border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>🚐 poem de riha 安積店｜送迎範囲</h1>
+  <div class="meta">片道7分（実走行ベース）／ 国土地理院タイル<br>
+    <a href="poem-asaka.html">← 案内ページに戻る</a>
+  </div>
+</div>
+<div class="legend">
+  <span class="swatch"></span>送迎範囲（片道7分）
+</div>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const FACILITY = { lat: 37.349490, lng: 140.362112, name: 'poem de riha 安積店' };
+
+const map = L.map('map').setView([FACILITY.lat, FACILITY.lng], 13);
+
+// 国土地理院 標準地図（既定）
+const gsi = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+  attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">国土地理院</a>',
+  maxZoom: 18,
+}).addTo(map);
+
+// 切り替え用に OSM も用意
+const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors',
+  maxZoom: 19,
+});
+
+// 淡色地図
+const pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
+  attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">国土地理院（淡色）</a>',
+  maxZoom: 18,
+});
+
+L.control.layers({
+  '国土地理院 標準': gsi,
+  '国土地理院 淡色': pale,
+  'OpenStreetMap': osm,
+}).addTo(map);
+
+// 送迎範囲（GeoJSON）
+fetch('photos/sougei-area-asaka.geojson')
+  .then(r => r.json())
+  .then(geo => {
+    const layer = L.geoJSON(geo, {
+      style: {
+        color: '#a87827',
+        weight: 2.5,
+        fillColor: '#b88835',
+        fillOpacity: 0.35,
+      },
+    }).addTo(map);
+    map.fitBounds(layer.getBounds(), { padding: [40, 40] });
+  })
+  .catch(e => console.error('GeoJSON load failed', e));
+
+// 施設ピン
+const pinIcon = L.divIcon({
+  className: 'facility-pin',
+  html: `<div style="position:relative;width:40px;height:48px">
+    <div style="position:absolute;left:8px;top:0;width:24px;height:24px;background:#a87827;border:3px solid #1f2933;border-radius:50%"></div>
+    <div style="position:absolute;left:14px;top:6px;width:12px;height:12px;background:#fff;border-radius:50%"></div>
+    <div style="position:absolute;left:18px;top:22px;width:4px;height:24px;background:#1f2933"></div>
+  </div>`,
+  iconSize: [40, 48],
+  iconAnchor: [20, 48],
+});
+L.marker([FACILITY.lat, FACILITY.lng], { icon: pinIcon }).addTo(map);
+
+// 施設名ラベル
+L.tooltip({
+  permanent: true,
+  direction: 'right',
+  offset: [12, -18],
+  className: 'pin-label',
+}).setLatLng([FACILITY.lat, FACILITY.lng]).setContent(FACILITY.name).addTo(map);
+</script>
+</body>
+</html>
