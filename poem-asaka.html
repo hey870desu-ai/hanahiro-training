@@ -464,31 +464,37 @@
       margin-bottom: 14px;
       letter-spacing: 0.04em;
     }
-    .sougei-area-map img {
-      display: block;
-      width: 100%;
-      height: auto;
-      border: 1px solid var(--line);
+    .sougei-area-map .print-only-img { display: none; }
+    .sougei-area-map .map-cta {
+      display: flex; align-items: center; gap: 18px;
+      padding: 18px 24px;
+      background: var(--ink); color: #fff;
+      text-decoration: none; border-radius: 4px;
+      transition: background 0.15s, transform 0.15s;
+      border: 1px solid var(--ink);
     }
-    .sougei-area-map .map-link {
-      position: relative; display: block;
-      transition: opacity 0.15s;
+    .sougei-area-map .map-cta:hover {
+      background: var(--gold); border-color: var(--gold);
     }
-    .sougei-area-map .map-link:hover { opacity: 0.92; }
-    .sougei-area-map .map-zoom-hint {
-      position: absolute; right: 16px; bottom: 16px;
-      background: rgba(31, 41, 51, 0.92); color: #fff;
-      padding: 8px 16px; border-radius: 4px;
-      font-size: 13px; font-weight: 600;
-      letter-spacing: 0.04em;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      pointer-events: none;
+    .sougei-area-map .map-cta-icon { font-size: 28px; line-height: 1; }
+    .sougei-area-map .map-cta-body {
+      display: flex; flex-direction: column; gap: 2px; flex: 1;
+    }
+    .sougei-area-map .map-cta-body strong {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 16px; font-weight: 600; letter-spacing: 0.06em;
+    }
+    .sougei-area-map .map-cta-body em {
+      font-size: 12px; font-style: normal; opacity: 0.8;
+      letter-spacing: 0.02em;
+    }
+    .sougei-area-map .map-cta-arrow {
+      font-size: 22px; opacity: 0.7;
     }
     @media (max-width: 600px) {
-      .sougei-area-map .map-zoom-hint {
-        right: 8px; bottom: 8px;
-        padding: 6px 10px; font-size: 11px;
-      }
+      .sougei-area-map .map-cta { padding: 14px 16px; gap: 12px; }
+      .sougei-area-map .map-cta-body strong { font-size: 14px; }
+      .sougei-area-map .map-cta-body em { font-size: 11px; }
     }
     .sougei-area-map p {
       margin-top: 12px;
@@ -776,12 +782,14 @@
         font-size: 11pt;
         margin-bottom: 4mm;
       }
-      .sougei-area-map img {
+      .sougei-area-map .map-cta { display: none !important; }
+      .sougei-area-map .print-only-img {
+        display: block !important;
         max-height: 105mm;
         width: auto;
         max-width: 100%;
         margin: 0 auto;
-        display: block;
+        border: 1px solid var(--line);
       }
       .sougei-area-map p {
         font-size: 8pt;
@@ -1153,13 +1161,17 @@
       </div>
 
       <div class="sougei-area-map">
-        <h4>🚐 送迎範囲マップ</h4>
-        <a href="sougei-area-asaka.html" target="_blank" rel="noopener" title="クリックで拡大表示（ズーム・移動可能）" class="map-link">
-          <img src="photos/sougei-area-asaka.png" alt="送迎範囲マップ：施設を中心とした送迎可能エリア">
-          <span class="map-zoom-hint">🔍 クリックで拡大マップを開く</span>
+        <h4>🚐 送迎範囲</h4>
+        <a href="sougei-area-asaka.html" target="_blank" rel="noopener" class="map-cta">
+          <span class="map-cta-icon">🗺️</span>
+          <span class="map-cta-body">
+            <strong>送迎エリアはこちら</strong>
+            <em>クリックで対話型マップが開きます（ズーム・移動可）</em>
+          </span>
+          <span class="map-cta-arrow">→</span>
         </a>
-        <p>※ 拡大マップではズーム・移動が自由にでき、より細かい地名も確認できます。<br>
-          上記範囲外でもお気軽にご相談ください。地図データ © OpenStreetMap contributors / OpenRouteService</p>
+        <img src="photos/sougei-area-asaka.png" alt="送迎範囲マップ" class="print-only-img">
+        <p>※ 上記範囲外でもお気軽にご相談ください。地図データ © OpenStreetMap contributors / OpenRouteService</p>
       </div>
 
       <div class="access-map-print">

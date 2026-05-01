@@ -31,7 +31,8 @@ FACILITIES = [
         'name': 'poem de riha 安積店',
         'slug': 'asaka',
         'lat': 37.349490, 'lng': 140.362112,
-        'range_sec': 420,  # 片道7分
+        'range_sec': 420,  # 片道7分（東西方向）
+        'ns_clip_range_sec': 240,  # 北南は4分相当でクリップ（4号線渋滞考慮）
         'zoom': 13,
         'tile_url': 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png',  # 国土地理院 標準地図
         'tile_attribution': '地図：国土地理院',
@@ -152,11 +153,37 @@ def render_facility(fac, output_dir, zoom=12, w=1400, h=900):
     w = fac.get('width', w)
     h = fac.get('height', h)
     range_sec = fac.get('range_sec', 600)
+    ns_clip_sec = fac.get('ns_clip_range_sec')
     tile_url = fac.get('tile_url', 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png')
     tile_attr = fac.get('tile_attribution', '地図：OpenStreetMap')
-    print(f"--- {fac['name']} （片道 {range_sec // 60}分）---")
+    note = f"片道 {range_sec // 60}分"
+    if ns_clip_sec:
+        note += f"（北南は {ns_clip_sec // 60}分でクリップ）"
+    print(f"--- {fac['name']} （{note}）---")
     geo = fetch_isochrones(fac['lat'], fac['lng'], range_sec)
     features = sorted(geo['features'], key=lambda f: -f['properties']['value'])
+
+    # 北南クリップ：別の到達時間で取得した範囲の緯度を上下限として、
+    # メインポリゴンの北南を制限する（東西は触らない）
+    if ns_clip_sec:
+        try:
+            print(f"  北南クリップ用に {ns_clip_sec//60}分範囲を取得中…")
+            import time
+            time.sleep(2)
+            ns_geo = fetch_isochrones(fac['lat'], fac['lng'], ns_clip_sec)
+            ns_lats = [pt[1] for f_ in ns_geo['features']
+                       for ring in f_['geometry']['coordinates']
+                       for pt in ring]
+            min_lat, max_lat = min(ns_lats), max(ns_lats)
+            print(f"  クリップ緯度: {min_lat:.4f} 〜 {max_lat:.4f}")
+            for ft in features:
+                ft['geometry']['coordinates'] = [
+                    [[lng, max(min(lat, max_lat), min_lat)] for lng, lat in ring]
+                    for ring in ft['geometry']['coordinates']
+                ]
+            geo['features'] = features
+        except Exception as e:
+            print(f"  ⚠ 北南クリップ失敗（処理続行）: {e}")
 
     m = StaticMap(w, h, url_template=tile_url, padding_x=20, padding_y=20)
 
