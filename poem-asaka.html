@@ -464,37 +464,35 @@
       margin-bottom: 14px;
       letter-spacing: 0.04em;
     }
+    .sougei-area-map.print-only-block { display: none; }
     .sougei-area-map .print-only-img { display: none; }
-    .sougei-area-map .map-cta {
-      display: flex; align-items: center; gap: 18px;
-      padding: 18px 24px;
+    .access-info .map-cta { margin-top: 14px; }
+    .map-cta {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 18px;
       background: var(--ink); color: #fff;
       text-decoration: none; border-radius: 4px;
-      transition: background 0.15s, transform 0.15s;
+      transition: background 0.15s;
       border: 1px solid var(--ink);
     }
-    .sougei-area-map .map-cta:hover {
-      background: var(--gold); border-color: var(--gold);
-    }
-    .sougei-area-map .map-cta-icon { font-size: 28px; line-height: 1; }
-    .sougei-area-map .map-cta-body {
+    .map-cta:hover { background: var(--gold); border-color: var(--gold); }
+    .map-cta-icon { font-size: 24px; line-height: 1; }
+    .map-cta-body {
       display: flex; flex-direction: column; gap: 2px; flex: 1;
     }
-    .sougei-area-map .map-cta-body strong {
+    .map-cta-body strong {
       font-family: 'Noto Serif JP', serif;
-      font-size: 16px; font-weight: 600; letter-spacing: 0.06em;
+      font-size: 14px; font-weight: 600; letter-spacing: 0.04em;
     }
-    .sougei-area-map .map-cta-body em {
-      font-size: 12px; font-style: normal; opacity: 0.8;
+    .map-cta-body em {
+      font-size: 11px; font-style: normal; opacity: 0.8;
       letter-spacing: 0.02em;
     }
-    .sougei-area-map .map-cta-arrow {
-      font-size: 22px; opacity: 0.7;
-    }
+    .map-cta-arrow { font-size: 20px; opacity: 0.7; }
     @media (max-width: 600px) {
-      .sougei-area-map .map-cta { padding: 14px 16px; gap: 12px; }
-      .sougei-area-map .map-cta-body strong { font-size: 14px; }
-      .sougei-area-map .map-cta-body em { font-size: 11px; }
+      .map-cta { padding: 12px 14px; gap: 10px; }
+      .map-cta-body strong { font-size: 13px; }
+      .map-cta-body em { font-size: 10px; }
     }
     .sougei-area-map p {
       margin-top: 12px;
@@ -774,7 +772,9 @@
       .access-info p { font-size: 10pt; line-height: 1.7; }
       .access-map { display: none !important; }
       .access-map-print { display: none !important; }
-      .sougei-area-map {
+      .access-info .map-cta { display: none !important; }
+      .sougei-area-map.print-only-block {
+        display: block !important;
         margin-top: 6mm;
         padding: 6mm 8mm 5mm;
       }
@@ -782,7 +782,6 @@
         font-size: 11pt;
         margin-bottom: 4mm;
       }
-      .sougei-area-map .map-cta { display: none !important; }
       .sougei-area-map .print-only-img {
         display: block !important;
         max-height: 105mm;
@@ -1153,6 +1152,14 @@
             郡山市・須賀川市<br>
             <span style="font-size:13px;color:var(--ink-soft)">エリア外もお気軽にご相談ください</span>
           </p>
+          <a href="sougei-area-asaka.html" target="_blank" rel="noopener" class="map-cta">
+            <span class="map-cta-icon">🗺️</span>
+            <span class="map-cta-body">
+              <strong>送迎範囲を地図で見る</strong>
+              <em>クリックで対話型マップが開きます</em>
+            </span>
+            <span class="map-cta-arrow">→</span>
+          </a>
         </div>
       </div>
 
@@ -1160,16 +1167,8 @@
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3171.7050828152483!2d140.36211223886934!3d37.349490180565745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60206b26b8e3a1c3%3A0xe020f6ded81afc58!2z44CSOTYzLTAxMDIg56aP5bO255yM6YOh5bGx5biC5a6J56mN55S656y55bed5Zub6KeS5Z2m77yT4oiS77yR!5e0!3m2!1sja!2sjp!4v1777480647477!5m2!1sja!2sjp" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="poem de riha 安積店 地図"></iframe>
       </div>
 
-      <div class="sougei-area-map">
+      <div class="sougei-area-map print-only-block">
         <h4>🚐 送迎範囲</h4>
-        <a href="sougei-area-asaka.html" target="_blank" rel="noopener" class="map-cta">
-          <span class="map-cta-icon">🗺️</span>
-          <span class="map-cta-body">
-            <strong>送迎エリアはこちら</strong>
-            <em>クリックで対話型マップが開きます（ズーム・移動可）</em>
-          </span>
-          <span class="map-cta-arrow">→</span>
-        </a>
         <img src="photos/sougei-area-asaka.png" alt="送迎範囲マップ" class="print-only-img">
         <p>※ 上記範囲外でもお気軽にご相談ください。地図データ © OpenStreetMap contributors / OpenRouteService</p>
       </div>
