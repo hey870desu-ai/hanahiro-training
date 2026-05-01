@@ -142,12 +142,15 @@
     }
     .ch-headline {
       font-family: 'Noto Serif JP', serif;
-      font-size: 30px;
+      font-size: 48px;
       font-weight: 600;
-      letter-spacing: 0.06em;
-      line-height: 1.7;
+      letter-spacing: 0.08em;
+      line-height: 1.5;
       color: var(--ink);
-      margin-bottom: 36px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 600px) {
+      .ch-headline { font-size: 32px; letter-spacing: 0.05em; }
     }
     .ch-headline .accent { color: var(--gold); }
     .ch-text {
@@ -722,7 +725,7 @@
       /* concept-hero */
       .concept-hero { padding: 18mm 30mm 24mm; text-align: center; }
       .ch-eyebrow { font-size: 10pt; margin-bottom: 4mm; }
-      .ch-headline { font-size: 22pt; margin-bottom: 12mm; line-height: 1.7; }
+      .ch-headline { font-size: 30pt; margin-bottom: 12mm; line-height: 1.5; }
       .ch-text { font-size: 11pt; line-height: 2; text-align: left; }
       .ch-text p { margin-bottom: 5mm; }
 
@@ -855,7 +858,6 @@
     <div class="concept-hero">
       <div class="ch-eyebrow">OUR PHILOSOPHY</div>
       <h2 class="ch-headline">
-        動かないことでの 痛み<br>
         動くから <span class="accent">変わる</span>
       </h2>
       <div class="ch-text">
