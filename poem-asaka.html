@@ -209,13 +209,21 @@
       .pillar-grid { grid-template-columns: 1fr 1fr 1fr; }
     }
     .pillar-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .pillar-head {
       background: linear-gradient(135deg, #1f2933, #2c3742);
       color: #fff;
-      padding: 32px 28px;
+      padding: 28px 24px 24px;
       position: relative;
       overflow: hidden;
     }
-    .pillar-card::before {
+    .pillar-head::before {
       content: "";
       position: absolute;
       top: -40px; right: -40px;
@@ -249,15 +257,18 @@
       font-size: 18px;
       font-weight: 600;
       color: #fff;
-      margin-bottom: 12px;
       letter-spacing: 0.04em;
       position: relative;
     }
+    .pillar-body {
+      background: #fff;
+      padding: 24px 24px 28px;
+      flex: 1;
+    }
     .pillar-desc {
       font-size: 13px;
-      color: #d8dde4;
+      color: var(--ink-soft);
       line-height: 1.85;
-      position: relative;
     }
 
     /* 設備リスト */
@@ -898,47 +909,59 @@
 
       <div class="pillar-grid">
         <div class="pillar-card">
-          <div class="pillar-num">01</div>
-          <div class="pillar-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="14" y1="24" x2="34" y2="24"/>
-              <rect x="11" y="16" width="3" height="16"/>
-              <rect x="34" y="16" width="3" height="16"/>
-              <rect x="7" y="20" width="4" height="8"/>
-              <rect x="37" y="20" width="4" height="8"/>
-            </svg>
+          <div class="pillar-head">
+            <div class="pillar-num">01</div>
+            <div class="pillar-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="14" y1="24" x2="34" y2="24"/>
+                <rect x="11" y="16" width="3" height="16"/>
+                <rect x="34" y="16" width="3" height="16"/>
+                <rect x="7" y="20" width="4" height="8"/>
+                <rect x="37" y="20" width="4" height="8"/>
+              </svg>
+            </div>
+            <h3 class="pillar-title">マシーントレーニング</h3>
           </div>
-          <h3 class="pillar-title">マシーントレーニング</h3>
-          <p class="pillar-desc">医療・フィットネス機関でも採用される本格的なマシン9種を配備。年齢や体力に合わせて負荷を細かく調整できるため、無理なく安全に筋力を取り戻せます。「動ける身体」へ最短距離で導きます。</p>
+          <div class="pillar-body">
+            <p class="pillar-desc">医療・フィットネス機関でも採用される本格的なマシン9種を配備。年齢や体力に合わせて負荷を細かく調整できるため、無理なく安全に筋力を取り戻せます。「動ける身体」へ最短距離で導きます。</p>
+          </div>
         </div>
         <div class="pillar-card">
-          <div class="pillar-num">02</div>
-          <div class="pillar-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M24 8a10 10 0 0 0-6 18l1 4h10l1-4a10 10 0 0 0-6-18z"/>
-              <line x1="20" y1="34" x2="28" y2="34"/>
-              <line x1="21.5" y1="38" x2="26.5" y2="38"/>
-              <line x1="24" y1="4" x2="24" y2="2"/>
-              <line x1="14" y1="14" x2="12" y2="13"/>
-              <line x1="34" y1="14" x2="36" y2="13"/>
-            </svg>
+          <div class="pillar-head">
+            <div class="pillar-num">02</div>
+            <div class="pillar-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M24 8a10 10 0 0 0-6 18l1 4h10l1-4a10 10 0 0 0-6-18z"/>
+                <line x1="20" y1="34" x2="28" y2="34"/>
+                <line x1="21.5" y1="38" x2="26.5" y2="38"/>
+                <line x1="24" y1="4" x2="24" y2="2"/>
+                <line x1="14" y1="14" x2="12" y2="13"/>
+                <line x1="34" y1="14" x2="36" y2="13"/>
+              </svg>
+            </div>
+            <h3 class="pillar-title">楽しい脳トレ</h3>
           </div>
-          <h3 class="pillar-title">楽しい脳トレ</h3>
-          <p class="pillar-desc">動画を見ながら取り組む間違い探しやクイズ形式の脳トレを実施。「楽しい」が続く秘訣です。身体を動かしながら頭も使う、二重課題（デュアルタスク）で認知機能の維持・向上をサポートします。</p>
+          <div class="pillar-body">
+            <p class="pillar-desc">動画を見ながら取り組む間違い探しやクイズ形式の脳トレを実施。「楽しい」が続く秘訣です。身体を動かしながら頭も使う、二重課題（デュアルタスク）で認知機能の維持・向上をサポートします。</p>
+          </div>
         </div>
         <div class="pillar-card">
-          <div class="pillar-num">03</div>
-          <div class="pillar-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 8h18l8 8v24H12z"/>
-              <path d="M30 8v8h8"/>
-              <line x1="18" y1="24" x2="32" y2="24"/>
-              <line x1="18" y1="30" x2="32" y2="30"/>
-              <line x1="18" y1="36" x2="26" y2="36"/>
-            </svg>
+          <div class="pillar-head">
+            <div class="pillar-num">03</div>
+            <div class="pillar-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 8h18l8 8v24H12z"/>
+                <path d="M30 8v8h8"/>
+                <line x1="18" y1="24" x2="32" y2="24"/>
+                <line x1="18" y1="30" x2="32" y2="30"/>
+                <line x1="18" y1="36" x2="26" y2="36"/>
+              </svg>
+            </div>
+            <h3 class="pillar-title">PT監修プログラム</h3>
           </div>
-          <h3 class="pillar-title">PT監修プログラム</h3>
-          <p class="pillar-desc">理学療法士（PT）監修のオリジナル体操プログラムを毎日実施。常駐の柔道整復師が、お一人おひとりの身体の状態を見極めながら、その日に最適な運動メニューをご提案します。</p>
+          <div class="pillar-body">
+            <p class="pillar-desc">理学療法士（PT）監修のオリジナル体操プログラムを毎日実施。常駐の柔道整復師が、お一人おひとりの身体の状態を見極めながら、その日に最適な運動メニューをご提案します。</p>
+          </div>
         </div>
       </div>
     </section>
