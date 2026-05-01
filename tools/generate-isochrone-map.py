@@ -32,6 +32,8 @@ FACILITIES = [
         'slug': 'asaka',
         'lat': 37.349490, 'lng': 140.362112,
         'range_sec': 420,  # 片道7分
+        'tile_url': 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png',  # 国土地理院 標準地図
+        'tile_attribution': '地図：国土地理院',
         'labels': [
             ('郡山駅', 37.3963, 140.3873, 'big'),
             ('須賀川市', 37.2868, 140.3727, 'big'),
@@ -145,12 +147,13 @@ def latlng_to_xy(lat, lng, c_lat, c_lng, w, h, zoom):
 def render_facility(fac, output_dir, zoom=12, w=1400, h=900):
     """1事業所のマップを生成"""
     range_sec = fac.get('range_sec', 600)
+    tile_url = fac.get('tile_url', 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png')
+    tile_attr = fac.get('tile_attribution', '地図：OpenStreetMap')
     print(f"--- {fac['name']} （片道 {range_sec // 60}分）---")
     geo = fetch_isochrones(fac['lat'], fac['lng'], range_sec)
     features = sorted(geo['features'], key=lambda f: -f['properties']['value'])
 
-    m = StaticMap(w, h, url_template='https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  padding_x=20, padding_y=20)
+    m = StaticMap(w, h, url_template=tile_url, padding_x=20, padding_y=20)
 
     # 送迎範囲ポリゴン（単色塗り）
     for f in features:
@@ -227,7 +230,16 @@ def render_facility(fac, output_dir, zoom=12, w=1400, h=900):
     draw.rectangle([lx, ly, lx + lw, ly + lh], fill='#fff', outline='#b88835', width=2)
     draw.ellipse([lx + 18, ly + 18, lx + 38, ly + 38], fill='#b8883560', outline='#a87827', width=2)
     draw.text((lx + 50, ly + 16), '送迎範囲', fill='#1f2933', font=font_legend)
-    draw.text((lx + 18, ly + 50), '※ OpenStreetMap道路網ベース', fill='#8b8e95', font=font_small)
+    draw.text((lx + 18, ly + 50), f'※ OpenStreetMap道路網ベース', fill='#8b8e95', font=font_small)
+
+    # タイル出典（地図右下）
+    bbox = draw.textbbox((0, 0), tile_attr, font=font_note)
+    aw = bbox[2] - bbox[0]
+    ah = bbox[3] - bbox[1]
+    bg = Image.new('RGBA', (aw + 16, ah + 8), (255, 255, 255, 200))
+    img.paste(bg, (10, h - ah - 18), bg)
+    draw = ImageDraw.Draw(img)
+    draw.text((18, h - ah - 14), tile_attr, fill='#3a414d', font=font_note)
 
     out = os.path.join(output_dir, f"sougei-area-{fac['slug']}.png")
     img.save(out, 'PNG', optimize=True)
