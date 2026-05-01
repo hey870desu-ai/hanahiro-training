@@ -31,6 +31,7 @@ FACILITIES = [
         'name': 'poem de riha 安積店',
         'slug': 'asaka',
         'lat': 37.349490, 'lng': 140.362112,
+        'range_sec': 420,  # 片道7分
         'labels': [
             ('郡山駅', 37.3963, 140.3873, 'big'),
             ('須賀川市', 37.2868, 140.3727, 'big'),
@@ -94,12 +95,12 @@ FACILITIES = [
 ]
 
 
-def fetch_isochrones(lat, lng):
-    """OpenRouteService から isochrone (片道10分) を取得"""
+def fetch_isochrones(lat, lng, range_sec=600):
+    """OpenRouteService から isochrone を取得（デフォルト片道10分）"""
     url = "https://api.openrouteservice.org/v2/isochrones/driving-car"
     body = json.dumps({
         "locations": [[lng, lat]],
-        "range": [600],
+        "range": [range_sec],
         "range_type": "time",
     }).encode('utf-8')
     req = urllib.request.Request(url, data=body, headers={
@@ -143,8 +144,9 @@ def latlng_to_xy(lat, lng, c_lat, c_lng, w, h, zoom):
 
 def render_facility(fac, output_dir, zoom=12, w=1400, h=900):
     """1事業所のマップを生成"""
-    print(f"--- {fac['name']} ---")
-    geo = fetch_isochrones(fac['lat'], fac['lng'])
+    range_sec = fac.get('range_sec', 600)
+    print(f"--- {fac['name']} （片道 {range_sec // 60}分）---")
+    geo = fetch_isochrones(fac['lat'], fac['lng'], range_sec)
     features = sorted(geo['features'], key=lambda f: -f['properties']['value'])
 
     m = StaticMap(w, h, url_template='https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -236,7 +238,11 @@ def render_facility(fac, output_dir, zoom=12, w=1400, h=900):
 def main():
     output_dir = '/Users/hanawahiroyuki/hanahiro-training/photos'
     os.makedirs(output_dir, exist_ok=True)
+    # コマンドライン引数で slug を指定すると、その事業所だけ生成
+    only = sys.argv[1] if len(sys.argv) > 1 else None
     for fac in FACILITIES:
+        if only and fac['slug'] != only:
+            continue
         try:
             render_facility(fac, output_dir)
         except Exception as e:
