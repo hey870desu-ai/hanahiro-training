@@ -32,7 +32,7 @@ FACILITIES = [
         'slug': 'asaka',
         'lat': 37.349490, 'lng': 140.362112,
         'range_sec': 420,  # 片道7分（東西方向）
-        'ns_clip_range_sec': 240,  # 北南は4分相当でクリップ（4号線渋滞考慮）
+        'ns_clip_range_sec': 180,  # 北南は3分相当でクリップ（4号線渋滞考慮）
         'zoom': 13,
         'tile_url': 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png',  # 国土地理院 標準地図
         'tile_attribution': '地図：国土地理院',
