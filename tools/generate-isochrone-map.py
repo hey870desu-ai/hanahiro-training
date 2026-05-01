@@ -32,6 +32,7 @@ FACILITIES = [
         'slug': 'asaka',
         'lat': 37.349490, 'lng': 140.362112,
         'range_sec': 420,  # 片道7分
+        'zoom': 13,
         'tile_url': 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png',  # 国土地理院 標準地図
         'tile_attribution': '地図：国土地理院',
         'labels': [
@@ -146,6 +147,7 @@ def latlng_to_xy(lat, lng, c_lat, c_lng, w, h, zoom):
 
 def render_facility(fac, output_dir, zoom=12, w=1400, h=900):
     """1事業所のマップを生成"""
+    zoom = fac.get('zoom', zoom)
     range_sec = fac.get('range_sec', 600)
     tile_url = fac.get('tile_url', 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png')
     tile_attr = fac.get('tile_attribution', '地図：OpenStreetMap')
