@@ -500,10 +500,51 @@ function reviewLesson() {
   showLesson();
 }
 
+// html2pdf.js を遅延ロード（必要になったときだけ）
+let _html2pdfLoading = null;
+function loadHtml2Pdf() {
+  if (window.html2pdf) return Promise.resolve(window.html2pdf);
+  if (_html2pdfLoading) return _html2pdfLoading;
+  _html2pdfLoading = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js';
+    s.onload = () => resolve(window.html2pdf);
+    s.onerror = () => reject(new Error('html2pdf.js の読み込みに失敗しました'));
+    document.head.appendChild(s);
+  });
+  return _html2pdfLoading;
+}
+
+// PDF保存処理
+async function savePdfFromOverlay() {
+  const btn = document.getElementById('po-pdf-btn');
+  const originalText = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ PDF生成中...'; }
+  try {
+    const html2pdf = await loadHtml2Pdf();
+    const target = document.querySelector('#print-overlay .po-content');
+    if (!target) throw new Error('印刷対象が見つかりません');
+    const mod = courseData.modules[currentModuleIndex];
+    const filename = `はなひろラーニング_${(mod && mod.title || 'レッスン').replace(/[\\\/:*?"<>|]/g, '')}.pdf`;
+    await html2pdf().set({
+      margin: [12, 10, 14, 10],
+      filename,
+      image: { type: 'jpeg', quality: 0.96 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'legacy'] }
+    }).from(target).save();
+    if (btn) { btn.textContent = '✓ 保存しました'; setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 2000); }
+  } catch (e) {
+    console.error(e);
+    alert('PDF保存に失敗しました：' + (e.message || e));
+    if (btn) { btn.textContent = originalText; btn.disabled = false; }
+  }
+}
+
 // --- 現モジュールの全レッスンを印刷 / PDF保存 ---
-// オーバーレイで全レッスン表示し、印刷ボタンで window.print() を呼ぶ。
-// LINE アプリ内ブラウザ等で window.print() が動かない端末では、
-// ブラウザのメニュー（共有→プリント等）から印刷してもらう運用。
+// オーバーレイで全レッスン表示し、PDF保存ボタン or 印刷ボタンを提供。
+// LINE in-app ブラウザでも PDF保存は動く（ファイルダウンロード）。
 function printModule() {
   try {
     const mod = courseData.modules[currentModuleIndex];
@@ -520,8 +561,8 @@ function printModule() {
     overlay.innerHTML = `
       <div class="po-toolbar">
         <button type="button" class="po-close" id="po-close-btn">&larr; 戻る</button>
-        <span class="po-hint">下の「🖨 印刷 / PDF保存」を押してください</span>
-        <button type="button" class="po-print" id="po-print-btn">🖨 印刷</button>
+        <span class="po-hint">下のボタンで PDF保存できます</span>
+        <button type="button" class="po-print" id="po-pdf-btn">📄 PDF保存</button>
       </div>
       <div class="po-content">
         <div class="po-cover">
@@ -535,8 +576,8 @@ function printModule() {
           </section>
         `).join('')}
         <div class="po-bottom-actions">
-          <button type="button" class="po-print-bottom" id="po-print-btn-bottom">🖨 このページを印刷 / PDF保存</button>
-          <p class="po-tip">スマホで反応しない場合は、ブラウザのメニュー（Safariは共有→プリント、Chromeは⋮→共有→プリント）から印刷できます。</p>
+          <button type="button" class="po-print-bottom" id="po-pdf-btn-bottom">📄 このレッスンをPDF保存</button>
+          <p class="po-tip">PCでブラウザ印刷したい場合は、このオーバーレイを開いた状態で<strong>Cmd+P / Ctrl+P</strong> で印刷ダイアログが開きます。</p>
         </div>
       </div>
     `;
@@ -548,9 +589,8 @@ function printModule() {
       document.body.style.overflow = '';
     };
     document.getElementById('po-close-btn').addEventListener('click', close);
-    const doPrint = () => { try { window.print(); } catch (e) { console.error(e); } };
-    document.getElementById('po-print-btn')?.addEventListener('click', doPrint);
-    document.getElementById('po-print-btn-bottom')?.addEventListener('click', doPrint);
+    document.getElementById('po-pdf-btn')?.addEventListener('click', savePdfFromOverlay);
+    document.getElementById('po-pdf-btn-bottom')?.addEventListener('click', savePdfFromOverlay);
   } catch (e) {
     console.error('printModule エラー:', e);
     alert('印刷準備でエラーが発生しました: ' + e.message);
