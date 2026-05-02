@@ -493,6 +493,53 @@
       line-height: 1.85;
     }
 
+    /* こんな未来へ（future-grid） */
+    .future-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    @media (min-width: 720px) {
+      .future-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 1024px) {
+      .future-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .future-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 28px 24px;
+      position: relative;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .future-card:hover {
+      border-color: var(--gold-soft);
+      transform: translateY(-2px);
+    }
+    .future-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .future-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.04em;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .future-mech {
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.85;
+      padding-top: 10px;
+      border-top: 1px solid var(--line-soft);
+    }
+
     /* ご利用案内 */
     .guide-table {
       width: 100%;
@@ -1023,6 +1070,14 @@
       .policy-item h4 { font-size: 13pt; }
       .policy-item p { font-size: 10pt; }
 
+      /* こんな未来へ */
+      .future-grid { grid-template-columns: 1fr 1fr 1fr !important; gap: 5mm !important; }
+      .future-card { padding: 7mm 6mm; }
+      .future-card:hover { transform: none; border-color: var(--line); }
+      .future-num { font-size: 11pt; margin-bottom: 2mm; }
+      .future-title { font-size: 11.5pt; margin-bottom: 3mm; line-height: 1.55; }
+      .future-mech { font-size: 9pt; line-height: 1.65; padding-top: 2.5mm; }
+
       /* ご利用案内 */
       .guide-table { font-size: 8.5pt; }
       .guide-table th { padding: 1.6mm 4mm !important; width: 32mm; font-size: 8pt; }
@@ -1190,10 +1245,58 @@
       </div>
     </div>
 
-    <!-- 01 3つの柱 -->
+    <!-- 01 こんな未来へ -->
     <section class="block">
       <div class="sec-head">
         <div class="sec-num">01</div>
+        <div class="sec-title-block">
+          <div class="sec-eyebrow">Your Future</div>
+          <div class="sec-title">こんな未来へ</div>
+        </div>
+      </div>
+
+      <p style="text-align:center;font-size:14px;color:var(--ink-soft);margin-bottom:28px;letter-spacing:0.04em;line-height:1.85">
+        私たちが目指すのは、機能訓練そのものではなく、<strong style="color:var(--ink)">あなたの暮らしが取り戻されていく姿</strong>です。
+      </p>
+
+      <div class="future-grid">
+        <div class="future-card">
+          <div class="future-num">01</div>
+          <div class="future-title">孫と手をつないで、<br>公園を散歩できる。</div>
+          <div class="future-mech">立つ・歩く力を取り戻し、外出への自信を育みます。</div>
+        </div>
+        <div class="future-card">
+          <div class="future-num">02</div>
+          <div class="future-title">重い買い物袋を、<br>ためらわずに持てる。</div>
+          <div class="future-mech">上半身の筋力を維持し、毎日の家事や外出が楽になります。</div>
+        </div>
+        <div class="future-card">
+          <div class="future-num">03</div>
+          <div class="future-title">階段を、<br>手すりに頼らずに登れる。</div>
+          <div class="future-mech">太もも・お尻の筋肉を鍛え、転倒不安からも解放されます。</div>
+        </div>
+        <div class="future-card">
+          <div class="future-num">04</div>
+          <div class="future-title">ふらつかず、<br>安心して外に出られる。</div>
+          <div class="future-mech">バランス力を保ち、自分の足でどこへでも行ける身体に。</div>
+        </div>
+        <div class="future-card">
+          <div class="future-num">05</div>
+          <div class="future-title">朝すっきり起きて、<br>1日が始まる。</div>
+          <div class="future-mech">適度な運動と血流ケアで、夜ぐっすり眠れる身体へ整います。</div>
+        </div>
+        <div class="future-card">
+          <div class="future-num">06</div>
+          <div class="future-title">久しぶりに、<br>好きなことをまた始められる。</div>
+          <div class="future-mech">楽しさと達成感が、心の元気もよみがえらせます。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 3つの柱 -->
+    <section class="block">
+      <div class="sec-head">
+        <div class="sec-num">02</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Three Pillars</div>
           <div class="sec-title">3つの柱</div>
@@ -1262,10 +1365,10 @@
       </div>
     </section>
 
-    <!-- 02 設備一覧 -->
+    <!-- 03 設備一覧 -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">02</div>
+        <div class="sec-num">03</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Equipment</div>
           <div class="sec-title">設備・トレーニング機器</div>
@@ -1339,10 +1442,10 @@
       </div>
     </section>
 
-    <!-- 03 1日の流れ -->
+    <!-- 04 1日の流れ -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">03</div>
+        <div class="sec-num">04</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Daily Schedule</div>
           <div class="sec-title">半日の流れ</div>
@@ -1404,10 +1507,10 @@
       </div>
     </section>
 
-    <!-- 04 運営方針 -->
+    <!-- 05 運営方針 -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">04</div>
+        <div class="sec-num">05</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Our Approach</div>
           <div class="sec-title">私たちの運営方針</div>
@@ -1436,10 +1539,10 @@
       </div>
     </section>
 
-    <!-- 05 ギャラリー -->
+    <!-- 06 ギャラリー -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">05</div>
+        <div class="sec-num">06</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Gallery</div>
           <div class="sec-title">活動の様子</div>
@@ -1464,10 +1567,10 @@
       </div>
     </section>
 
-    <!-- 06 ご利用案内 -->
+    <!-- 07 ご利用案内 -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">06</div>
+        <div class="sec-num">07</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Service Information</div>
           <div class="sec-title">ご利用案内</div>
@@ -1521,10 +1624,10 @@
       </div>
     </section>
 
-    <!-- 07 アクセス -->
+    <!-- 08 アクセス -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">07</div>
+        <div class="sec-num">08</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Access</div>
           <div class="sec-title">アクセス</div>
@@ -1575,10 +1678,10 @@
       </div>
     </section>
 
-    <!-- 08 お問い合わせ -->
+    <!-- 09 お問い合わせ -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">08</div>
+        <div class="sec-num">09</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Contact</div>
           <div class="sec-title">お問い合わせ・見学・無料体験のお申込み</div>
@@ -1599,10 +1702,10 @@
       </div>
     </section>
 
-    <!-- 09 採用情報 -->
+    <!-- 10 採用情報 -->
     <section class="block no-print">
       <div class="sec-head">
-        <div class="sec-num">09</div>
+        <div class="sec-num">10</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Careers</div>
           <div class="sec-title">採用情報</div>
