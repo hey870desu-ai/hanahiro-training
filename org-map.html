@@ -40,35 +40,38 @@
     .header {
       background: linear-gradient(155deg, #1a2742 0%, #243454 35%, #2c3e60 70%, #1a2742 100%);
       color: var(--paper);
-      padding: 36px 20px 30px;
+      padding: 28px 20px 22px;
       text-align: center;
-      position: sticky; top: 0; z-index: 10;
+      position: relative;
       border-bottom: 2px solid var(--gold);
     }
     .header h1 {
-      font-size: 22px; font-weight: 600; margin-bottom: 6px;
+      font-size: 20px; font-weight: 600; margin-bottom: 4px;
       font-family: 'Noto Serif JP', serif;
       letter-spacing: 0.12em;
     }
     .header p {
-      font-size: 12px; color: var(--gold-soft);
+      font-size: 11.5px; color: var(--gold-soft);
       letter-spacing: 0.16em;
       font-family: 'Cormorant Garamond', 'Noto Serif JP', serif;
     }
+    /* スクロール時も戻るボタンだけは画面隅に常駐 */
     .back-link {
-      position: absolute; top: 18px; left: 18px;
-      color: var(--gold-pale); text-decoration: none; font-size: 12px; font-weight: 500;
-      background: rgba(0,0,0,0.18); padding: 6px 14px; border-radius: 3px;
+      position: fixed; top: 12px; left: 12px; z-index: 100;
+      color: var(--paper); text-decoration: none; font-size: 12px; font-weight: 500;
+      background: rgba(26,39,66,0.92); padding: 7px 14px; border-radius: 3px;
       border: 1px solid rgba(244,234,214,0.3); letter-spacing: 0.08em;
       transition: all 0.2s;
+      backdrop-filter: blur(4px);
     }
     .back-link:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
     .print-btn {
-      position: absolute; top: 18px; right: 18px;
-      background: rgba(0,0,0,0.18); border: 1px solid rgba(244,234,214,0.3);
-      padding: 5px 12px; color: var(--gold-pale);
+      position: fixed; top: 12px; right: 12px; z-index: 100;
+      background: rgba(26,39,66,0.92); border: 1px solid rgba(244,234,214,0.3);
+      padding: 6px 12px; color: var(--paper);
       border-radius: 3px; font-size: 14px; cursor: pointer;
       transition: all 0.2s;
+      backdrop-filter: blur(4px);
     }
     .print-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
     .container { max-width: 900px; margin: 0 auto; padding: 28px 16px; }
