@@ -196,29 +196,108 @@ body {
 }
 .print-btn { font-size: 16px; padding: 4px 10px; }
 
-/* ===== 印刷 / PDF保存 ===== */
-/* 通常時は印刷専用コンテナを非表示、印刷時はそれだけ表示 */
-#print-container { display: none; }
+/* ===== 印刷オーバーレイ ===== */
+#print-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--paper);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#print-overlay .po-toolbar {
+  position: sticky; top: 0; z-index: 1;
+  background: var(--ink); color: var(--paper);
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 2px solid var(--gold);
+}
+#print-overlay .po-close {
+  background: rgba(244,234,214,0.1); color: var(--paper);
+  border: 1px solid rgba(244,234,214,0.3);
+  padding: 7px 12px; border-radius: 3px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.04em;
+  cursor: pointer;
+}
+#print-overlay .po-close:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+#print-overlay .po-hint {
+  flex: 1; font-size: 11.5px; color: var(--gold-pale);
+  letter-spacing: 0.04em; line-height: 1.4;
+}
+#print-overlay .po-print {
+  background: var(--gold); color: var(--ink); border: none;
+  padding: 8px 16px; border-radius: 3px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
+  cursor: pointer;
+}
+#print-overlay .po-print:hover { background: var(--gold-soft); }
+#print-overlay .po-content {
+  max-width: 720px; margin: 0 auto;
+  padding: 24px 18px 60px;
+  background: #fff;
+  color: #1a2742;
+  line-height: 1.85;
+}
+#print-overlay .po-cover {
+  text-align: center; padding: 12px 0 24px;
+  border-bottom: 1px solid var(--line); margin-bottom: 24px;
+}
+#print-overlay .po-cover h1 {
+  color: var(--ink); font-size: 22px; margin-bottom: 10px;
+  font-family: 'Noto Serif JP', serif; letter-spacing: 0.06em;
+}
+#print-overlay .po-meta { color: var(--ink-mute); font-size: 13px; }
+#print-overlay .po-section { margin-bottom: 28px; }
+#print-overlay .po-section h2 {
+  color: var(--ink); font-size: 18px;
+  border-bottom: 1px solid var(--line); padding-bottom: 6px;
+  margin: 24px 0 14px;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+}
+#print-overlay .po-bottom-actions {
+  margin-top: 32px; padding-top: 20px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+#print-overlay .po-print-bottom {
+  background: var(--ink); color: var(--paper);
+  border: 1px solid var(--gold);
+  padding: 14px 28px; border-radius: 3px;
+  font-size: 14px; font-weight: 600; letter-spacing: 0.08em;
+  cursor: pointer; min-width: 240px;
+}
+#print-overlay .po-print-bottom:hover { background: var(--gold); color: var(--ink); }
+#print-overlay .po-tip {
+  margin-top: 14px; font-size: 12px; color: var(--ink-mute);
+  line-height: 1.7; padding: 0 8px;
+}
+
+/* ===== 印刷時 ===== */
 @media print {
-  /* 全画面を非表示 → 印刷コンテナのみ表示 */
-  body > *:not(#print-container) { display: none !important; }
-  #print-container {
-    display: block !important;
-    background: #fff;
-    color: #000;
-    font-size: 12pt;
-    line-height: 1.7;
-    padding: 0;
-    margin: 0;
+  /* オーバーレイがあれば、それだけを印刷 */
+  body > *:not(#print-overlay) { display: none !important; }
+  #print-overlay {
+    position: static !important;
+    overflow: visible !important;
+    background: #fff !important;
+    inset: auto !important;
   }
+  #print-overlay .po-toolbar,
+  #print-overlay .po-bottom-actions { display: none !important; }
+  #print-overlay .po-content {
+    max-width: none; padding: 0; color: #000;
+  }
+  #print-overlay .po-cover h1,
+  #print-overlay .po-section h2 { color: #1a2742 !important; }
+  #print-overlay .po-section { page-break-before: always; }
+  #print-overlay .po-section:first-of-type { page-break-before: auto; }
   body { background: #fff !important; padding: 0 !important; margin: 0 !important; color: #000; }
-  #print-container h2, #print-container h3 { color: #1a2742 !important; }
-  #print-container .print-section { page-break-before: always; }
-  #print-container .print-section:first-child { page-break-before: auto; }
-  #print-container .print-cover { page-break-after: always; }
   .diagram-box, .key-point, .example-box, .chat-bubble {
     break-inside: avoid;
   }
+
+  /* オーバーレイがない場合の従来挙動 */
+  body:not(:has(#print-overlay)) .app-header,
+  body:not(:has(#print-overlay)) .lesson-nav,
+  body:not(:has(#print-overlay)) .modal { display: none !important; }
 }
 
 /* ===== ダッシュボード ===== */
