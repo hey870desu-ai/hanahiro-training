@@ -22,7 +22,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Mincho ProN', 'Noto Serif JP', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', YuGothic, 'Meiryo', sans-serif;
   background: var(--paper);
   color: var(--ink);
   line-height: 1.85;
@@ -59,12 +59,12 @@ body.is-admin .admin-only { display: inline-flex !important; }
 }
 .logo-area h1 {
   color: var(--paper); font-size: 26px; line-height: 1.4; font-weight: 700;
-  letter-spacing: 0.08em; font-family: 'Noto Serif JP', serif;
+  letter-spacing: 0.08em; font-family: 'Noto Sans JP', sans-serif;
 }
 .logo-area h1 span {
   font-size: 12px; font-weight: 400; color: var(--gold-soft);
   display: block; margin-top: 8px; letter-spacing: 0.3em;
-  font-family: 'Cormorant Garamond', 'Noto Serif JP', serif;
+  font-family: 'Cormorant Garamond', 'Noto Sans JP', sans-serif;
 }
 .login-subtitle {
   color: var(--gold-pale); font-size: 13px;
@@ -109,7 +109,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
 .course-label {
   font-size: 16px; font-weight: 600; color: var(--paper);
   letter-spacing: 0.04em;
-  font-family: 'Noto Serif JP', serif;
+  font-family: 'Noto Sans JP', sans-serif;
 }
 .course-desc {
   font-size: 12px; color: var(--gold-soft); margin-top: 4px;
@@ -132,7 +132,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
 }
 .modal-content h3 {
   font-size: 18px; margin-bottom: 8px; color: var(--ink);
-  font-family: 'Noto Serif JP', serif;
+  font-family: 'Noto Sans JP', sans-serif;
   letter-spacing: 0.04em;
 }
 .modal-content p {
@@ -164,7 +164,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
   padding: 12px 24px; font-size: 14px; font-weight: 600;
   cursor: pointer; transition: all 0.2s;
   letter-spacing: 0.12em;
-  font-family: 'Noto Serif JP', serif;
+  font-family: 'Noto Sans JP', sans-serif;
 }
 .btn-primary:hover { background: var(--gold); }
 .btn-primary:disabled { background: #b0b0b0; cursor: default; }
@@ -254,7 +254,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
 }
 #print-overlay .po-cover h1 {
   color: var(--ink); font-size: 22px; margin-bottom: 10px;
-  font-family: 'Noto Serif JP', serif; letter-spacing: 0.06em;
+  font-family: 'Noto Sans JP', sans-serif; letter-spacing: 0.06em;
 }
 #print-overlay .po-meta { color: var(--ink-mute); font-size: 13px; }
 #print-overlay .po-bottom-actions {
@@ -283,7 +283,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
   border-radius: 3px; color: var(--ink);
 }
 #print-overlay .po-line-block h2 {
-  font-family: 'Noto Serif JP', serif;
+  font-family: 'Noto Sans JP', sans-serif;
   font-size: 18px; color: var(--ink);
   margin-bottom: 14px; letter-spacing: 0.04em;
   border: none; padding: 0;
@@ -369,7 +369,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
 }
 .welcome-card h2 {
   font-size: 16px; margin-bottom: 16px; color: var(--paper);
-  font-family: 'Noto Serif JP', serif; letter-spacing: 0.04em;
+  font-family: 'Noto Sans JP', sans-serif; letter-spacing: 0.04em;
   position: relative;
 }
 .progress-overview { display: flex; align-items: center; gap: 14px; position: relative; }
@@ -411,7 +411,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
 .module-number {
   font-size: 11px; color: var(--ink-mute); font-weight: 600;
   letter-spacing: 0.2em;
-  font-family: 'Cormorant Garamond', 'Noto Serif JP', serif;
+  font-family: 'Cormorant Garamond', 'Noto Sans JP', sans-serif;
 }
 .module-status {
   font-size: 10px; padding: 3px 10px; border-radius: 2px;
@@ -424,7 +424,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
 .module-title {
   font-size: 15px; font-weight: 600; color: var(--ink);
   margin-bottom: 4px;
-  font-family: 'Noto Serif JP', serif;
+  font-family: 'Noto Sans JP', sans-serif;
   letter-spacing: 0.04em;
 }
 .module-desc { font-size: 12.5px; color: var(--ink-mute); line-height: 1.7; }
@@ -448,13 +448,13 @@ body.is-admin .admin-only { display: inline-flex !important; }
 #print-overlay .po-section h2 {
   font-size: 20px; color: var(--ink); margin-bottom: 18px;
   padding-bottom: 14px; border-bottom: 1px solid var(--line);
-  font-family: 'Noto Serif JP', serif;
+  font-family: 'Noto Sans JP', sans-serif;
   font-weight: 600; letter-spacing: 0.06em;
 }
 #lesson-body h3,
 #print-overlay .po-section h3 {
   font-size: 16px; color: var(--ink-soft); margin: 24px 0 10px;
-  font-family: 'Noto Serif JP', serif;
+  font-family: 'Noto Sans JP', sans-serif;
   font-weight: 600; letter-spacing: 0.04em;
   padding-left: 12px; border-left: 3px solid var(--gold);
 }
@@ -496,7 +496,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
   background: var(--ink); color: var(--gold-pale); padding: 22px;
   border-radius: 3px; text-align: center; margin: 20px 0;
   font-size: 19px; font-weight: 600; letter-spacing: 0.06em;
-  font-family: 'Noto Serif JP', serif;
+  font-family: 'Noto Sans JP', sans-serif;
   border: 1px solid var(--ink-soft);
 }
 .formula-box small {
@@ -532,7 +532,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
 #page-indicator {
   font-size: 12px; color: var(--ink-mute);
   letter-spacing: 0.12em;
-  font-family: 'Cormorant Garamond', 'Noto Serif JP', serif;
+  font-family: 'Cormorant Garamond', 'Noto Sans JP', sans-serif;
 }
 
 /* ===== テスト画面 ===== */
@@ -546,7 +546,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
 .quiz-question-text {
   font-size: 15.5px; font-weight: 600; color: var(--ink);
   margin-bottom: 14px; line-height: 1.8;
-  font-family: 'Noto Serif JP', serif;
+  font-family: 'Noto Sans JP', sans-serif;
 }
 .quiz-question-number {
   font-size: 11px; color: var(--ink-mute); margin-bottom: 6px;
@@ -601,7 +601,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
 .diagram-box .diagram-title {
   font-size: 13px; font-weight: 600; color: var(--ink);
   margin-bottom: 16px; letter-spacing: 0.06em;
-  font-family: 'Noto Serif JP', serif;
+  font-family: 'Noto Sans JP', sans-serif;
 }
 .flow-row {
   display: flex; align-items: center; justify-content: center;
@@ -634,7 +634,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
 }
 .stat-card .stat-num {
   font-size: 26px; font-weight: 700; color: var(--ink); line-height: 1.2;
-  font-family: 'Cormorant Garamond', 'Noto Serif JP', serif;
+  font-family: 'Cormorant Garamond', 'Noto Sans JP', sans-serif;
 }
 .stat-card .stat-label {
   font-size: 11.5px; color: var(--ink-mute); margin-top: 4px;
@@ -669,7 +669,7 @@ body.is-admin .admin-only { display: inline-flex !important; }
   background: var(--ink); color: var(--gold-pale); padding: 11px 14px;
   text-align: left; font-weight: 600; vertical-align: middle;
   letter-spacing: 0.04em;
-  font-family: 'Noto Serif JP', serif;
+  font-family: 'Noto Sans JP', sans-serif;
 }
 .compare-table td {
   padding: 11px 14px; border-bottom: 1px solid var(--line);
