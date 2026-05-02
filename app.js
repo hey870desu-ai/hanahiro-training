@@ -509,85 +509,6 @@ function reviewLesson() {
   showLesson();
 }
 
-// html2pdf.js を遅延ロード（必要になったときだけ）
-let _html2pdfLoading = null;
-function loadHtml2Pdf() {
-  if (window.html2pdf) return Promise.resolve(window.html2pdf);
-  if (_html2pdfLoading) return _html2pdfLoading;
-  _html2pdfLoading = new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js';
-    s.onload = () => resolve(window.html2pdf);
-    s.onerror = () => reject(new Error('html2pdf.js の読み込みに失敗しました'));
-    document.head.appendChild(s);
-  });
-  return _html2pdfLoading;
-}
-
-// PDF生成 → 画面内ビューアで表示。
-// LINE内ブラウザでもブラウザ標準のPDFビューアが開くので、その共有ボタンから保存可。
-async function savePdfFromOverlay() {
-  const btn = document.getElementById('po-pdf-btn');
-  const btnBottom = document.getElementById('po-pdf-btn-bottom');
-  const setBtnText = (text, disabled = false) => {
-    [btn, btnBottom].forEach(b => { if (b) { b.textContent = text; b.disabled = disabled; } });
-  };
-  const originalTop = btn ? btn.textContent : '';
-  const originalBottom = btnBottom ? btnBottom.textContent : '';
-  setBtnText('⏳ PDF生成中...', true);
-  try {
-    const html2pdf = await loadHtml2Pdf();
-    const target = document.querySelector('#print-overlay .po-content');
-    if (!target) throw new Error('印刷対象が見つかりません');
-    const mod = courseData.modules[currentModuleIndex];
-    const safeTitle = (mod && mod.title || 'レッスン').replace(/[\\\/:*?"<>|]/g, '');
-    const filename = `はなひろラーニング_${safeTitle}.pdf`;
-
-    const pdfBlob = await html2pdf().set({
-      margin: [12, 10, 14, 10],
-      image: { type: 'jpeg', quality: 0.96 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'] }
-    }).from(target).outputPdf('blob');
-
-    const url = URL.createObjectURL(pdfBlob);
-    setBtnText(originalTop || '📄 PDF保存', false);
-
-    // PDF をオーバーレイ内のビューアで表示
-    const overlay = document.getElementById('print-overlay');
-    if (!overlay) throw new Error('オーバーレイが見つかりません');
-    overlay.innerHTML = `
-      <div class="po-toolbar">
-        <button type="button" class="po-close" id="po-close-btn">&larr; 戻る</button>
-        <span class="po-hint">PDF表示中。下の案内に従って保存してください</span>
-      </div>
-      <div class="po-pdf-viewer">
-        <div class="po-pdf-help">
-          <strong>📄 PDFを保存する手順:</strong>
-          <ol>
-            <li>下のPDFを長押し → 「<strong>"ファイル"に保存</strong>」または「<strong>共有</strong>」</li>
-            <li>または下の「PDF をダウンロード」リンクをタップ → ブラウザの保存先を選択</li>
-          </ol>
-          <a href="${url}" download="${escapeForPrint(filename)}" class="po-download-link">⬇ PDF をダウンロード（${escapeForPrint(filename)}）</a>
-        </div>
-        <iframe src="${url}" class="po-pdf-frame" title="PDF プレビュー"></iframe>
-      </div>
-    `;
-    document.getElementById('po-close-btn').addEventListener('click', () => {
-      overlay.remove();
-      document.body.style.overflow = '';
-      URL.revokeObjectURL(url);
-    });
-  } catch (e) {
-    console.error(e);
-    alert('PDF生成に失敗しました：' + (e.message || e));
-    if (btn) btn.textContent = originalTop;
-    if (btnBottom) btnBottom.textContent = originalBottom;
-    setBtnText(btn?.textContent || originalTop, false);
-  }
-}
-
 // LINE アプリ内ブラウザ判定
 function isLineInAppBrowser() {
   return /Line\//i.test(navigator.userAgent);
@@ -614,8 +535,8 @@ function renderAdminPrintView(moduleId) {
     <div id="print-overlay" style="position:static">
       <div class="po-toolbar">
         <a href="${escapeForPrint(location.origin + location.pathname)}" class="po-close">&larr; トップへ</a>
-        <span class="po-hint">管理者印刷ビュー｜下のボタンで PDF保存できます</span>
-        <button type="button" class="po-print" id="po-pdf-btn">📄 PDF保存</button>
+        <span class="po-hint">管理者印刷ビュー｜下のボタンで印刷／PDF保存ができます</span>
+        <button type="button" class="po-print" onclick="window.print()">🖨 印刷 / PDF保存</button>
       </div>
       <div class="po-content">
         <div class="po-cover">
@@ -629,19 +550,16 @@ function renderAdminPrintView(moduleId) {
           </section>
         `).join('')}
         <div class="po-bottom-actions">
-          <button type="button" class="po-print-bottom" id="po-pdf-btn-bottom">📄 このレッスンをPDF保存</button>
-          <p class="po-tip">ブラウザの印刷機能（Cmd+P / Ctrl+P）からも印刷ダイアログが開けます。</p>
+          <button type="button" class="po-print-bottom" onclick="window.print()">🖨 印刷 / PDF保存</button>
+          <p class="po-tip">押すとブラウザの印刷ダイアログが開きます。「PDF として保存」も選べます（Cmd+P / Ctrl+P でも開きます）。</p>
         </div>
       </div>
     </div>
   `;
   document.body.style.background = '#fff';
   document.body.style.overflow = 'auto';
-  // ダミーの courseData を設定して savePdfFromOverlay が動くように
   courseData = course;
   currentModuleIndex = course.modules.indexOf(mod);
-  document.getElementById('po-pdf-btn')?.addEventListener('click', savePdfFromOverlay);
-  document.getElementById('po-pdf-btn-bottom')?.addEventListener('click', savePdfFromOverlay);
 }
 
 // Notion等に貼るための管理者印刷URL一覧をコンソールに出力
@@ -706,8 +624,8 @@ function printModule() {
     overlay.innerHTML = `
       <div class="po-toolbar">
         <button type="button" class="po-close" id="po-close-btn">&larr; 戻る</button>
-        <span class="po-hint">下のボタンで PDF保存できます</span>
-        <button type="button" class="po-print" id="po-pdf-btn">📄 PDF保存</button>
+        <span class="po-hint">下のボタンで印刷／PDF保存ができます</span>
+        <button type="button" class="po-print" onclick="window.print()">🖨 印刷 / PDF保存</button>
       </div>
       <div class="po-content">
         <div class="po-cover">
@@ -721,8 +639,8 @@ function printModule() {
           </section>
         `).join('')}
         <div class="po-bottom-actions">
-          <button type="button" class="po-print-bottom" id="po-pdf-btn-bottom">📄 このレッスンをPDF保存</button>
-          <p class="po-tip">PCで直接印刷したい場合は、このオーバーレイを開いた状態で<strong>Cmd+P / Ctrl+P</strong> でも印刷ダイアログが開きます。</p>
+          <button type="button" class="po-print-bottom" onclick="window.print()">🖨 印刷 / PDF保存</button>
+          <p class="po-tip">押すとブラウザの印刷ダイアログが開きます。「PDFとして保存」も選べます（Cmd+P / Ctrl+P でも開きます）。</p>
         </div>
       </div>
     `;
@@ -734,8 +652,6 @@ function printModule() {
       document.body.style.overflow = '';
     };
     document.getElementById('po-close-btn').addEventListener('click', close);
-    document.getElementById('po-pdf-btn')?.addEventListener('click', savePdfFromOverlay);
-    document.getElementById('po-pdf-btn-bottom')?.addEventListener('click', savePdfFromOverlay);
   } catch (e) {
     console.error('printModule エラー:', e);
     alert('印刷準備でエラーが発生しました: ' + e.message);
