@@ -90,6 +90,12 @@ async function initAuth() {
   const params = new URLSearchParams(window.location.search);
   const token = params.get('token');
 
+  // 認証不要の印刷ビューモード（?print=1&course=X&module=Y）
+  if (params.get('print') === '1') {
+    renderPublicPrintView(params.get('course'), params.get('module'));
+    return;
+  }
+
   // モジュールが読み込まれるのを待つ
   if (token) {
     await waitForFirestore();
@@ -500,9 +506,53 @@ function reviewLesson() {
   showLesson();
 }
 
+// LINE アプリ内ブラウザ判定
+function isLineInAppBrowser() {
+  return /Line\//i.test(navigator.userAgent);
+}
+
+// 認証不要の印刷ビュー（Safariで開いたときに使う）
+function renderPublicPrintView(courseKey, moduleId) {
+  const course = courseKey === 'manager' ? MANAGER_COURSE : STAFF_COURSE;
+  const mod = course.modules.find(m => m.id === moduleId);
+  if (!mod) {
+    document.body.innerHTML = `<div style="padding:40px;text-align:center;font-family:sans-serif"><h2>レッスンが見つかりません</h2><p>URLを確認してください。</p></div>`;
+    return;
+  }
+  document.body.innerHTML = `
+    <div id="print-overlay" style="position:static">
+      <div class="po-toolbar">
+        <span class="po-hint">印刷ボタンを押すと印刷ダイアログが起動します</span>
+        <button type="button" class="po-print" onclick="window.print()">🖨 印刷</button>
+      </div>
+      <div class="po-content">
+        <div class="po-cover">
+          <h1>${escapeForPrint(mod.title)}</h1>
+          <div class="po-meta">はなひろラーニング「${escapeForPrint(course.title)}」 ／ ${escapeForPrint(mod.number || '')}</div>
+        </div>
+        ${mod.lessons.map((l, i) => `
+          <section class="po-section">
+            <h2>ページ${i + 1}：${escapeForPrint(l.title)}</h2>
+            ${l.content}
+          </section>
+        `).join('')}
+        <div class="po-bottom-actions">
+          <button type="button" class="po-print-bottom" onclick="window.print()">🖨 このページを印刷 / PDF保存</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.style.background = '#fff';
+}
+
+// 印刷専用URLを組み立て（認証不要モード）
+function buildPrintUrl(moduleId, course) {
+  const base = location.origin + location.pathname;
+  return `${base}?print=1&course=${encodeURIComponent(course)}&module=${encodeURIComponent(moduleId)}`;
+}
+
 // --- 現モジュールの全レッスンを印刷 / PDF保存 ---
 // 同じタブにオーバーレイで全レッスン表示。閉じるボタンで戻る。
-// 印刷ボタンタップで window.print() をユーザージェスチャーから直接呼ぶ。
 function printModule() {
   try {
     const mod = courseData.modules[currentModuleIndex];
@@ -511,20 +561,38 @@ function printModule() {
       return;
     }
     const courseName = courseData.title;
+    const inLine = isLineInAppBrowser();
+    const printUrl = buildPrintUrl(mod.id, currentCourse);
 
-    // 既存オーバーレイがあれば削除
     let overlay = document.getElementById('print-overlay');
     if (overlay) overlay.remove();
+
+    const lineNoticeHtml = inLine ? `
+      <div class="po-line-notice">
+        <div class="po-line-title">📱 LINE アプリ内では印刷できません</div>
+        <p>右上の <strong>「⋯」</strong> をタップ → <strong>「他のアプリで開く」</strong> または <strong>「Safari で開く」</strong> を選択してください。<br>下のURLを長押ししてもSafariで開けます。</p>
+        <div class="po-url-box">
+          <input type="text" readonly value="${escapeForPrint(printUrl)}" id="po-print-url" onclick="this.select()">
+          <button type="button" id="po-copy-btn">コピー</button>
+        </div>
+      </div>` : '';
+
+    const printButtonsHtml = inLine ? '' : `
+      <button type="button" class="po-print" id="po-print-btn">🖨 印刷</button>`;
+    const bottomButtonHtml = inLine ? '' : `
+      <button type="button" class="po-print-bottom" id="po-print-btn-bottom">🖨 このページを印刷 / PDF保存</button>
+      <p class="po-tip">反応しない場合はブラウザのメニュー（Safari は共有 → プリント、Chrome は ⋮ → 共有 → プリント）からも印刷できます。</p>`;
 
     overlay = document.createElement('div');
     overlay.id = 'print-overlay';
     overlay.innerHTML = `
       <div class="po-toolbar">
         <button type="button" class="po-close" id="po-close-btn">&larr; 戻る</button>
-        <span class="po-hint">下の「🖨 印刷 / PDF保存」を押してください</span>
-        <button type="button" class="po-print" id="po-print-btn">🖨 印刷</button>
+        <span class="po-hint">${inLine ? '⚠️ Safariで開いて印刷してください' : '下の「🖨 印刷 / PDF保存」を押してください'}</span>
+        ${printButtonsHtml}
       </div>
       <div class="po-content">
+        ${lineNoticeHtml}
         <div class="po-cover">
           <h1>${escapeForPrint(mod.title)}</h1>
           <div class="po-meta">はなひろラーニング「${escapeForPrint(courseName)}」 ／ ${escapeForPrint(mod.number || '')}</div>
@@ -536,8 +604,7 @@ function printModule() {
           </section>
         `).join('')}
         <div class="po-bottom-actions">
-          <button type="button" class="po-print-bottom" id="po-print-btn-bottom">🖨 このページを印刷 / PDF保存</button>
-          <p class="po-tip">スマホで反応しない場合は、ブラウザのメニュー（Safari は共有 → プリント、Chrome は ⋮ → 共有 → プリント）からも印刷できます。</p>
+          ${bottomButtonHtml}
         </div>
       </div>
     `;
@@ -549,9 +616,28 @@ function printModule() {
       document.body.style.overflow = '';
     };
     document.getElementById('po-close-btn').addEventListener('click', close);
-    const doPrint = () => { try { window.print(); } catch (e) { console.error(e); } };
-    document.getElementById('po-print-btn').addEventListener('click', doPrint);
-    document.getElementById('po-print-btn-bottom').addEventListener('click', doPrint);
+
+    if (inLine) {
+      const copyBtn = document.getElementById('po-copy-btn');
+      const urlInput = document.getElementById('po-print-url');
+      copyBtn?.addEventListener('click', () => {
+        urlInput.select();
+        urlInput.setSelectionRange(0, 99999);
+        try {
+          navigator.clipboard?.writeText(printUrl);
+          copyBtn.textContent = '✓ コピー済';
+          setTimeout(() => { copyBtn.textContent = 'コピー'; }, 2000);
+        } catch (e) {
+          document.execCommand('copy');
+          copyBtn.textContent = '✓';
+          setTimeout(() => { copyBtn.textContent = 'コピー'; }, 2000);
+        }
+      });
+    } else {
+      const doPrint = () => { try { window.print(); } catch (e) { console.error(e); } };
+      document.getElementById('po-print-btn')?.addEventListener('click', doPrint);
+      document.getElementById('po-print-btn-bottom')?.addEventListener('click', doPrint);
+    }
   } catch (e) {
     console.error('printModule エラー:', e);
     alert('印刷準備でエラーが発生しました: ' + e.message);
