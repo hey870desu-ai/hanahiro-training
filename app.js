@@ -90,6 +90,15 @@ async function initAuth() {
   const params = new URLSearchParams(window.location.search);
   const token = params.get('token');
 
+  // 管理者用印刷ビュー: ?adminPrint=moduleId&key=管理者PW
+  // 認証スキップで指定モジュールの印刷ビューを表示（Notionから開く運用）
+  const adminPrintModule = params.get('adminPrint');
+  const adminKey = params.get('key');
+  if (adminPrintModule && adminKey === MANAGER_COURSE.password) {
+    renderAdminPrintView(adminPrintModule);
+    return;
+  }
+
   // モジュールが読み込まれるのを待つ
   if (token) {
     await waitForFirestore();
@@ -584,6 +593,69 @@ function isLineInAppBrowser() {
   return /Line\//i.test(navigator.userAgent);
 }
 
+// グローバル: 管理者モード（印刷ボタン表示用）
+let isAdminMode = false;
+
+// 管理者専用印刷ビュー（認証不要、URL keyで保護）
+function renderAdminPrintView(moduleId) {
+  let course = null, mod = null;
+  for (const c of [STAFF_COURSE, MANAGER_COURSE]) {
+    const m = c.modules.find(m => m.id === moduleId);
+    if (m) { course = c; mod = m; break; }
+  }
+  if (!mod) {
+    document.body.innerHTML = `<div style="padding:40px;text-align:center;font-family:sans-serif;color:#1a2742"><h2>レッスンが見つかりません</h2><p>moduleId=${moduleId}</p><p style="font-size:13px;color:#5a6378">URLの「adminPrint=」の値が正しいか確認してください。</p></div>`;
+    return;
+  }
+  isAdminMode = true;
+  // 既存のスクリーンを全部非表示にして印刷ビューだけ出す
+  document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+  document.body.innerHTML = `
+    <div id="print-overlay" style="position:static">
+      <div class="po-toolbar">
+        <a href="${escapeForPrint(location.origin + location.pathname)}" class="po-close">&larr; トップへ</a>
+        <span class="po-hint">管理者印刷ビュー｜下のボタンで PDF保存できます</span>
+        <button type="button" class="po-print" id="po-pdf-btn">📄 PDF保存</button>
+      </div>
+      <div class="po-content">
+        <div class="po-cover">
+          <h1>${escapeForPrint(mod.title)}</h1>
+          <div class="po-meta">はなひろラーニング「${escapeForPrint(course.title)}」 ／ ${escapeForPrint(mod.number || '')}</div>
+        </div>
+        ${mod.lessons.map((l, i) => `
+          <section class="po-section">
+            <h2>ページ${i + 1}：${escapeForPrint(l.title)}</h2>
+            ${l.content}
+          </section>
+        `).join('')}
+        <div class="po-bottom-actions">
+          <button type="button" class="po-print-bottom" id="po-pdf-btn-bottom">📄 このレッスンをPDF保存</button>
+          <p class="po-tip">ブラウザの印刷機能（Cmd+P / Ctrl+P）からも印刷ダイアログが開けます。</p>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.style.background = '#fff';
+  document.body.style.overflow = 'auto';
+  // ダミーの courseData を設定して savePdfFromOverlay が動くように
+  courseData = course;
+  currentModuleIndex = course.modules.indexOf(mod);
+  document.getElementById('po-pdf-btn')?.addEventListener('click', savePdfFromOverlay);
+  document.getElementById('po-pdf-btn-bottom')?.addEventListener('click', savePdfFromOverlay);
+}
+
+// Notion等に貼るための管理者印刷URL一覧をコンソールに出力
+function listAdminPrintUrls() {
+  const base = location.origin + location.pathname;
+  const key = MANAGER_COURSE.password;
+  const all = [...STAFF_COURSE.modules, ...MANAGER_COURSE.modules];
+  console.log('=== 管理者印刷URL一覧（Notionに貼り付け用） ===');
+  all.forEach(m => {
+    console.log(`${m.title}\n  ${base}?adminPrint=${m.id}&key=${key}\n`);
+  });
+}
+window.listAdminPrintUrls = listAdminPrintUrls;
+
 // --- 現モジュールの全レッスンを印刷 / PDF保存 ---
 // LINE アプリ内ブラウザは全ファイル操作がブロックされる仕様のため、
 // 検出時は「Safariで開く」案内に切替。それ以外はオーバーレイ + PDF保存。
@@ -689,6 +761,8 @@ function closeAdminPasswordModal() {
 function checkAdminPassword() {
   const input = document.getElementById('admin-password').value;
   if (input === MANAGER_COURSE.password) {
+    isAdminMode = true;
+    document.body.classList.add('is-admin');
     closeAdminPasswordModal();
     openAdminDashboard();
   } else {

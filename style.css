@@ -32,6 +32,10 @@ body {
 .screen { display: none; min-height: 100vh; }
 .screen.active { display: block; }
 
+/* 管理者のみに表示する要素（デフォルト非表示。body.is-admin の時だけ表示） */
+.admin-only { display: none !important; }
+body.is-admin .admin-only { display: inline-flex !important; }
+
 /* ===== ログイン画面 ===== */
 #login-screen {
   background: linear-gradient(155deg, #1a2742 0%, #243454 35%, #2c3e60 70%, #1a2742 100%);
