@@ -501,6 +501,7 @@ function reviewLesson() {
 }
 
 // --- 現モジュールの全レッスンを印刷 / PDF保存 ---
+// 印刷専用コンテナに書き出す方式（画面表示は変更しない）
 function printModule() {
   try {
     const mod = courseData.modules[currentModuleIndex];
@@ -508,11 +509,14 @@ function printModule() {
       alert('印刷できるレッスンがありません');
       return;
     }
-    const body = document.getElementById('lesson-body');
-    const originalHTML = body.innerHTML;
     const courseName = courseData.title;
 
-    body.innerHTML = `
+    // 既存の印刷コンテナがあれば削除して新規作成
+    let printContainer = document.getElementById('print-container');
+    if (printContainer) printContainer.remove();
+    printContainer = document.createElement('div');
+    printContainer.id = 'print-container';
+    printContainer.innerHTML = `
       <div class="print-cover">
         <h1 style="text-align:center;font-size:24px;color:#1a2742;border-bottom:2px solid #b8954a;padding-bottom:12px">${mod.title}</h1>
         <p style="text-align:center;color:#5a6378;margin:8px 0 20px">はなひろラーニング「${courseName}」&nbsp;/&nbsp;${mod.number || ''}</p>
@@ -524,29 +528,27 @@ function printModule() {
         </section>
       `).join('')}
     `;
+    document.body.appendChild(printContainer);
 
-    document.body.classList.add('printing');
-    const restore = () => {
-      body.innerHTML = originalHTML;
-      document.body.classList.remove('printing');
-      window.removeEventListener('afterprint', restore);
+    const cleanup = () => {
+      const el = document.getElementById('print-container');
+      if (el) el.remove();
+      window.removeEventListener('afterprint', cleanup);
     };
-    window.addEventListener('afterprint', restore);
-    setTimeout(() => { if (document.body.classList.contains('printing')) restore(); }, 60000);
+    window.addEventListener('afterprint', cleanup);
+    // 万一 afterprint が発火しないモバイルブラウザ対策
+    setTimeout(cleanup, 60000);
 
-    // iOS Safari は共有シート経由で印刷ダイアログを開く挙動。DOM反映を待つために少し遅らせる
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     setTimeout(() => {
       try {
         window.print();
       } catch (e) {
         console.error('印刷エラー:', e);
-        if (isMobile) {
-          alert('印刷ダイアログを開けませんでした。\nブラウザの「共有」メニューから「プリント」または「PDFを保存」を選んでください。');
-        }
-        restore();
+        cleanup();
+        alert('印刷ダイアログを開けませんでした。\nブラウザの「共有」メニュー → 「プリント」「ページをプリント」「PDFとして保存」 などを選んでください。');
       }
-    }, isMobile ? 250 : 50);
+    }, isMobile ? 200 : 50);
   } catch (e) {
     console.error('printModule エラー:', e);
     alert('印刷準備でエラーが発生しました: ' + e.message);

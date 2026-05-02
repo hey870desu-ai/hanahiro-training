@@ -197,20 +197,25 @@ body {
 .print-btn { font-size: 16px; padding: 4px 10px; }
 
 /* ===== 印刷 / PDF保存 ===== */
+/* 通常時は印刷専用コンテナを非表示、印刷時はそれだけ表示 */
+#print-container { display: none; }
 @media print {
-  .app-header, .lesson-nav, .logout-btn, .back-btn, .print-btn,
-  #login-screen, #password-modal, #admin-password-modal, .modal,
-  .quiz-submit-area { display: none !important; }
-  body, #app, .screen, .lesson-content {
-    background: #fff !important; padding: 0 !important; margin: 0 !important;
+  /* 全画面を非表示 → 印刷コンテナのみ表示 */
+  body > *:not(#print-container) { display: none !important; }
+  #print-container {
+    display: block !important;
+    background: #fff;
     color: #000;
+    font-size: 12pt;
+    line-height: 1.7;
+    padding: 0;
+    margin: 0;
   }
-  .screen { display: block !important; }
-  #lesson-body { padding: 20px; color: #000; font-size: 12pt; }
-  #lesson-body h2, #lesson-body h3 { color: #1a2742 !important; }
-  .print-section { page-break-before: always; }
-  .print-section:first-child { page-break-before: auto; }
-  .print-cover { page-break-after: always; }
+  body { background: #fff !important; padding: 0 !important; margin: 0 !important; color: #000; }
+  #print-container h2, #print-container h3 { color: #1a2742 !important; }
+  #print-container .print-section { page-break-before: always; }
+  #print-container .print-section:first-child { page-break-before: auto; }
+  #print-container .print-cover { page-break-after: always; }
   .diagram-box, .key-point, .example-box, .chat-bubble {
     break-inside: avoid;
   }
