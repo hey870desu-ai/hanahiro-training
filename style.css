@@ -312,6 +312,8 @@ body.is-admin .admin-only { display: inline-flex !important; }
 
 /* ===== 印刷時 ===== */
 @media print {
+  /* 背景色・色アクセントを保持（ブラウザのデフォルトはストリップ） */
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
   /* オーバーレイがあれば、それだけを印刷 */
   body > *:not(#print-overlay) { display: none !important; }
   #print-overlay {
