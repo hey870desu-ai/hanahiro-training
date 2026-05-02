@@ -849,10 +849,16 @@
       }
       .print-cover { page-break-before: avoid; }
 
+      /* スクリーン版の .concept-hero::before/::after（角ゴールド枠）は印刷時は不要 */
+      .concept-hero::before { display: none !important; }
       .concept-hero::after, section.block::after {
         content: "POEM DE RIHA  ASAKA";
         position: absolute;
-        bottom: 6mm; left: 0; right: 0;
+        bottom: 6mm;
+        left: 0; right: 0;
+        width: auto !important;
+        height: auto !important;
+        border: 0 !important;
         text-align: center;
         font-family: 'Cormorant Garamond', serif;
         font-size: 8.5pt;
@@ -1212,7 +1218,7 @@
             <h3 class="pillar-title">マシーントレーニング</h3>
           </div>
           <div class="pillar-body">
-            <img src="photos/kaisei-machine.jpg" alt="マシーントレーニングの様子（ポエム開成店）" class="pillar-img" loading="lazy">
+            <img src="photos/kaisei-machine.jpg" alt="マシーントレーニングの様子（ポエム開成店）" class="pillar-img">
             <p class="pillar-desc">高齢者の体格や筋力に配慮して設計された専用マシン9種を配備。負荷を細かく調整できるので、無理なく安全に筋力を取り戻せます。「動ける身体」へ最短距離で導きます。</p>
           </div>
         </div>
@@ -1232,7 +1238,7 @@
             <h3 class="pillar-title">楽しい脳トレ</h3>
           </div>
           <div class="pillar-body">
-            <img src="photos/kaisei-brain.jpg" alt="楽しい脳トレ・棒体操の様子（ポエム開成店）" class="pillar-img" loading="lazy">
+            <img src="photos/kaisei-brain.jpg" alt="楽しい脳トレ・棒体操の様子（ポエム開成店）" class="pillar-img">
             <p class="pillar-desc">動画を見ながら取り組む間違い探しやクイズ形式の脳トレを実施。「楽しい」が続く秘訣です。身体を動かしながら頭も使う、二重課題（デュアルタスク）で認知機能の維持・向上をサポートします。</p>
           </div>
         </div>
@@ -1251,7 +1257,7 @@
             <h3 class="pillar-title">PT監修プログラム</h3>
           </div>
           <div class="pillar-body">
-            <img src="photos/kaisei-balloon.jpg" alt="バルーンを使ったPT監修プログラム（ポエム開成店）" class="pillar-img" loading="lazy">
+            <img src="photos/kaisei-balloon.jpg" alt="バルーンを使ったPT監修プログラム（ポエム開成店）" class="pillar-img">
             <p class="pillar-desc">理学療法士（PT）監修のオリジナル体操プログラムを毎日実施。常駐の柔道整復師が、お一人おひとりの身体の状態を見極めながら、その日に最適な運動メニューをご提案します。</p>
           </div>
         </div>
@@ -1445,18 +1451,18 @@
       <p style="text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:24px;letter-spacing:0.04em">※ 写真はすべてポエム開成店</p>
 
       <div class="gallery-grid">
-        <div class="gallery-item"><img src="photos/kaisei-room.jpg" alt="フロア全景" loading="lazy"></div>
-        <div class="gallery-item"><img src="photos/kaisei-floor2.jpg" alt="活動風景（別アングル）" loading="lazy"></div>
-        <div class="gallery-item"><img src="photos/kaisei-floor3.jpg" alt="施設内の様子" loading="lazy"></div>
-        <div class="gallery-item"><img src="photos/kaisei-machine.jpg" alt="マシーントレーニング" loading="lazy"></div>
-        <div class="gallery-item"><img src="photos/kaisei-brain.jpg" alt="棒体操" loading="lazy"></div>
-        <div class="gallery-item"><img src="photos/kaisei-balloon.jpg" alt="バルーンを使ったプログラム" loading="lazy"></div>
-        <div class="gallery-item"><img src="photos/kaisei-ball.jpg" alt="バランスボールでのリハビリ" loading="lazy"></div>
-        <div class="gallery-item"><img src="photos/kaisei-pt.jpg" alt="石井さんの体操指導" loading="lazy"></div>
-        <div class="gallery-item"><img src="photos/kaisei-care.jpg" alt="個別の施術" loading="lazy"></div>
-        <div class="gallery-item"><img src="photos/kaisei-talk.jpg" alt="スタッフと利用者の対話" loading="lazy"></div>
-        <div class="gallery-item"><img src="photos/kaisei-staff.jpg" alt="スタッフ" loading="lazy"></div>
-        <div class="gallery-item"><img src="photos/kaisei-nurse.jpg" alt="看護職員" loading="lazy"></div>
+        <div class="gallery-item"><img src="photos/kaisei-room.jpg" alt="フロア全景"></div>
+        <div class="gallery-item"><img src="photos/kaisei-floor2.jpg" alt="活動風景（別アングル）"></div>
+        <div class="gallery-item"><img src="photos/kaisei-floor3.jpg" alt="施設内の様子"></div>
+        <div class="gallery-item"><img src="photos/kaisei-machine.jpg" alt="マシーントレーニング"></div>
+        <div class="gallery-item"><img src="photos/kaisei-brain.jpg" alt="棒体操"></div>
+        <div class="gallery-item"><img src="photos/kaisei-balloon.jpg" alt="バルーンを使ったプログラム"></div>
+        <div class="gallery-item"><img src="photos/kaisei-ball.jpg" alt="バランスボールでのリハビリ"></div>
+        <div class="gallery-item"><img src="photos/kaisei-pt.jpg" alt="石井さんの体操指導"></div>
+        <div class="gallery-item"><img src="photos/kaisei-care.jpg" alt="個別の施術"></div>
+        <div class="gallery-item"><img src="photos/kaisei-talk.jpg" alt="スタッフと利用者の対話"></div>
+        <div class="gallery-item"><img src="photos/kaisei-staff.jpg" alt="スタッフ"></div>
+        <div class="gallery-item"><img src="photos/kaisei-nurse.jpg" alt="看護職員"></div>
       </div>
     </section>
 
@@ -1562,12 +1568,12 @@
       </div>
 
       <div class="access-map">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3171.7050828152483!2d140.36211223886934!3d37.349490180565745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60206b26b8e3a1c3%3A0xe020f6ded81afc58!2z44CSOTYzLTAxMDIg56aP5bO255yM6YOh5bGx5biC5a6J56mN55S656y55bed5Zub6KeS5Z2m77yT4oiS77yR!5e0!3m2!1sja!2sjp!4v1777480647477!5m2!1sja!2sjp" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="poem de riha 安積店 地図"></iframe>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3171.7050828152483!2d140.36211223886934!3d37.349490180565745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60206b26b8e3a1c3%3A0xe020f6ded81afc58!2z44CSOTYzLTAxMDIg56aP5bO255yM6YOh5bGx5biC5a6J56mN55S656y55bed5Zub6KeS5Z2m77yT4oiS77yR!5e0!3m2!1sja!2sjp!4v1777480647477!5m2!1sja!2sjp" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade" title="poem de riha 安積店 地図"></iframe>
       </div>
 
       <!-- 印刷時：施設アクセスマップ（ウェブのiframeの代わり） -->
       <div class="access-map-print">
-        <img src="photos/access-asaka.png?v=20260502c" alt="施設アクセスマップ" class="access-map-print-img">
+        <img src="photos/access-asaka.png?v=20260502d" alt="施設アクセスマップ" class="access-map-print-img">
         <p class="map-attr">地図データ © OpenStreetMap contributors</p>
       </div>
     </section>
