@@ -19,89 +19,131 @@
   <meta name="twitter:image" content="https://hey870desu-ai.github.io/hanahiro-training/photos/ogp.jpg">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --ink: #1a2742;
+      --ink-soft: #2c3e60;
+      --ink-mute: #5a6378;
+      --gold: #b8954a;
+      --gold-soft: #d4b573;
+      --gold-pale: #f4ead6;
+      --paper: #f7f5ee;
+      --line: #d8d2c2;
+    }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
-      background: #faf7f2;
-      color: #4a4a4a;
-      line-height: 1.7;
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Mincho ProN', 'Noto Serif JP', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.85;
       padding: 0 0 60px;
+      -webkit-font-smoothing: antialiased;
     }
     .header {
-      background: linear-gradient(150deg, #f9e4b7 0%, #f5c16c 30%, #e8a849 60%, #d4944a 100%);
-      color: #5a3e1b;
-      padding: 32px 20px 28px;
+      background: linear-gradient(155deg, #1a2742 0%, #243454 35%, #2c3e60 70%, #1a2742 100%);
+      color: var(--paper);
+      padding: 36px 20px 30px;
       text-align: center;
       position: sticky; top: 0; z-index: 10;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      border-bottom: 2px solid var(--gold);
     }
-    .header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
-    .header p { font-size: 13px; color: #6b4d28; }
+    .header h1 {
+      font-size: 22px; font-weight: 600; margin-bottom: 6px;
+      font-family: 'Noto Serif JP', serif;
+      letter-spacing: 0.12em;
+    }
+    .header p {
+      font-size: 12px; color: var(--gold-soft);
+      letter-spacing: 0.16em;
+      font-family: 'Cormorant Garamond', 'Noto Serif JP', serif;
+    }
     .back-link {
       position: absolute; top: 18px; left: 18px;
-      color: #5a3e1b; text-decoration: none; font-size: 14px; font-weight: 600;
-      background: rgba(255,255,255,0.6); padding: 6px 12px; border-radius: 20px;
+      color: var(--gold-pale); text-decoration: none; font-size: 12px; font-weight: 500;
+      background: rgba(0,0,0,0.18); padding: 6px 14px; border-radius: 3px;
+      border: 1px solid rgba(244,234,214,0.3); letter-spacing: 0.08em;
+      transition: all 0.2s;
     }
+    .back-link:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
     .print-btn {
       position: absolute; top: 18px; right: 18px;
-      background: rgba(255,255,255,0.7); border: none; padding: 6px 12px;
-      border-radius: 20px; font-size: 16px; cursor: pointer;
+      background: rgba(0,0,0,0.18); border: 1px solid rgba(244,234,214,0.3);
+      padding: 5px 12px; color: var(--gold-pale);
+      border-radius: 3px; font-size: 14px; cursor: pointer;
+      transition: all 0.2s;
     }
-    .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+    .print-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+    .container { max-width: 900px; margin: 0 auto; padding: 28px 16px; }
     .intro {
-      background: #fff; border-radius: 16px; padding: 20px 22px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 28px;
+      background: #fff; border-radius: 3px; padding: 22px 24px;
+      border: 1px solid var(--line); border-top: 3px solid var(--ink);
+      margin-bottom: 28px;
     }
-    .intro h2 { font-size: 16px; color: #5a3e1b; margin-bottom: 8px; }
-    .intro p { font-size: 14px; color: #6b4d28; }
+    .intro h2 {
+      font-size: 16px; color: var(--ink); margin-bottom: 10px;
+      font-family: 'Noto Serif JP', serif; font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .intro p { font-size: 13.5px; color: var(--ink-soft); line-height: 1.85; }
     .principle-box {
-      background: #fff8ec; border-left: 4px solid #e8a849;
-      padding: 14px 16px; border-radius: 8px; margin-top: 12px;
-      font-size: 13px; color: #6b4d28;
+      background: var(--gold-pale); border-left: 3px solid var(--gold);
+      padding: 14px 18px; border-radius: 0 3px 3px 0; margin-top: 14px;
+      font-size: 13px; color: var(--ink);
     }
-    .principle-box strong { color: #5a3e1b; }
+    .principle-box strong { color: var(--ink); }
 
     /* 階層セクション */
     .tier {
-      margin-bottom: 24px; border-radius: 20px; overflow: hidden;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      margin-bottom: 22px; border-radius: 3px; overflow: hidden;
+      border: 1px solid var(--line);
     }
     .tier-header {
-      padding: 16px 22px; color: #fff; display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 22px; color: #fff; display: flex; align-items: center; justify-content: space-between;
+      letter-spacing: 0.04em;
     }
-    .tier-header .t-left { display: flex; align-items: center; gap: 10px; }
-    .tier-header h3 { font-size: 18px; font-weight: 800; }
-    .tier-header .t-icon { font-size: 26px; }
+    .tier-header .t-left { display: flex; align-items: center; gap: 12px; }
+    .tier-header h3 {
+      font-size: 16px; font-weight: 600;
+      font-family: 'Noto Serif JP', serif;
+      letter-spacing: 0.06em;
+    }
+    .tier-header .t-icon { font-size: 22px; }
     .tier-header .t-count {
-      background: rgba(255,255,255,0.3); padding: 3px 10px; border-radius: 12px;
-      font-size: 12px; font-weight: 700;
+      background: rgba(255,255,255,0.22); padding: 3px 11px; border-radius: 2px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
     }
-    .tier-body { background: #fff; padding: 18px; display: grid; gap: 12px; }
+    .tier-body { background: #fff; padding: 18px; display: grid; gap: 10px; }
 
     /* 役職カード */
     .role {
-      border: 2px solid; border-radius: 14px; padding: 14px 16px;
+      border: 1px solid; border-left: 3px solid; border-radius: 2px; padding: 14px 18px;
       background: #fff; position: relative;
     }
     .role-head {
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;
       margin-bottom: 8px;
     }
-    .role-name { font-size: 16px; font-weight: 800; color: #333; }
+    .role-name {
+      font-size: 15.5px; font-weight: 700; color: var(--ink);
+      font-family: 'Noto Serif JP', serif;
+      letter-spacing: 0.04em;
+    }
     .role-person {
-      font-size: 12px; color: #8a7a6a; font-weight: 500; margin-left: 6px;
+      font-size: 12px; color: var(--ink-mute); font-weight: 500; margin-left: 6px;
     }
     .badges { display: flex; gap: 4px; flex-wrap: wrap; }
     .badge {
-      font-size: 10px; padding: 2px 8px; border-radius: 10px;
-      background: #f5ecd9; color: #5a3e1b; font-weight: 700;
+      font-size: 10px; padding: 2px 8px; border-radius: 2px;
+      background: var(--gold-pale); color: var(--ink); font-weight: 600;
+      letter-spacing: 0.06em;
     }
     .role-row {
-      font-size: 13px; color: #6b4d28; margin-top: 4px; display: flex; gap: 6px;
+      font-size: 13px; color: var(--ink-soft); margin-top: 4px; display: flex; gap: 8px;
+      line-height: 1.75;
     }
     .role-row .lbl {
-      font-weight: 700; color: #5a3e1b; min-width: 72px; flex-shrink: 0;
+      font-weight: 600; color: var(--ink); min-width: 72px; flex-shrink: 0;
+      letter-spacing: 0.04em;
     }
-    .role-row .val { color: #4a4a4a; }
+    .role-row .val { color: var(--ink-soft); }
 
     /* 階層別カラー */
     .tier-1 .tier-header { background: linear-gradient(135deg, #c0392b, #e74c3c); }
@@ -134,15 +176,15 @@
       background: #fff; border-radius: 16px; padding: 18px 20px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 18px;
     }
-    .legend h4 { font-size: 14px; color: #5a3e1b; margin-bottom: 10px; }
-    .legend-row { font-size: 12px; color: #6b4d28; margin-bottom: 6px; }
-    .legend-row strong { color: #5a3e1b; }
+    .legend h4 { font-size: 14px; color: #1a2742; margin-bottom: 10px; }
+    .legend-row { font-size: 12px; color: #2c3e60; margin-bottom: 6px; }
+    .legend-row strong { color: #1a2742; }
 
     .footer-msg {
-      text-align: center; color: #8a7a6a; font-size: 13px; margin-top: 24px;
+      text-align: center; color: #5a6378; font-size: 13px; margin-top: 24px;
       line-height: 1.8;
     }
-    .footer-msg strong { color: #5a3e1b; }
+    .footer-msg strong { color: #1a2742; }
 
     /* 印刷用 */
     @media print {
@@ -168,7 +210,7 @@
     <!-- はなひろの理念バナー -->
     <!-- ============================== -->
     <div id="origin" style="margin-top:40px;border-radius:20px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.08);scroll-margin-top:90px">
-      <div style="background:linear-gradient(135deg,#f5c16c,#e8a849,#c4861f);padding:28px 24px;text-align:center;color:#fff">
+      <div style="background:linear-gradient(135deg, #1a2742, #2c3e60, #243454);padding:28px 24px;text-align:center;color:#fff">
         <div style="font-size:11px;letter-spacing:4px;opacity:0.9;margin-bottom:6px">OUR PHILOSOPHY</div>
         <h2 style="font-size:22px;font-weight:800;margin-bottom:14px">&#x1F33B; はなひろの原点</h2>
         <div style="background:rgba(255,255,255,0.18);border-radius:12px;padding:16px 18px;margin-bottom:12px">
@@ -180,7 +222,7 @@
           <div style="font-size:13px;font-weight:600;line-height:1.7">豊かなシルバーライフの創造から、日本中に夢と元気を。<br>憧れの職業ナンバーワンを目指して。</div>
         </div>
       </div>
-      <div style="background:#fff;padding:20px 24px;font-size:13px;color:#6b4d28;line-height:1.8">
+      <div style="background:#fff;padding:20px 24px;font-size:13px;color:#2c3e60;line-height:1.8">
         はなひろは、「<strong>みんなの会社</strong>」です。CREDO（行動指針）はメンバーたちの手で作られました。一人ひとりが自分ごととして仕事に向き合い、会社に愛着を持ち、共に成長していく ─ そんな会社を目指しています。
       </div>
     </div>
@@ -189,9 +231,9 @@
     <!-- はなひろで育みたい6つの人間力 -->
     <!-- ============================== -->
     <div style="margin-top:40px;text-align:center">
-      <div style="font-size:11px;letter-spacing:4px;color:#8a7a6a;margin-bottom:6px">OUR CHARACTER</div>
-      <h2 style="font-size:22px;font-weight:800;color:#5a3e1b;margin-bottom:8px">&#x1F31F; はなひろで育みたい 7つの人間力</h2>
-      <p style="font-size:13px;color:#6b4d28;margin-bottom:24px">役職に関係なく、全員が心に持っておきたい7つの在り方。<br>迷った時、立ち返る場所です。</p>
+      <div style="font-size:11px;letter-spacing:4px;color:#5a6378;margin-bottom:6px">OUR CHARACTER</div>
+      <h2 style="font-size:22px;font-weight:800;color:#1a2742;margin-bottom:8px">&#x1F31F; はなひろで育みたい 7つの人間力</h2>
+      <p style="font-size:13px;color:#2c3e60;margin-bottom:24px">役職に関係なく、全員が心に持っておきたい7つの在り方。<br>迷った時、立ち返る場所です。</p>
     </div>
 
     <!-- 1. フォロワーシップ -->
@@ -203,7 +245,7 @@
           <h3 style="font-size:18px;color:#145a32;font-weight:800">フォロワーシップ</h3>
         </div>
       </div>
-      <p style="font-size:13px;color:#4a4a4a;margin-bottom:12px">良きリーダーになる人は、まず<strong>良きフォロワー</strong>である。役割に関係なく、チームを支える力が求められます。</p>
+      <p style="font-size:13px;color:#2c3e60;margin-bottom:12px">良きリーダーになる人は、まず<strong>良きフォロワー</strong>である。役割に関係なく、チームを支える力が求められます。</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:12px">
         <div style="background:#e8f6ec;border-radius:10px;padding:12px">
           <div style="font-size:12px;font-weight:700;color:#145a32;margin-bottom:4px">1. 主体的に貢献する</div>
@@ -218,7 +260,7 @@
           <div style="font-size:11px;color:#555;line-height:1.6">笑顔・挨拶・陽解釈でチームを明るく</div>
         </div>
       </div>
-      <div style="background:#fff8ec;border-left:3px solid #e8a849;padding:10px 12px;font-size:12px;color:#6b4d28;border-radius:6px">
+      <div style="background:#f4ead6;border-left:3px solid #b8954a;padding:10px 12px;font-size:12px;color:#2c3e60;border-radius:6px">
         <strong>&#x1F4A1; 現場で</strong>：「気づいたら動く」「頼まれなくても一歩踏み出す」「上司がいないときこそ、チームを支える」
       </div>
     </div>
@@ -232,14 +274,14 @@
           <h3 style="font-size:18px;color:#1a5276;font-weight:800">ギバーになる</h3>
         </div>
       </div>
-      <p style="font-size:13px;color:#4a4a4a;margin-bottom:12px">ペンシルベニア大学のアダム・グラント教授の研究で、<strong>長期的に最も成功するのはギバー（与える人）</strong>と証明されています。</p>
+      <p style="font-size:13px;color:#2c3e60;margin-bottom:12px">ペンシルベニア大学のアダム・グラント教授の研究で、<strong>長期的に最も成功するのはギバー（与える人）</strong>と証明されています。</p>
       <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:12px">
         <tr><th style="background:#dceaf4;padding:8px;text-align:left;border-radius:6px 0 0 0">タイプ</th><th style="background:#dceaf4;padding:8px;text-align:left">特徴</th><th style="background:#dceaf4;padding:8px;text-align:left;border-radius:0 6px 0 0">結果</th></tr>
         <tr><td style="padding:8px;border-bottom:1px solid #eee"><strong>テイカー</strong></td><td style="padding:8px;border-bottom:1px solid #eee">自分の利益を優先</td><td style="padding:8px;border-bottom:1px solid #eee">人が離れる</td></tr>
         <tr><td style="padding:8px;border-bottom:1px solid #eee"><strong>マッチャー</strong></td><td style="padding:8px;border-bottom:1px solid #eee">損得のバランスを考える</td><td style="padding:8px;border-bottom:1px solid #eee">公平だが突出しにくい</td></tr>
         <tr style="background:#f0f7fc"><td style="padding:8px"><strong>&#x1F3C6; ギバー</strong></td><td style="padding:8px">惜しみなく与える</td><td style="padding:8px;color:#1a5276;font-weight:700">長期的に最も成功する</td></tr>
       </table>
-      <div style="background:#fff8ec;border-left:3px solid #e8a849;padding:10px 12px;font-size:12px;color:#6b4d28;border-radius:6px">
+      <div style="background:#f4ead6;border-left:3px solid #b8954a;padding:10px 12px;font-size:12px;color:#2c3e60;border-radius:6px">
         <strong>&#x1F4A1; 現場で</strong>：「忙しい仲間を先に手伝う」「自分の知識・経験を惜しみなく共有する」「利用者さまにも仲間にも、先に与える」
       </div>
     </div>
@@ -253,14 +295,14 @@
           <h3 style="font-size:18px;color:#a04100;font-weight:800">非他責</h3>
         </div>
       </div>
-      <p style="font-size:13px;color:#4a4a4a;margin-bottom:12px">責任を任された時の反応は4つに分かれます。目指すのは <strong>「非他責」</strong>。</p>
+      <p style="font-size:13px;color:#2c3e60;margin-bottom:12px">責任を任された時の反応は4つに分かれます。目指すのは <strong>「非他責」</strong>。</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
         <div style="background:#f5f5f5;border-radius:8px;padding:10px;font-size:12px"><strong style="color:#888">他責</strong><br><span style="color:#666">人のせいにする（ネガティブ）</span></div>
         <div style="background:#f5f5f5;border-radius:8px;padding:10px;font-size:12px"><strong style="color:#888">自責</strong><br><span style="color:#666">自分を責める（ネガティブ）</span></div>
         <div style="background:#f5f5f5;border-radius:8px;padding:10px;font-size:12px"><strong style="color:#888">免責</strong><br><span style="color:#666">まぬがれる（消極的）</span></div>
-        <div style="background:#fff4e6;border:2px solid #e67e22;border-radius:8px;padding:10px;font-size:12px"><strong style="color:#a04100">&#x2B50; 非他責</strong><br><span style="color:#5a3e1b">ポジティブに責任を負う</span></div>
+        <div style="background:#fff4e6;border:2px solid #e67e22;border-radius:8px;padding:10px;font-size:12px"><strong style="color:#a04100">&#x2B50; 非他責</strong><br><span style="color:#1a2742">ポジティブに責任を負う</span></div>
       </div>
-      <div style="background:#fff8ec;border-left:3px solid #e8a849;padding:10px 12px;font-size:12px;color:#6b4d28;border-radius:6px">
+      <div style="background:#f4ead6;border-left:3px solid #b8954a;padding:10px 12px;font-size:12px;color:#2c3e60;border-radius:6px">
         <strong>&#x1F4A1; 現場で</strong>：「任せてくれてありがとう」の精神／失敗を他人や環境のせいにしない／でも自分を責めすぎない／「自分にできることは？」を考える
       </div>
     </div>
@@ -274,7 +316,7 @@
           <h3 style="font-size:18px;color:#6c3483;font-weight:800">美点凝視（びてんぎょうし）</h3>
         </div>
       </div>
-      <p style="font-size:13px;color:#4a4a4a;margin-bottom:12px"><strong>完璧な人間はいない。誰もが未完成。</strong><br>だからこそ、相手の「欠けている点」ではなく、「良いところ」に目を向けて、お互いを認め合う文化を育てよう。</p>
+      <p style="font-size:13px;color:#2c3e60;margin-bottom:12px"><strong>完璧な人間はいない。誰もが未完成。</strong><br>だからこそ、相手の「欠けている点」ではなく、「良いところ」に目を向けて、お互いを認め合う文化を育てよう。</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
         <div style="background:#f4ecf7;border-radius:10px;padding:12px;font-size:12px">
           <div style="color:#8e44ad;font-weight:700;margin-bottom:4px">&#x2716; やりがちな視点</div>
@@ -282,10 +324,10 @@
         </div>
         <div style="background:#e8d5f2;border-radius:10px;padding:12px;font-size:12px">
           <div style="color:#6c3483;font-weight:700;margin-bottom:4px">&#x2714; 美点凝視</div>
-          <div style="color:#4a4a4a">「〇〇さんは、ここがすごい」<br>「これを任せたら光るな」</div>
+          <div style="color:#2c3e60">「〇〇さんは、ここがすごい」<br>「これを任せたら光るな」</div>
         </div>
       </div>
-      <div style="background:#fff8ec;border-left:3px solid #e8a849;padding:10px 12px;font-size:12px;color:#6b4d28;border-radius:6px">
+      <div style="background:#f4ead6;border-left:3px solid #b8954a;padding:10px 12px;font-size:12px;color:#2c3e60;border-radius:6px">
         <strong>&#x1F4A1; 現場で</strong>：仲間の良いところを1日1つ見つけて声に出す／利用者さまの「できること」「大事にしているもの」に目を向ける
       </div>
     </div>
@@ -301,17 +343,17 @@
       </div>
       <div style="background:#fdecea;border-radius:10px;padding:14px;margin-bottom:10px">
         <div style="font-size:13px;font-weight:700;color:#922b21;margin-bottom:4px">善因善果（ぜんいんぜんか）</div>
-        <div style="font-size:12px;color:#4a4a4a;line-height:1.7">良い原因をつくれば、良い結果が返ってくる。<br>日々、良いことを考え、良いことをしよう。</div>
+        <div style="font-size:12px;color:#2c3e60;line-height:1.7">良い原因をつくれば、良い結果が返ってくる。<br>日々、良いことを考え、良いことをしよう。</div>
       </div>
       <div style="background:#fdecea;border-radius:10px;padding:14px;margin-bottom:10px">
         <div style="font-size:13px;font-weight:700;color:#922b21;margin-bottom:4px">情けは人のためならず</div>
-        <div style="font-size:12px;color:#4a4a4a;line-height:1.7">人に優しくすることは、<strong>めぐりめぐって自分のため</strong>になる。<br>（「相手のためにならない」という意味ではありません）</div>
+        <div style="font-size:12px;color:#2c3e60;line-height:1.7">人に優しくすることは、<strong>めぐりめぐって自分のため</strong>になる。<br>（「相手のためにならない」という意味ではありません）</div>
       </div>
       <div style="background:#fdecea;border-radius:10px;padding:14px;margin-bottom:12px">
         <div style="font-size:13px;font-weight:700;color:#922b21;margin-bottom:4px">刻石流水（こくせきりゅうすい）</div>
-        <div style="font-size:12px;color:#4a4a4a;line-height:1.7">「情を懸けしは<strong>水に流し</strong>、恩を受けしは<strong>石に刻むべし</strong>」<br>自分が与えたことは忘れ、受けた恩は忘れない。</div>
+        <div style="font-size:12px;color:#2c3e60;line-height:1.7">「情を懸けしは<strong>水に流し</strong>、恩を受けしは<strong>石に刻むべし</strong>」<br>自分が与えたことは忘れ、受けた恩は忘れない。</div>
       </div>
-      <div style="background:#fff8ec;border-left:3px solid #e8a849;padding:10px 12px;font-size:12px;color:#6b4d28;border-radius:6px">
+      <div style="background:#f4ead6;border-left:3px solid #b8954a;padding:10px 12px;font-size:12px;color:#2c3e60;border-radius:6px">
         <strong>&#x1F4A1; 現場で</strong>：「やってあげた」を数えない／「してもらった」を大切に覚えておく／受けた恩は言葉で返す
       </div>
     </div>
@@ -325,20 +367,20 @@
           <h3 style="font-size:18px;color:#7b4a1d;font-weight:800">はなひろの心得（毎日の実践）</h3>
         </div>
       </div>
-      <p style="font-size:13px;color:#4a4a4a;margin-bottom:12px">「いるだけで、雰囲気がよくなる人」になろう。難しいことは何もない、<strong>毎日の小さな実践</strong>の積み重ね（10の心得）。</p>
+      <p style="font-size:13px;color:#2c3e60;margin-bottom:12px">「いるだけで、雰囲気がよくなる人」になろう。難しいことは何もない、<strong>毎日の小さな実践</strong>の積み重ね（10の心得）。</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:12px">
-        <div style="background:#fff8ec;border-radius:10px;padding:12px;font-size:12px;color:#6b4d28;line-height:1.7">&#x1F305; 毎日、丁寧に<strong>明るく陽気な挨拶</strong>をする</div>
-        <div style="background:#fff8ec;border-radius:10px;padding:12px;font-size:12px;color:#6b4d28;line-height:1.7">&#x1F4DD; 素直な心で、<strong>うなづき、笑顔で、メモ</strong>を取る</div>
-        <div style="background:#fff8ec;border-radius:10px;padding:12px;font-size:12px;color:#6b4d28;line-height:1.7">&#x1F64F; 感謝の心で、毎日<strong>10回は「ありがとう」</strong>と気持ちよく言う</div>
-        <div style="background:#fff8ec;border-radius:10px;padding:12px;font-size:12px;color:#6b4d28;line-height:1.7">&#x1F60A; <strong>笑顔で優しい顔つき</strong>を心がける（鏡でチェック）</div>
-        <div style="background:#fff8ec;border-radius:10px;padding:12px;font-size:12px;color:#6b4d28;line-height:1.7">&#x1F338; <strong>表情が柔らかく</strong>、変な緊張感がない（心のゆとり）</div>
-        <div style="background:#fff8ec;border-radius:10px;padding:12px;font-size:12px;color:#6b4d28;line-height:1.7">&#x1F3B5; ほおをゆるめて、<strong>口角が自然に上がっている</strong></div>
-        <div style="background:#fff8ec;border-radius:10px;padding:12px;font-size:12px;color:#6b4d28;line-height:1.7">&#x2615; ちょっとした<strong>冗談や気遣い</strong>で、温かい感じがする</div>
-        <div style="background:#fff8ec;border-radius:10px;padding:12px;font-size:12px;color:#6b4d28;line-height:1.7">&#x1F4AB; 人に<strong>癒やし</strong>を与えられる</div>
-        <div style="background:#fff8ec;border-radius:10px;padding:12px;font-size:12px;color:#6b4d28;line-height:1.7">&#x1F48E; <strong>美点凝視</strong>でネガティブなことを言わない</div>
-        <div style="background:#fff8ec;border-radius:10px;padding:12px;font-size:12px;color:#6b4d28;line-height:1.7">&#x1F343; いるだけで<strong>雰囲気がよくなり、場の空気が軽くなる</strong></div>
+        <div style="background:#f4ead6;border-radius:10px;padding:12px;font-size:12px;color:#2c3e60;line-height:1.7">&#x1F305; 毎日、丁寧に<strong>明るく陽気な挨拶</strong>をする</div>
+        <div style="background:#f4ead6;border-radius:10px;padding:12px;font-size:12px;color:#2c3e60;line-height:1.7">&#x1F4DD; 素直な心で、<strong>うなづき、笑顔で、メモ</strong>を取る</div>
+        <div style="background:#f4ead6;border-radius:10px;padding:12px;font-size:12px;color:#2c3e60;line-height:1.7">&#x1F64F; 感謝の心で、毎日<strong>10回は「ありがとう」</strong>と気持ちよく言う</div>
+        <div style="background:#f4ead6;border-radius:10px;padding:12px;font-size:12px;color:#2c3e60;line-height:1.7">&#x1F60A; <strong>笑顔で優しい顔つき</strong>を心がける（鏡でチェック）</div>
+        <div style="background:#f4ead6;border-radius:10px;padding:12px;font-size:12px;color:#2c3e60;line-height:1.7">&#x1F338; <strong>表情が柔らかく</strong>、変な緊張感がない（心のゆとり）</div>
+        <div style="background:#f4ead6;border-radius:10px;padding:12px;font-size:12px;color:#2c3e60;line-height:1.7">&#x1F3B5; ほおをゆるめて、<strong>口角が自然に上がっている</strong></div>
+        <div style="background:#f4ead6;border-radius:10px;padding:12px;font-size:12px;color:#2c3e60;line-height:1.7">&#x2615; ちょっとした<strong>冗談や気遣い</strong>で、温かい感じがする</div>
+        <div style="background:#f4ead6;border-radius:10px;padding:12px;font-size:12px;color:#2c3e60;line-height:1.7">&#x1F4AB; 人に<strong>癒やし</strong>を与えられる</div>
+        <div style="background:#f4ead6;border-radius:10px;padding:12px;font-size:12px;color:#2c3e60;line-height:1.7">&#x1F48E; <strong>美点凝視</strong>でネガティブなことを言わない</div>
+        <div style="background:#f4ead6;border-radius:10px;padding:12px;font-size:12px;color:#2c3e60;line-height:1.7">&#x1F343; いるだけで<strong>雰囲気がよくなり、場の空気が軽くなる</strong></div>
       </div>
-      <div style="background:#fff8ec;border-left:3px solid #e8a849;padding:10px 12px;font-size:12px;color:#6b4d28;border-radius:6px">
+      <div style="background:#f4ead6;border-left:3px solid #b8954a;padding:10px 12px;font-size:12px;color:#2c3e60;border-radius:6px">
         <strong>&#x1F4A1; 迷ったら、この10の心得に戻る</strong>。<br>介護の仕事は「人と人」。スキルよりも、心の在り方が、利用者さまと仲間に一番伝わります。
       </div>
     </div>
@@ -352,7 +394,7 @@
           <h3 style="font-size:18px;color:#154360;font-weight:800">二宮金次郎に学ぶ 〜報徳思想〜</h3>
         </div>
       </div>
-      <p style="font-size:13px;color:#4a4a4a;margin-bottom:14px">
+      <p style="font-size:13px;color:#2c3e60;margin-bottom:14px">
         薪を背負って本を読む姿の像で有名な <strong>二宮尊徳（金次郎）</strong>。江戸時代に多くの村を救った実業家であり、思想家でした。<br>
         彼の<strong>「報徳思想」</strong>は、「<strong>徳（よいこと）に報いる</strong>」という考え方。介護の現場で大切にしたい5つの徳があります。
       </p>
@@ -387,7 +429,7 @@
         &#x201C; 真の富とは、「道徳」に基づくものでなければ、決して永くは続かない &#x201D;<br>
         <span style="font-size:11px;color:#566573;font-style:normal">─ 二宮尊徳『論語と算盤』の著者・渋沢栄一も彼を最も尊敬していた</span>
       </div>
-      <div style="background:#fff8ec;border-left:3px solid #e8a849;padding:10px 12px;font-size:12px;color:#6b4d28;border-radius:6px;margin-top:12px">
+      <div style="background:#f4ead6;border-left:3px solid #b8954a;padding:10px 12px;font-size:12px;color:#2c3e60;border-radius:6px;margin-top:12px">
         <strong>&#x1F4A1; 現場で</strong>：「ありがとう」と感謝されたら、その何倍も仲間や利用者さまに返していく。無駄を減らし、余裕を分け合う。この積み重ねが、はなひろの文化を育てます。
       </div>
     </div>
@@ -432,7 +474,7 @@
           </div>
           <div class="role-row"><span class="lbl">主な責任</span><span class="val"><span class="resp-tag r-業績向上">業績向上</span><span class="resp-tag r-業務改善">業務改善</span><span class="resp-tag r-稟議提言">稟議提言</span><span class="resp-tag r-神経伝達">神経伝達</span><span class="resp-tag r-経営代理">経営代理</span><span class="resp-tag r-対外渉外">対外渉外</span><span class="resp-tag r-組織活性">組織活性</span><span class="resp-tag r-人財育成">人財育成</span></span></div>
           <div class="role-row"><span class="lbl">具体業務</span><span class="val">代表の補佐・経営代理／現場と経営の橋渡し／全事業の管理監督／管理部門の統括／対外渉外活動／全社の経理・出納統括／介護報酬請求の全体把握／勤怠管理の取りまとめ／給与計算の支援／本部の書類管理／行政への書類提出（本部）／請求書・支払い管理</span></div>
-          <div class="role-row"><span class="lbl">兼務業務</span><span class="val" style="background:#fff8ec;border-radius:6px;padding:8px 10px">※ 現在、専任の事務員がいないため<strong>事務員業務も兼務</strong>：<br>電話応対／来客対応／備品発注／一般事務／書類整理</span></div>
+          <div class="role-row"><span class="lbl">兼務業務</span><span class="val" style="background:#f4ead6;border-radius:6px;padding:8px 10px">※ 現在、専任の事務員がいないため<strong>事務員業務も兼務</strong>：<br>電話応対／来客対応／備品発注／一般事務／書類整理</span></div>
           <div class="role-row"><span class="lbl">報告先</span><span class="val">代表取締役</span></div>
         </div>
       </div>
@@ -569,92 +611,92 @@
     <!-- 8つの責任タグ 解説 -->
     <div class="legend">
       <h4>&#x1F3F7; 8つの責任タグ（カード内のタグの意味）</h4>
-      <p style="font-size:12px;color:#8a7a6a;margin-bottom:12px">各役職のカードに付いているカラフルなタグは、この8つのうち、その役職に強く求められる責任を示しています。</p>
+      <p style="font-size:12px;color:#5a6378;margin-bottom:12px">各役職のカードに付いているカラフルなタグは、この8つのうち、その役職に強く求められる責任を示しています。</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
         <div style="border:1px solid #f5cbc6;border-radius:10px;padding:10px 12px;background:#fff">
           <div><span class="resp-tag r-業績向上">業績向上</span></div>
-          <div style="font-size:12px;color:#4a4a4a;margin-top:6px;line-height:1.6">
+          <div style="font-size:12px;color:#2c3e60;margin-top:6px;line-height:1.6">
             事業所の目標（稼働率・売上・利益）を達成するために動くこと。<br>
-            <em style="color:#8a7a6a">例：稼働率を意識してケアをする、新規見学者に喜ばれる対応をする</em>
+            <em style="color:#5a6378">例：稼働率を意識してケアをする、新規見学者に喜ばれる対応をする</em>
           </div>
         </div>
         <div style="border:1px solid #f9d4b5;border-radius:10px;padding:10px 12px;background:#fff">
           <div><span class="resp-tag r-業務改善">業務改善</span></div>
-          <div style="font-size:12px;color:#4a4a4a;margin-top:6px;line-height:1.6">
+          <div style="font-size:12px;color:#2c3e60;margin-top:6px;line-height:1.6">
             毎日の仕事を「もっと良く・もっと早く・もっと楽に」する工夫を考えて実行すること。<br>
-            <em style="color:#8a7a6a">例：記録を書きやすい形式に変える、動線を短くする</em>
+            <em style="color:#5a6378">例：記録を書きやすい形式に変える、動線を短くする</em>
           </div>
         </div>
         <div style="border:1px solid #f5dfa1;border-radius:10px;padding:10px 12px;background:#fff">
           <div><span class="resp-tag r-稟議提言">稟議提言</span></div>
-          <div style="font-size:12px;color:#4a4a4a;margin-top:6px;line-height:1.6">
+          <div style="font-size:12px;color:#2c3e60;margin-top:6px;line-height:1.6">
             やりたいこと・改善案を企画にまとめて提案し、上司の承認を得て進めること。<br>
-            <em style="color:#8a7a6a">例：「こんなイベントやりたい」を企画書で出す、備品購入を稟議する</em>
+            <em style="color:#5a6378">例：「こんなイベントやりたい」を企画書で出す、備品購入を稟議する</em>
           </div>
         </div>
         <div style="border:1px solid #b7e0c4;border-radius:10px;padding:10px 12px;background:#fff">
           <div><span class="resp-tag r-神経伝達">神経伝達</span></div>
-          <div style="font-size:12px;color:#4a4a4a;margin-top:6px;line-height:1.6">
+          <div style="font-size:12px;color:#2c3e60;margin-top:6px;line-height:1.6">
             報・連・相を確実にすること。組織の「神経」として、情報を正しく速く届ける。<br>
-            <em style="color:#8a7a6a">例：利用者さまの変化をリーダーに即報告、家族への連絡漏れをなくす</em>
+            <em style="color:#5a6378">例：利用者さまの変化をリーダーに即報告、家族への連絡漏れをなくす</em>
           </div>
         </div>
         <div style="border:1px solid #bcd9ec;border-radius:10px;padding:10px 12px;background:#fff">
           <div><span class="resp-tag r-経営代理">経営代理</span></div>
-          <div style="font-size:12px;color:#4a4a4a;margin-top:6px;line-height:1.6">
+          <div style="font-size:12px;color:#2c3e60;margin-top:6px;line-height:1.6">
             経営者（代表・専務）の視点で判断し、現場と経営の橋渡しをすること。<br>
-            <em style="color:#8a7a6a">例：「これを社長がやるならどう判断するか」を考えて動く、現場の声を経営に翻訳する</em>
+            <em style="color:#5a6378">例：「これを社長がやるならどう判断するか」を考えて動く、現場の声を経営に翻訳する</em>
           </div>
         </div>
         <div style="border:1px solid #e3cff0;border-radius:10px;padding:10px 12px;background:#fff">
           <div><span class="resp-tag r-対外渉外">対外渉外</span></div>
-          <div style="font-size:12px;color:#4a4a4a;margin-top:6px;line-height:1.6">
+          <div style="font-size:12px;color:#2c3e60;margin-top:6px;line-height:1.6">
             会社の外の人（ご家族・ケアマネ・医療機関・行政・地域）と良い関係をつくること。<br>
-            <em style="color:#8a7a6a">例：ご家族に笑顔で挨拶、ケアマネに丁寧に状況報告</em>
+            <em style="color:#5a6378">例：ご家族に笑顔で挨拶、ケアマネに丁寧に状況報告</em>
           </div>
         </div>
         <div style="border:1px solid #fad7de;border-radius:10px;padding:10px 12px;background:#fff">
           <div><span class="resp-tag r-組織活性">組織活性</span></div>
-          <div style="font-size:12px;color:#4a4a4a;margin-top:6px;line-height:1.6">
+          <div style="font-size:12px;color:#2c3e60;margin-top:6px;line-height:1.6">
             職場を明るく・元気にすること。みんなが気持ちよく働ける雰囲気を作る。<br>
-            <em style="color:#8a7a6a">例：朝の挨拶を欠かさない、グチではなく提案をする、仲間をねぎらう</em>
+            <em style="color:#5a6378">例：朝の挨拶を欠かさない、グチではなく提案をする、仲間をねぎらう</em>
           </div>
         </div>
         <div style="border:1px solid #efe0cc;border-radius:10px;padding:10px 12px;background:#fff">
           <div><span class="resp-tag r-人財育成">人財育成</span></div>
-          <div style="font-size:12px;color:#4a4a4a;margin-top:6px;line-height:1.6">
+          <div style="font-size:12px;color:#2c3e60;margin-top:6px;line-height:1.6">
             仲間を育てる・成長を助けること。自分が学んだことを後輩に伝える。<br>
-            <em style="color:#8a7a6a">例：新人のOJT、良いところを見つけて褒める、自分も学び続ける</em>
+            <em style="color:#5a6378">例：新人のOJT、良いところを見つけて褒める、自分も学び続ける</em>
           </div>
         </div>
       </div>
 
       <h4 style="margin-top:20px">&#x1F3AF; 5つの責任レベル</h4>
-      <p style="font-size:12px;color:#8a7a6a;margin-bottom:10px">各役職のカード右上の<span class="badge" style="font-size:10px">ラベル</span>は、「どこまでの責任を担うか」を示しています。</p>
+      <p style="font-size:12px;color:#5a6378;margin-bottom:10px">各役職のカード右上の<span class="badge" style="font-size:10px">ラベル</span>は、「どこまでの責任を担うか」を示しています。</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px">
-        <div style="border:1px solid #e0d5c5;border-radius:10px;padding:10px;background:#fff">
-          <strong style="color:#5a3e1b;font-size:13px">1. 実行</strong>
-          <div style="font-size:11px;color:#6b4d28;margin-top:4px;line-height:1.6">やるべきことをやりきる</div>
+        <div style="border:1px solid #d8d2c2;border-radius:10px;padding:10px;background:#fff">
+          <strong style="color:#1a2742;font-size:13px">1. 実行</strong>
+          <div style="font-size:11px;color:#2c3e60;margin-top:4px;line-height:1.6">やるべきことをやりきる</div>
         </div>
-        <div style="border:1px solid #e0d5c5;border-radius:10px;padding:10px;background:#fff">
-          <strong style="color:#5a3e1b;font-size:13px">2. 結果</strong>
-          <div style="font-size:11px;color:#6b4d28;margin-top:4px;line-height:1.6">求められる成果を出す</div>
+        <div style="border:1px solid #d8d2c2;border-radius:10px;padding:10px;background:#fff">
+          <strong style="color:#1a2742;font-size:13px">2. 結果</strong>
+          <div style="font-size:11px;color:#2c3e60;margin-top:4px;line-height:1.6">求められる成果を出す</div>
         </div>
-        <div style="border:1px solid #e0d5c5;border-radius:10px;padding:10px;background:#fff">
-          <strong style="color:#5a3e1b;font-size:13px">3. 説明</strong>
-          <div style="font-size:11px;color:#6b4d28;margin-top:4px;line-height:1.6">状況を正直に説明できる</div>
+        <div style="border:1px solid #d8d2c2;border-radius:10px;padding:10px;background:#fff">
+          <strong style="color:#1a2742;font-size:13px">3. 説明</strong>
+          <div style="font-size:11px;color:#2c3e60;margin-top:4px;line-height:1.6">状況を正直に説明できる</div>
         </div>
-        <div style="border:1px solid #e0d5c5;border-radius:10px;padding:10px;background:#fff">
-          <strong style="color:#5a3e1b;font-size:13px">4. 解決</strong>
-          <div style="font-size:11px;color:#6b4d28;margin-top:4px;line-height:1.6">問題を解決に導ける</div>
+        <div style="border:1px solid #d8d2c2;border-radius:10px;padding:10px;background:#fff">
+          <strong style="color:#1a2742;font-size:13px">4. 解決</strong>
+          <div style="font-size:11px;color:#2c3e60;margin-top:4px;line-height:1.6">問題を解決に導ける</div>
         </div>
-        <div style="border:1px solid #e0d5c5;border-radius:10px;padding:10px;background:#fff">
-          <strong style="color:#5a3e1b;font-size:13px">5. 決定</strong>
-          <div style="font-size:11px;color:#6b4d28;margin-top:4px;line-height:1.6">自分で判断し意思決定</div>
+        <div style="border:1px solid #d8d2c2;border-radius:10px;padding:10px;background:#fff">
+          <strong style="color:#1a2742;font-size:13px">5. 決定</strong>
+          <div style="font-size:11px;color:#2c3e60;margin-top:4px;line-height:1.6">自分で判断し意思決定</div>
         </div>
       </div>
 
-      <div style="background:#fff8ec;border-left:4px solid #e8a849;padding:12px 14px;border-radius:8px;margin-top:16px;font-size:13px;color:#6b4d28">
+      <div style="background:#f4ead6;border-left:3px solid #b8954a;padding:12px 14px;border-radius:8px;margin-top:16px;font-size:13px;color:#2c3e60">
         <strong>&#x1F4A1; ポイント</strong><br>
         階層は「えらい / えらくない」ではありません。それぞれに違う <strong>責任と時間軸</strong> があります。<strong>非他責の姿勢</strong>（ポジティブに責任を引き受ける姿勢）は、階層に関係なく全員に求められます。
       </div>
