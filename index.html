@@ -182,9 +182,9 @@
     <!-- 学習画面 -->
     <div id="lesson-screen" class="screen">
       <header class="app-header">
-        <button type="button" class="back-btn" onclick="event.stopPropagation();backToDashboard();return false;">&#x2190;</button>
+        <button type="button" class="back-btn" onclick="backToDashboard()">&#x2190;</button>
         <span id="lesson-title-header"></span>
-        <button type="button" class="print-btn" onclick="event.stopPropagation();printModule();return false;" title="このステップのテキストを印刷 / PDF保存">&#x1F5A8;</button>
+        <button type="button" class="print-btn" onclick="printModule()" title="このステップのテキストを印刷 / PDF保存">&#x1F5A8;</button>
       </header>
       <div class="lesson-content">
         <div id="lesson-body"></div>
