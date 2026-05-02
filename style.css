@@ -250,12 +250,6 @@ body.is-admin .admin-only { display: inline-flex !important; }
 }
 #print-overlay .po-meta { color: var(--ink-mute); font-size: 13px; }
 #print-overlay .po-section { margin-bottom: 28px; }
-#print-overlay .po-section h2 {
-  color: var(--ink); font-size: 18px;
-  border-bottom: 1px solid var(--line); padding-bottom: 6px;
-  margin: 24px 0 14px;
-  font-family: 'Noto Serif JP', serif; font-weight: 600;
-}
 #print-overlay .po-bottom-actions {
   margin-top: 32px; padding-top: 20px;
   border-top: 1px solid var(--line);
@@ -430,22 +424,29 @@ body.is-admin .admin-only { display: inline-flex !important; }
   border: 1px solid var(--line);
   border-top: 3px solid var(--ink);
 }
-#lesson-body h2 {
+/* 印刷ビューも同じテキストスタイルを共有 */
+#lesson-body h2,
+#print-overlay .po-section h2 {
   font-size: 20px; color: var(--ink); margin-bottom: 18px;
   padding-bottom: 14px; border-bottom: 1px solid var(--line);
   font-family: 'Noto Serif JP', serif;
   font-weight: 600; letter-spacing: 0.06em;
 }
-#lesson-body h3 {
+#lesson-body h3,
+#print-overlay .po-section h3 {
   font-size: 16px; color: var(--ink-soft); margin: 24px 0 10px;
   font-family: 'Noto Serif JP', serif;
   font-weight: 600; letter-spacing: 0.04em;
   padding-left: 12px; border-left: 3px solid var(--gold);
 }
-#lesson-body p { margin-bottom: 14px; font-size: 15px; color: var(--ink); line-height: 1.95; }
-#lesson-body ul, #lesson-body ol { margin: 10px 0 16px 22px; font-size: 15px; }
-#lesson-body li { margin-bottom: 6px; line-height: 1.85; }
-#lesson-body strong { color: var(--ink); font-weight: 700; }
+#lesson-body p,
+#print-overlay .po-section p { margin-bottom: 14px; font-size: 15px; color: var(--ink); line-height: 1.95; }
+#lesson-body ul, #lesson-body ol,
+#print-overlay .po-section ul, #print-overlay .po-section ol { margin: 10px 0 16px 22px; font-size: 15px; }
+#lesson-body li,
+#print-overlay .po-section li { margin-bottom: 6px; line-height: 1.85; }
+#lesson-body strong,
+#print-overlay .po-section strong { color: var(--ink); font-weight: 700; }
 
 /* 吹き出し風のポイント */
 .key-point {
