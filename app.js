@@ -515,30 +515,78 @@ function loadHtml2Pdf() {
   return _html2pdfLoading;
 }
 
-// PDF保存処理
+// PDF保存処理（共有シート優先、ダメなら直接ダウンロード）
 async function savePdfFromOverlay() {
   const btn = document.getElementById('po-pdf-btn');
-  const originalText = btn ? btn.textContent : '';
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ PDF生成中...'; }
+  const btnBottom = document.getElementById('po-pdf-btn-bottom');
+  const setBtnText = (text, disabled = false) => {
+    [btn, btnBottom].forEach(b => { if (b) { b.textContent = text; b.disabled = disabled; } });
+  };
+  const originalTop = btn ? btn.textContent : '';
+  const originalBottom = btnBottom ? btnBottom.textContent : '';
+  setBtnText('⏳ PDF生成中...', true);
   try {
     const html2pdf = await loadHtml2Pdf();
     const target = document.querySelector('#print-overlay .po-content');
     if (!target) throw new Error('印刷対象が見つかりません');
     const mod = courseData.modules[currentModuleIndex];
-    const filename = `はなひろラーニング_${(mod && mod.title || 'レッスン').replace(/[\\\/:*?"<>|]/g, '')}.pdf`;
-    await html2pdf().set({
+    const safeTitle = (mod && mod.title || 'レッスン').replace(/[\\\/:*?"<>|]/g, '');
+    const filename = `はなひろラーニング_${safeTitle}.pdf`;
+
+    const pdfBlob = await html2pdf().set({
       margin: [12, 10, 14, 10],
-      filename,
       image: { type: 'jpeg', quality: 0.96 },
       html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
       pagebreak: { mode: ['css', 'legacy'] }
-    }).from(target).save();
-    if (btn) { btn.textContent = '✓ 保存しました'; setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 2000); }
+    }).from(target).outputPdf('blob');
+
+    // Web Share API でファイルが共有可能ならシートを開く（iOS Safari/LINE で動く）
+    const file = new File([pdfBlob], filename, { type: 'application/pdf' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: safeTitle });
+        setBtnText('✓ 共有しました');
+        setTimeout(() => {
+          if (btn) btn.textContent = originalTop;
+          if (btnBottom) btnBottom.textContent = originalBottom;
+          setBtnText(btn?.textContent || originalTop, false);
+        }, 2000);
+        return;
+      } catch (e) {
+        // ユーザーがキャンセルしたら何もしない
+        if (e.name === 'AbortError') {
+          if (btn) btn.textContent = originalTop;
+          if (btnBottom) btnBottom.textContent = originalBottom;
+          setBtnText(btn?.textContent || originalTop, false);
+          return;
+        }
+        // それ以外のエラーはダウンロードフォールバックへ
+        console.warn('共有失敗、ダウンロードへフォールバック:', e);
+      }
+    }
+
+    // フォールバック: 直接ダウンロード
+    const url = URL.createObjectURL(pdfBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    setBtnText('✓ 保存しました');
+    setTimeout(() => {
+      if (btn) btn.textContent = originalTop;
+      if (btnBottom) btnBottom.textContent = originalBottom;
+      setBtnText(btn?.textContent || originalTop, false);
+    }, 2500);
   } catch (e) {
     console.error(e);
     alert('PDF保存に失敗しました：' + (e.message || e));
-    if (btn) { btn.textContent = originalText; btn.disabled = false; }
+    if (btn) btn.textContent = originalTop;
+    if (btnBottom) btnBottom.textContent = originalBottom;
+    setBtnText(btn?.textContent || originalTop, false);
   }
 }
 
