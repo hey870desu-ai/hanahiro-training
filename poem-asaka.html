@@ -975,10 +975,10 @@
       .section-photo { max-height: 50mm; margin: 0 0 4mm; }
       .section-photo-caption { margin: -3mm 0 4mm; font-size: 8pt; }
 
-      /* ギャラリー（A3横に12枚＝6列×2行で1ページ） */
+      /* ギャラリー（A4横に12枚＝4列×3行） */
       .gallery-grid {
-        grid-template-columns: repeat(6, 1fr) !important;
-        gap: 2.5mm !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 3mm !important;
       }
       .gallery-item { aspect-ratio: 4 / 3; }
       .gallery-item:hover img { transform: none; }
@@ -1025,17 +1025,27 @@
       .access-info h4 { font-size: 10pt; margin-bottom: 3mm; }
       .access-info p { font-size: 9pt; line-height: 1.6; }
       .access-map { display: none !important; }
-      .access-info .map-cta { display: none !important; }
 
-      /* 印刷時：施設アクセスマップ */
+      /* 印刷時：map-cta ボタンはウェブと同じ見た目で残す */
+      .access-info .map-cta {
+        background: var(--ink) !important;
+        color: #fff !important;
+        padding: 3mm 4mm !important;
+        gap: 3mm !important;
+      }
+      .access-info .map-cta-body strong { font-size: 9pt !important; }
+      .access-info .map-cta-body em { font-size: 7.5pt !important; }
+      .access-info .map-cta-icon { font-size: 11pt !important; }
+
+      /* 印刷時：施設アクセスマップ（ウェブのiframeの代わり） */
       .access-map-print {
         display: block !important;
-        margin: 5mm auto 0;
+        margin: 4mm auto 0;
         text-align: center;
       }
       .access-map-print-img {
         display: block;
-        max-height: 92mm;
+        max-height: 70mm;
         width: auto;
         max-width: 100%;
         margin: 0 auto;
@@ -1046,37 +1056,6 @@
         color: var(--ink-mute);
         margin-top: 1.5mm;
         letter-spacing: 0.05em;
-      }
-
-      /* 印刷時：送迎範囲 QR（access-info右カラム内に表示） */
-      .sougei-qr-print {
-        display: flex !important;
-        align-items: center;
-        gap: 4mm;
-        margin-top: 3mm;
-        padding: 3mm 4mm;
-        background: #fbf9f4;
-        border: 1px solid var(--line);
-      }
-      .sougei-qr-print img {
-        width: 18mm;
-        height: 18mm;
-        background: #fff;
-        padding: 1mm;
-      }
-      .sougei-qr-text { flex: 1; text-align: left; }
-      .sougei-qr-title {
-        font-family: 'Noto Serif JP', serif;
-        font-size: 10pt;
-        font-weight: 600;
-        color: var(--ink);
-        margin-bottom: 1mm;
-        letter-spacing: 0.04em;
-      }
-      .sougei-qr-desc {
-        font-size: 7.5pt;
-        color: var(--ink-soft);
-        line-height: 1.5;
       }
 
       /* 採用情報 */
@@ -1252,9 +1231,6 @@
         </div>
       </div>
 
-      <img src="photos/kaisei-room.jpg" alt="フロア全景（ポエム開成店）" class="section-photo" loading="lazy">
-      <div class="section-photo-caption">※ 写真はポエム開成店</div>
-
       <div class="equip-grid">
         <div class="equip-item">
           <div class="ei-num">01</div>
@@ -1397,9 +1373,6 @@
         </div>
       </div>
 
-      <img src="photos/kaisei-talk.jpg" alt="スタッフと利用者の対話風景（ポエム開成店）" class="section-photo" loading="lazy">
-      <div class="section-photo-caption">※ 写真はポエム開成店</div>
-
       <div class="policy-block">
         <div class="policy-grid">
           <div class="policy-item">
@@ -1540,15 +1513,6 @@
             </span>
             <span class="map-cta-arrow">→</span>
           </a>
-
-          <!-- 印刷時：送迎範囲QR -->
-          <div class="sougei-qr-print">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fhey870desu-ai.github.io%2Fhanahiro-training%2Fsougei-area-asaka.html" alt="QR 送迎範囲マップ">
-            <div class="sougei-qr-text">
-              <div class="sougei-qr-title">送迎範囲マップ</div>
-              <div class="sougei-qr-desc">QRから対話型マップ（拡大・縮小可）が開きます。</div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -1556,7 +1520,7 @@
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3171.7050828152483!2d140.36211223886934!3d37.349490180565745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60206b26b8e3a1c3%3A0xe020f6ded81afc58!2z44CSOTYzLTAxMDIg56aP5bO255yM6YOh5bGx5biC5a6J56mN55S656y55bed5Zub6KeS5Z2m77yT4oiS77yR!5e0!3m2!1sja!2sjp!4v1777480647477!5m2!1sja!2sjp" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="poem de riha 安積店 地図"></iframe>
       </div>
 
-      <!-- 印刷時：施設アクセスマップ -->
+      <!-- 印刷時：施設アクセスマップ（ウェブのiframeの代わり） -->
       <div class="access-map-print">
         <img src="photos/access-asaka.png?v=20260502" alt="施設アクセスマップ" class="access-map-print-img">
         <p class="map-attr">地図：国土地理院</p>
