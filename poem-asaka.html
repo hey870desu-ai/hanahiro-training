@@ -262,13 +262,43 @@
     }
     .pillar-body {
       background: #fff;
-      padding: 24px 24px 28px;
+      padding: 0 0 26px;
       flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .pillar-img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
     }
     .pillar-desc {
       font-size: 13px;
       color: var(--ink-soft);
       line-height: 1.85;
+      padding: 20px 24px 0;
+      margin: 0;
+    }
+
+    /* セクション写真 */
+    .section-photo {
+      display: block;
+      width: 100%;
+      max-height: 380px;
+      object-fit: cover;
+      margin: 0 0 32px;
+      border: 1px solid var(--line);
+    }
+    .section-photo + .equip-grid,
+    .section-photo + .schedule,
+    .section-photo + .policy-block { margin-top: 0; }
+    .section-photo-caption {
+      text-align: right;
+      font-size: 11px;
+      color: var(--ink-mute);
+      margin: -28px 0 32px;
+      letter-spacing: 0.04em;
     }
 
     /* 設備リスト */
@@ -923,6 +953,7 @@
             <h3 class="pillar-title">マシーントレーニング</h3>
           </div>
           <div class="pillar-body">
+            <img src="photos/kaisei-machine.jpg" alt="マシーントレーニングの様子（ポエム開成店）" class="pillar-img" loading="lazy">
             <p class="pillar-desc">医療・フィットネス機関でも採用される本格的なマシン9種を配備。年齢や体力に合わせて負荷を細かく調整できるため、無理なく安全に筋力を取り戻せます。「動ける身体」へ最短距離で導きます。</p>
           </div>
         </div>
@@ -942,6 +973,7 @@
             <h3 class="pillar-title">楽しい脳トレ</h3>
           </div>
           <div class="pillar-body">
+            <img src="photos/kaisei-brain.jpg" alt="楽しい脳トレ・棒体操の様子（ポエム開成店）" class="pillar-img" loading="lazy">
             <p class="pillar-desc">動画を見ながら取り組む間違い探しやクイズ形式の脳トレを実施。「楽しい」が続く秘訣です。身体を動かしながら頭も使う、二重課題（デュアルタスク）で認知機能の維持・向上をサポートします。</p>
           </div>
         </div>
@@ -960,6 +992,7 @@
             <h3 class="pillar-title">PT監修プログラム</h3>
           </div>
           <div class="pillar-body">
+            <img src="photos/kaisei-pt.jpg" alt="PT監修の体操指導（ポエム開成店）" class="pillar-img" loading="lazy">
             <p class="pillar-desc">理学療法士（PT）監修のオリジナル体操プログラムを毎日実施。常駐の柔道整復師が、お一人おひとりの身体の状態を見極めながら、その日に最適な運動メニューをご提案します。</p>
           </div>
         </div>
@@ -975,6 +1008,9 @@
           <div class="sec-title">設備・トレーニング機器</div>
         </div>
       </div>
+
+      <img src="photos/kaisei-room.jpg" alt="フロア全景（ポエム開成店）" class="section-photo" loading="lazy">
+      <div class="section-photo-caption">※ 写真はポエム開成店</div>
 
       <div class="equip-grid">
         <div class="equip-item">
@@ -1053,6 +1089,9 @@
         </div>
       </div>
 
+      <img src="photos/kaisei-balloon.jpg" alt="活動風景（ポエム開成店）" class="section-photo" loading="lazy">
+      <div class="section-photo-caption">※ 写真はポエム開成店</div>
+
       <div class="schedule">
         <div style="text-align:center;font-size:12px;color:var(--ink-soft);margin-bottom:14px;letter-spacing:0.1em">
           <span style="color:var(--gold);font-weight:600">午前の部</span>　／　<span style="color:var(--ink-soft)">午後の部</span>
@@ -1117,6 +1156,9 @@
           <div class="sec-title">私たちの運営方針</div>
         </div>
       </div>
+
+      <img src="photos/kaisei-talk.jpg" alt="スタッフと利用者の対話風景（ポエム開成店）" class="section-photo" loading="lazy">
+      <div class="section-photo-caption">※ 写真はポエム開成店</div>
 
       <div class="policy-block">
         <div class="policy-grid">
