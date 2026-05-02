@@ -581,23 +581,7 @@
       border: 0;
     }
     .access-map-print { display: none; }
-
-    .sougei-area-map {
-      margin-top: 22px;
-      background: #fff;
-      border: 1px solid var(--line);
-      padding: 24px;
-    }
-    .sougei-area-map h4 {
-      font-family: 'Noto Serif JP', serif;
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--ink);
-      margin-bottom: 14px;
-      letter-spacing: 0.04em;
-    }
-    .sougei-area-map.print-only-block { display: none; }
-    .sougei-area-map .print-only-img { display: none; }
+    .sougei-qr-print { display: none; }
     .access-info .map-cta { margin-top: 14px; }
     .map-cta {
       display: flex; align-items: center; gap: 14px;
@@ -625,12 +609,6 @@
       .map-cta { padding: 12px 14px; gap: 10px; }
       .map-cta-body strong { font-size: 13px; }
       .map-cta-body em { font-size: 10px; }
-    }
-    .sougei-area-map p {
-      margin-top: 12px;
-      font-size: 12px;
-      color: var(--ink-soft);
-      line-height: 1.7;
     }
     .access-info h4 {
       font-family: 'Noto Serif JP', serif;
@@ -1027,14 +1005,19 @@
       .policy-item p { font-size: 10pt; }
 
       /* ご利用案内 */
-      .guide-table { font-size: 9pt; }
-      .guide-table th { padding: 2.5mm 5mm; width: 36mm; font-size: 8.5pt; }
-      .guide-table td { padding: 2.5mm 5mm; line-height: 1.6; }
-      .flow-grid { grid-template-columns: repeat(5, 1fr); gap: 3mm; margin-top: 4mm; }
-      .flow-card { padding: 4mm 3mm; }
-      .flow-card .step-num { font-size: 14pt; }
-      .flow-card .step-name { font-size: 10pt; }
-      .flow-card .step-desc { font-size: 8pt; }
+      .guide-table { font-size: 8.5pt; }
+      .guide-table th { padding: 1.6mm 4mm !important; width: 32mm; font-size: 8pt; }
+      .guide-table td { padding: 1.6mm 4mm !important; line-height: 1.5; }
+      .guide-table td span { font-size: 7.5pt !important; }
+      .flow-heading {
+        font-size: 11pt !important;
+        margin: 5mm 0 2mm !important;
+      }
+      .flow-grid { grid-template-columns: repeat(5, 1fr); gap: 2.5mm; margin-top: 3mm; }
+      .flow-card { padding: 3mm 2mm; }
+      .flow-card .step-num { font-size: 12pt; }
+      .flow-card .step-name { font-size: 9pt; margin: 1.5mm 0; }
+      .flow-card .step-desc { font-size: 7.5pt; line-height: 1.4; }
 
       /* アクセス */
       .access-grid { grid-template-columns: 1fr 1fr; gap: 6mm; }
@@ -1042,29 +1025,58 @@
       .access-info h4 { font-size: 10pt; margin-bottom: 3mm; }
       .access-info p { font-size: 9pt; line-height: 1.6; }
       .access-map { display: none !important; }
-      .access-map-print { display: none !important; }
       .access-info .map-cta { display: none !important; }
-      .sougei-area-map.print-only-block {
+
+      /* 印刷時：施設アクセスマップ */
+      .access-map-print {
         display: block !important;
-        margin-top: 4mm;
-        padding: 4mm 6mm 3mm;
+        margin: 5mm auto 0;
+        text-align: center;
       }
-      .sougei-area-map h4 {
-        font-size: 10pt;
-        margin-bottom: 2mm;
-      }
-      .sougei-area-map .print-only-img {
-        display: block !important;
-        max-height: 88mm;
+      .access-map-print-img {
+        display: block;
+        max-height: 92mm;
         width: auto;
         max-width: 100%;
         margin: 0 auto;
         border: 1px solid var(--line);
       }
-      .sougei-area-map p {
+      .access-map-print .map-attr {
+        font-size: 7pt;
+        color: var(--ink-mute);
+        margin-top: 1.5mm;
+        letter-spacing: 0.05em;
+      }
+
+      /* 印刷時：送迎範囲 QR（access-info右カラム内に表示） */
+      .sougei-qr-print {
+        display: flex !important;
+        align-items: center;
+        gap: 4mm;
+        margin-top: 3mm;
+        padding: 3mm 4mm;
+        background: #fbf9f4;
+        border: 1px solid var(--line);
+      }
+      .sougei-qr-print img {
+        width: 18mm;
+        height: 18mm;
+        background: #fff;
+        padding: 1mm;
+      }
+      .sougei-qr-text { flex: 1; text-align: left; }
+      .sougei-qr-title {
+        font-family: 'Noto Serif JP', serif;
+        font-size: 10pt;
+        font-weight: 600;
+        color: var(--ink);
+        margin-bottom: 1mm;
+        letter-spacing: 0.04em;
+      }
+      .sougei-qr-desc {
         font-size: 7.5pt;
-        margin-top: 2mm;
-        text-align: center;
+        color: var(--ink-soft);
+        line-height: 1.5;
       }
 
       /* 採用情報 */
@@ -1465,7 +1477,7 @@
         <tr><th>送迎</th><td>ご自宅までの送迎あり<br><span style="color:var(--ink-soft);font-size:13px">送迎範囲：郡山市・須賀川市</span></td></tr>
       </table>
 
-      <h3 style="font-family:'Noto Serif JP',serif;font-size:16px;font-weight:600;margin:32px 0 8px;letter-spacing:0.04em">ご利用までの流れ</h3>
+      <h3 class="flow-heading" style="font-family:'Noto Serif JP',serif;font-size:16px;font-weight:600;margin:32px 0 8px;letter-spacing:0.04em">ご利用までの流れ</h3>
       <div class="flow-grid">
         <div class="flow-card">
           <div class="step-num">01</div>
@@ -1528,6 +1540,15 @@
             </span>
             <span class="map-cta-arrow">→</span>
           </a>
+
+          <!-- 印刷時：送迎範囲QR -->
+          <div class="sougei-qr-print">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fhey870desu-ai.github.io%2Fhanahiro-training%2Fsougei-area-asaka.html" alt="QR 送迎範囲マップ">
+            <div class="sougei-qr-text">
+              <div class="sougei-qr-title">送迎範囲マップ</div>
+              <div class="sougei-qr-desc">QRから対話型マップ（拡大・縮小可）が開きます。</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1535,20 +1556,10 @@
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3171.7050828152483!2d140.36211223886934!3d37.349490180565745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60206b26b8e3a1c3%3A0xe020f6ded81afc58!2z44CSOTYzLTAxMDIg56aP5bO255yM6YOh5bGx5biC5a6J56mN55S656y55bed5Zub6KeS5Z2m77yT4oiS77yR!5e0!3m2!1sja!2sjp!4v1777480647477!5m2!1sja!2sjp" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="poem de riha 安積店 地図"></iframe>
       </div>
 
-      <div class="sougei-area-map print-only-block">
-        <h4>🚐 送迎範囲</h4>
-        <img src="photos/sougei-area-asaka.png" alt="送迎範囲マップ" class="print-only-img">
-        <p>※ 上記範囲外でもお気軽にご相談ください。地図データ © OpenStreetMap contributors / OpenRouteService</p>
-      </div>
-
+      <!-- 印刷時：施設アクセスマップ -->
       <div class="access-map-print">
-        <div style="display:flex;align-items:center;justify-content:center;gap:8mm">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fmaps.google.com%2F%3Fq%3D37.349490%2C140.362112" alt="QR 地図">
-          <div style="text-align:left">
-            <div style="font-family:'Noto Serif JP',serif;font-size:13pt;font-weight:600;margin-bottom:2mm">地図はQRコードから</div>
-            <div style="font-size:9.5pt;color:var(--ink-soft);line-height:1.7">スマートフォンで右のQRコードを読み取ると、Googleマップで現地の位置・ルートを確認できます。</div>
-          </div>
-        </div>
+        <img src="photos/access-asaka.png?v=20260502" alt="施設アクセスマップ" class="access-map-print-img">
+        <p class="map-attr">地図：国土地理院</p>
       </div>
     </section>
 
