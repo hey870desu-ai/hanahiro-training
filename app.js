@@ -579,9 +579,14 @@ async function savePdfFromOverlay() {
   }
 }
 
+// LINE アプリ内ブラウザ判定
+function isLineInAppBrowser() {
+  return /Line\//i.test(navigator.userAgent);
+}
+
 // --- 現モジュールの全レッスンを印刷 / PDF保存 ---
-// オーバーレイで全レッスン表示し、PDF保存ボタン or 印刷ボタンを提供。
-// LINE in-app ブラウザでも PDF保存は動く（ファイルダウンロード）。
+// LINE アプリ内ブラウザは全ファイル操作がブロックされる仕様のため、
+// 検出時は「Safariで開く」案内に切替。それ以外はオーバーレイ + PDF保存。
 function printModule() {
   try {
     const mod = courseData.modules[currentModuleIndex];
@@ -590,11 +595,42 @@ function printModule() {
       return;
     }
     const courseName = courseData.title;
+    const inLine = isLineInAppBrowser();
 
     let overlay = document.getElementById('print-overlay');
     if (overlay) overlay.remove();
     overlay = document.createElement('div');
     overlay.id = 'print-overlay';
+
+    if (inLine) {
+      overlay.innerHTML = `
+        <div class="po-toolbar">
+          <button type="button" class="po-close" id="po-close-btn">&larr; 戻る</button>
+          <span class="po-hint">印刷・PDF保存の手順</span>
+        </div>
+        <div class="po-content">
+          <div class="po-line-block">
+            <h2>📱 LINEアプリ内では印刷・PDF保存できません</h2>
+            <p>LINE のアプリ内ブラウザはファイル保存をブロックする仕様です。下の手順で Safari で開いてから印刷してください。</p>
+            <ol>
+              <li>このページの右下の <strong>「⋯」</strong> ボタンをタップ</li>
+              <li>メニューの <strong>「他のブラウザで開く」</strong> または <strong>「Safari で開く」</strong> を選択</li>
+              <li>Safari で開いたら、レッスンを開いて右上の <strong>🖨</strong> ボタンをタップ</li>
+              <li>もう一度この画面が出るので、<strong>「📄 PDF保存」</strong> ボタンで保存</li>
+            </ol>
+            <p class="po-line-pc">PCをお使いの場合は、ブラウザでアクセスすると印刷・PDF保存が直接できます。</p>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      document.body.style.overflow = 'hidden';
+      document.getElementById('po-close-btn').addEventListener('click', () => {
+        overlay.remove();
+        document.body.style.overflow = '';
+      });
+      return;
+    }
+
     overlay.innerHTML = `
       <div class="po-toolbar">
         <button type="button" class="po-close" id="po-close-btn">&larr; 戻る</button>
@@ -614,7 +650,7 @@ function printModule() {
         `).join('')}
         <div class="po-bottom-actions">
           <button type="button" class="po-print-bottom" id="po-pdf-btn-bottom">📄 このレッスンをPDF保存</button>
-          <p class="po-tip">PCでブラウザ印刷したい場合は、このオーバーレイを開いた状態で<strong>Cmd+P / Ctrl+P</strong> で印刷ダイアログが開きます。</p>
+          <p class="po-tip">PCで直接印刷したい場合は、このオーバーレイを開いた状態で<strong>Cmd+P / Ctrl+P</strong> でも印刷ダイアログが開きます。</p>
         </div>
       </div>
     `;
