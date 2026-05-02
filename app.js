@@ -502,33 +502,55 @@ function reviewLesson() {
 
 // --- 現モジュールの全レッスンを印刷 / PDF保存 ---
 function printModule() {
-  const mod = courseData.modules[currentModuleIndex];
-  const body = document.getElementById('lesson-body');
-  const originalHTML = body.innerHTML;
-  const courseName = courseData.title;
+  try {
+    const mod = courseData.modules[currentModuleIndex];
+    if (!mod) {
+      alert('印刷できるレッスンがありません');
+      return;
+    }
+    const body = document.getElementById('lesson-body');
+    const originalHTML = body.innerHTML;
+    const courseName = courseData.title;
 
-  body.innerHTML = `
-    <div class="print-cover">
-      <h1 style="text-align:center;font-size:24px;color:#1a5276;border-bottom:2px solid #1a5276;padding-bottom:12px">${mod.title}</h1>
-      <p style="text-align:center;color:#8a7a6a;margin:8px 0 20px">はなひろラーニング「${courseName}」&nbsp;/&nbsp;${mod.number || ''}</p>
-    </div>
-    ${mod.lessons.map((l, i) => `
-      <section class="print-section">
-        <h2 style="color:#1a5276;border-bottom:1px solid #ccc;padding-bottom:6px;margin-top:28px">ページ${i + 1}：${l.title}</h2>
-        ${l.content}
-      </section>
-    `).join('')}
-  `;
+    body.innerHTML = `
+      <div class="print-cover">
+        <h1 style="text-align:center;font-size:24px;color:#1a2742;border-bottom:2px solid #b8954a;padding-bottom:12px">${mod.title}</h1>
+        <p style="text-align:center;color:#5a6378;margin:8px 0 20px">はなひろラーニング「${courseName}」&nbsp;/&nbsp;${mod.number || ''}</p>
+      </div>
+      ${mod.lessons.map((l, i) => `
+        <section class="print-section">
+          <h2 style="color:#1a2742;border-bottom:1px solid #d8d2c2;padding-bottom:6px;margin-top:28px">ページ${i + 1}：${l.title}</h2>
+          ${l.content}
+        </section>
+      `).join('')}
+    `;
 
-  document.body.classList.add('printing');
-  const restore = () => {
-    body.innerHTML = originalHTML;
-    document.body.classList.remove('printing');
-    window.removeEventListener('afterprint', restore);
-  };
-  window.addEventListener('afterprint', restore);
-  setTimeout(() => { if (document.body.classList.contains('printing')) restore(); }, 60000);
-  window.print();
+    document.body.classList.add('printing');
+    const restore = () => {
+      body.innerHTML = originalHTML;
+      document.body.classList.remove('printing');
+      window.removeEventListener('afterprint', restore);
+    };
+    window.addEventListener('afterprint', restore);
+    setTimeout(() => { if (document.body.classList.contains('printing')) restore(); }, 60000);
+
+    // iOS Safari は共有シート経由で印刷ダイアログを開く挙動。DOM反映を待つために少し遅らせる
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    setTimeout(() => {
+      try {
+        window.print();
+      } catch (e) {
+        console.error('印刷エラー:', e);
+        if (isMobile) {
+          alert('印刷ダイアログを開けませんでした。\nブラウザの「共有」メニューから「プリント」または「PDFを保存」を選んでください。');
+        }
+        restore();
+      }
+    }, isMobile ? 250 : 50);
+  } catch (e) {
+    console.error('printModule エラー:', e);
+    alert('印刷準備でエラーが発生しました: ' + e.message);
+  }
 }
 
 // --- 管理者ダッシュボード パスワード ---
