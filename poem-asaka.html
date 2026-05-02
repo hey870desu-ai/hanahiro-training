@@ -301,6 +301,33 @@
       letter-spacing: 0.04em;
     }
 
+    /* ギャラリー */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    @media (min-width: 720px) {
+      .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    }
+    @media (min-width: 1100px) {
+      .gallery-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .gallery-item {
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      position: relative;
+    }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.05); }
+
     /* 設備リスト */
     .equip-grid {
       display: grid;
@@ -792,11 +819,26 @@
 
       /* 3つの柱 */
       .pillar-grid { grid-template-columns: 1fr 1fr 1fr; gap: 5mm; }
-      .pillar-card { padding: 10mm 8mm; }
+      .pillar-card { padding: 0; }
+      .pillar-head { padding: 6mm 6mm 5mm; }
       .pillar-num { font-size: 10pt; }
-      .pillar-icon { width: 14mm; height: 14mm; margin: 3mm 0 5mm; }
-      .pillar-title { font-size: 14pt; margin-bottom: 5mm; }
-      .pillar-desc { font-size: 10pt; line-height: 1.85; }
+      .pillar-icon { width: 12mm; height: 12mm; margin: 2mm 0 4mm; }
+      .pillar-title { font-size: 13pt; }
+      .pillar-img { aspect-ratio: 4 / 3; }
+      .pillar-body { padding: 0 0 5mm; }
+      .pillar-desc { font-size: 9.5pt; line-height: 1.7; padding: 3mm 6mm 0; }
+
+      /* セクション写真 */
+      .section-photo { max-height: 70mm; margin: 0 0 6mm; }
+      .section-photo-caption { margin: -5mm 0 6mm; font-size: 8pt; }
+
+      /* ギャラリー */
+      .gallery-grid {
+        grid-template-columns: repeat(5, 1fr) !important;
+        gap: 3mm !important;
+      }
+      .gallery-item { aspect-ratio: 4 / 3; }
+      .gallery-item:hover img { transform: none; }
 
       /* 設備一覧（3列） */
       .equip-grid { grid-template-columns: repeat(3, 1fr); gap: 4mm; }
@@ -1089,9 +1131,6 @@
         </div>
       </div>
 
-      <img src="photos/kaisei-pt.jpg" alt="石井さんの体操指導（ポエム開成店）" class="section-photo" style="object-position:center 30%" loading="lazy">
-      <div class="section-photo-caption">※ 写真はポエム開成店</div>
-
       <div class="schedule">
         <div style="text-align:center;font-size:12px;color:var(--ink-soft);margin-bottom:14px;letter-spacing:0.1em">
           <span style="color:var(--gold);font-weight:600">午前の部</span>　／　<span style="color:var(--ink-soft)">午後の部</span>
@@ -1182,10 +1221,36 @@
       </div>
     </section>
 
-    <!-- 05 ご利用案内 -->
+    <!-- 05 ギャラリー -->
     <section class="block">
       <div class="sec-head">
         <div class="sec-num">05</div>
+        <div class="sec-title-block">
+          <div class="sec-eyebrow">Gallery</div>
+          <div class="sec-title">活動の様子</div>
+        </div>
+      </div>
+
+      <p style="text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:24px;letter-spacing:0.04em">※ 写真はすべてポエム開成店</p>
+
+      <div class="gallery-grid">
+        <div class="gallery-item"><img src="photos/kaisei-room.jpg" alt="フロア全景" loading="lazy"></div>
+        <div class="gallery-item"><img src="photos/kaisei-floor2.jpg" alt="活動風景（別アングル）" loading="lazy"></div>
+        <div class="gallery-item"><img src="photos/kaisei-floor3.jpg" alt="施設内の様子" loading="lazy"></div>
+        <div class="gallery-item"><img src="photos/kaisei-machine.jpg" alt="マシーントレーニング" loading="lazy"></div>
+        <div class="gallery-item"><img src="photos/kaisei-brain.jpg" alt="棒体操" loading="lazy"></div>
+        <div class="gallery-item"><img src="photos/kaisei-balloon.jpg" alt="バルーンを使ったプログラム" loading="lazy"></div>
+        <div class="gallery-item"><img src="photos/kaisei-pt.jpg" alt="石井さんの体操指導" loading="lazy"></div>
+        <div class="gallery-item"><img src="photos/kaisei-talk.jpg" alt="スタッフと利用者の対話" loading="lazy"></div>
+        <div class="gallery-item"><img src="photos/kaisei-staff.jpg" alt="スタッフ" loading="lazy"></div>
+        <div class="gallery-item"><img src="photos/kaisei-nurse.jpg" alt="看護職員" loading="lazy"></div>
+      </div>
+    </section>
+
+    <!-- 06 ご利用案内 -->
+    <section class="block">
+      <div class="sec-head">
+        <div class="sec-num">06</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Service Information</div>
           <div class="sec-title">ご利用案内</div>
@@ -1239,10 +1304,10 @@
       </div>
     </section>
 
-    <!-- 06 アクセス -->
+    <!-- 07 アクセス -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">06</div>
+        <div class="sec-num">07</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Access</div>
           <div class="sec-title">アクセス</div>
@@ -1296,10 +1361,10 @@
       </div>
     </section>
 
-    <!-- 07 お問い合わせ -->
+    <!-- 08 お問い合わせ -->
     <section class="block">
       <div class="sec-head">
-        <div class="sec-num">07</div>
+        <div class="sec-num">08</div>
         <div class="sec-title-block">
           <div class="sec-eyebrow">Contact</div>
           <div class="sec-title">お問い合わせ・見学・無料体験のお申込み</div>
