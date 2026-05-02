@@ -149,8 +149,43 @@
       color: var(--ink);
       margin-bottom: 40px;
     }
-    .ch-headline .ch-phrase { white-space: nowrap; }
-    .ch-headline .accent { color: var(--gold); }
+    .ch-headline .ch-phrase { white-space: nowrap; display: inline-block; }
+    .ch-headline .accent { color: var(--gold); display: inline-block; }
+
+    /* スクロール表示アニメーション */
+    .ch-headline {
+      opacity: 0;
+      transform: scale(0.86);
+      transition: opacity 1.4s ease-out, transform 1.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .ch-headline.is-visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .ch-headline .accent {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.9s ease-out 0.5s, transform 0.9s ease-out 0.5s;
+    }
+    .ch-headline.is-visible .accent {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ch-headline,
+      .ch-headline .accent {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+    @media print {
+      .ch-headline,
+      .ch-headline .accent {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
     @media (max-width: 600px) {
       .concept-hero { padding: 40px 22px; }
       .ch-headline { font-size: 30px; letter-spacing: 0.04em; }
@@ -1609,5 +1644,25 @@
     </div>
 
   </div>
+
+  <script>
+    (() => {
+      const el = document.querySelector('.ch-headline');
+      if (!el) return;
+      if (!('IntersectionObserver' in window)) {
+        el.classList.add('is-visible');
+        return;
+      }
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.35 });
+      obs.observe(el);
+    })();
+  </script>
 </body>
 </html>
