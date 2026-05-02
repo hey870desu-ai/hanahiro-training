@@ -761,12 +761,19 @@
       margin-bottom: 14px;
     }
     .contact-block .ct {
+      display: block;
       font-family: 'Cormorant Garamond', serif;
       font-size: 38px;
       font-weight: 500;
       letter-spacing: 0.08em;
       margin-bottom: 6px;
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.2s;
     }
+    a.contact-block .ct:visited,
+    .contact-block a.ct:visited { color: #fff; }
+    .contact-block a.ct:hover { color: var(--gold-soft); }
     .contact-block .charge {
       font-size: 13px;
       color: #d8dde4;
@@ -1032,16 +1039,40 @@
       .access-info p { font-size: 9pt; line-height: 1.6; }
       .access-map { display: none !important; }
 
-      /* 印刷時：map-cta ボタンはウェブと同じ見た目で残す */
-      .access-info .map-cta {
-        background: var(--ink) !important;
-        color: #fff !important;
-        padding: 3mm 4mm !important;
-        gap: 3mm !important;
+      /* 印刷時：map-cta ボタンはWebプレビューでは表示・印刷時はQRに置換するため非表示 */
+      .access-info .map-cta { display: none !important; }
+
+      /* 印刷時：送迎範囲QR（access-info右カラム内） */
+      .sougei-qr-print {
+        display: flex !important;
+        align-items: center;
+        gap: 4mm;
+        margin-top: 4mm;
+        padding: 3mm 4mm;
+        background: #fbf9f4;
+        border: 1px solid var(--line);
       }
-      .access-info .map-cta-body strong { font-size: 9pt !important; }
-      .access-info .map-cta-body em { font-size: 7.5pt !important; }
-      .access-info .map-cta-icon { font-size: 11pt !important; }
+      .sougei-qr-print img {
+        width: 22mm;
+        height: 22mm;
+        background: #fff;
+        padding: 0;
+        flex-shrink: 0;
+      }
+      .sougei-qr-text { flex: 1; text-align: left; }
+      .sougei-qr-title {
+        font-family: 'Noto Serif JP', serif;
+        font-size: 10pt;
+        font-weight: 600;
+        color: var(--ink);
+        margin-bottom: 1mm;
+        letter-spacing: 0.04em;
+      }
+      .sougei-qr-desc {
+        font-size: 7.5pt;
+        color: var(--ink-soft);
+        line-height: 1.5;
+      }
 
       /* 印刷時：施設アクセスマップ（ウェブのiframeの代わり） */
       .access-map-print {
@@ -1519,6 +1550,14 @@
             </span>
             <span class="map-cta-arrow">→</span>
           </a>
+          <!-- 印刷時：送迎範囲QR -->
+          <div class="sougei-qr-print">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=https%3A%2F%2Fhey870desu-ai.github.io%2Fhanahiro-training%2Fsougei-area-asaka.html" alt="QR 送迎範囲マップ">
+            <div class="sougei-qr-text">
+              <div class="sougei-qr-title">送迎範囲マップ</div>
+              <div class="sougei-qr-desc">QRから対話型の送迎範囲マップ（拡大・縮小可）が開きます。</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1528,7 +1567,7 @@
 
       <!-- 印刷時：施設アクセスマップ（ウェブのiframeの代わり） -->
       <div class="access-map-print">
-        <img src="photos/access-asaka.png?v=20260502b" alt="施設アクセスマップ" class="access-map-print-img">
+        <img src="photos/access-asaka.png?v=20260502c" alt="施設アクセスマップ" class="access-map-print-img">
         <p class="map-attr">地図データ © OpenStreetMap contributors</p>
       </div>
     </section>
@@ -1545,7 +1584,7 @@
 
       <div class="contact-block">
         <div class="ce">開設準備室</div>
-        <div class="ct">080-2848-2881</div>
+        <a href="tel:080-2848-2881" class="ct">080-2848-2881</a>
         <div class="charge">担当：豊嶋</div>
         <div class="mail-line">
           <a href="mailto:toyoshima@hana-hiro.com">toyoshima@hana-hiro.com</a>
