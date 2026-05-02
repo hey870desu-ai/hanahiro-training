@@ -539,16 +539,15 @@ function printModule() {
     // 万一 afterprint が発火しないモバイルブラウザ対策
     setTimeout(cleanup, 60000);
 
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    setTimeout(() => {
-      try {
-        window.print();
-      } catch (e) {
-        console.error('印刷エラー:', e);
-        cleanup();
-        alert('印刷ダイアログを開けませんでした。\nブラウザの「共有」メニュー → 「プリント」「ページをプリント」「PDFとして保存」 などを選んでください。');
-      }
-    }, isMobile ? 200 : 50);
+    // iOS Safari は user gesture の同一スタックで window.print() を呼ばないと無視される
+    // setTimeout を使わず直接呼ぶ（appendChild は同期なのでDOMは反映済み）
+    try {
+      window.print();
+    } catch (e) {
+      console.error('印刷エラー:', e);
+      cleanup();
+      alert('印刷ダイアログを開けませんでした。\nブラウザのメニューから「プリント」「PDFとして保存」を選んでください。');
+    }
   } catch (e) {
     console.error('printModule エラー:', e);
     alert('印刷準備でエラーが発生しました: ' + e.message);
