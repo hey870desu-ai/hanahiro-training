@@ -61,6 +61,24 @@ window.firestore = {
     }, { merge: true });
   },
 
+  // 個人の進捗を全件取得（端末切替・キャッシュ削除後の復元用）
+  async getUserProgress(userId) {
+    await authReady;
+    const snap = await getDocs(collection(db, 'users', userId, 'progress'));
+    const result = {};
+    snap.docs.forEach(d => {
+      const data = d.data();
+      result[d.id] = {
+        lessonsRead: data.lessonsRead || [],
+        quizScore: data.quizScore ?? null,
+        quizPassed: !!data.quizPassed,
+        passCount: data.passCount || 0,
+        highestScore: data.highestScore ?? null
+      };
+    });
+    return result;
+  },
+
   async getAllProgress() {
     await authReady;
     const snap = await getDocs(collectionGroup(db, 'progress'));

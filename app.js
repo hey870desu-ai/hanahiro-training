@@ -95,6 +95,7 @@ async function initAuth() {
           userId: user.id, name: user.name
         }));
         window.firestore.touchUser(user.id).catch(() => {});
+        await hydrateProgressFromFirestore();
         window.history.replaceState({}, '', window.location.pathname);
         showCourseSelector();
         return;
@@ -115,6 +116,8 @@ async function initAuth() {
       if (s.userId) {
         currentUserId = s.userId;
         currentUserName = s.name || 'スタッフ';
+        await waitForFirestore();
+        await hydrateProgressFromFirestore();
         showCourseSelector();
         return;
       }
@@ -123,6 +126,37 @@ async function initAuth() {
 
   // 認証なし → LINEガイド画面
   showLineGuide();
+}
+
+// Firestore から進捗を読み込み LocalStorage に書き戻す（端末切替・cache削除後の復元）
+// LocalStorage のほうが新しい場合は上書きしない（合格回数・最高点を逆行させない）
+async function hydrateProgressFromFirestore() {
+  if (!window.firestore || !currentUserId) return;
+  try {
+    const remote = await window.firestore.getUserProgress(currentUserId);
+    if (!remote || Object.keys(remote).length === 0) return;
+    const local = getProgress();
+    const merged = { ...local };
+    for (const [moduleId, rData] of Object.entries(remote)) {
+      const lData = local[moduleId];
+      if (!lData) {
+        merged[moduleId] = rData;
+        continue;
+      }
+      // どちらかが合格していれば合格扱い、合格回数・最高点は大きい方を採用
+      merged[moduleId] = {
+        lessonsRead: Array.from(new Set([...(lData.lessonsRead||[]), ...(rData.lessonsRead||[])])),
+        quizScore: Math.max(lData.quizScore ?? 0, rData.quizScore ?? 0) || lData.quizScore || rData.quizScore,
+        quizPassed: !!(lData.quizPassed || rData.quizPassed),
+        passCount: Math.max(lData.passCount || 0, rData.passCount || 0),
+        highestScore: Math.max(lData.highestScore ?? 0, rData.highestScore ?? 0) || lData.highestScore || rData.highestScore
+      };
+    }
+    localStorage.setItem(storageKey(), JSON.stringify(merged));
+    console.log('[hydrate] Firestoreから', Object.keys(remote).length, 'モジュールの進捗を復元');
+  } catch (e) {
+    console.warn('[hydrate] 進捗復元失敗（オフライン時はローカルのみ）:', e.message);
+  }
 }
 
 function showCourseSelector() {
