@@ -149,10 +149,16 @@
       color: var(--ink);
       margin-bottom: 40px;
     }
-    @media (max-width: 600px) {
-      .ch-headline { font-size: 32px; letter-spacing: 0.05em; }
-    }
+    .ch-headline .ch-phrase { white-space: nowrap; }
     .ch-headline .accent { color: var(--gold); }
+    @media (max-width: 600px) {
+      .concept-hero { padding: 40px 22px; }
+      .ch-headline { font-size: 30px; letter-spacing: 0.04em; }
+    }
+    @media (max-width: 380px) {
+      .concept-hero { padding: 36px 16px; }
+      .ch-headline { font-size: 26px; letter-spacing: 0.02em; }
+    }
     .ch-text {
       font-family: 'Noto Serif JP', serif;
       font-size: 14px;
@@ -1099,7 +1105,7 @@
     <div class="concept-hero">
       <div class="ch-eyebrow">OUR PHILOSOPHY</div>
       <h2 class="ch-headline">
-        動くから <span class="accent">変わる</span>
+        <span class="ch-phrase">動くから <span class="accent">変わる</span></span>
       </h2>
       <div class="ch-text">
         <p>歳を重ねるほど、痛みや不安から動かなくなる時間が増えていきます。けれど、動かないことが筋力の低下を生み、関節の硬さや新たな痛みにつながっていく ─ これが、廃用症候群やロコモティブシンドロームのはじまりです。</p>
