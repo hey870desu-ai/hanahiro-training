@@ -501,7 +501,8 @@ function reviewLesson() {
 }
 
 // --- 現モジュールの全レッスンを印刷 / PDF保存 ---
-// 印刷専用コンテナに書き出す方式（画面表示は変更しない）
+// 別ページに開く方式（モバイル対応）。新規タブで印刷専用ビューを開き、
+// ブラウザの共有メニューから「プリント / PDFを保存」できるようにする。
 function printModule() {
   try {
     const mod = courseData.modules[currentModuleIndex];
@@ -510,48 +511,81 @@ function printModule() {
       return;
     }
     const courseName = courseData.title;
+    const stylesHref = 'style.css?v=20260502print';
 
-    // 既存の印刷コンテナがあれば削除して新規作成
-    let printContainer = document.getElementById('print-container');
-    if (printContainer) printContainer.remove();
-    printContainer = document.createElement('div');
-    printContainer.id = 'print-container';
-    printContainer.innerHTML = `
-      <div class="print-cover">
-        <h1 style="text-align:center;font-size:24px;color:#1a2742;border-bottom:2px solid #b8954a;padding-bottom:12px">${mod.title}</h1>
-        <p style="text-align:center;color:#5a6378;margin:8px 0 20px">はなひろラーニング「${courseName}」&nbsp;/&nbsp;${mod.number || ''}</p>
-      </div>
-      ${mod.lessons.map((l, i) => `
-        <section class="print-section">
-          <h2 style="color:#1a2742;border-bottom:1px solid #d8d2c2;padding-bottom:6px;margin-top:28px">ページ${i + 1}：${l.title}</h2>
-          ${l.content}
-        </section>
-      `).join('')}
-    `;
-    document.body.appendChild(printContainer);
+    const html = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${mod.title} ｜ はなひろラーニング</title>
+<link rel="stylesheet" href="${stylesHref}">
+<style>
+  body { background: #fff; color: #000; padding: 24px 18px 60px; max-width: 720px; margin: 0 auto; font-size: 15px; line-height: 1.85; }
+  .print-cover { text-align: center; padding: 12px 0 28px; border-bottom: 1px solid #d8d2c2; margin-bottom: 28px; }
+  .print-cover h1 { color: #1a2742; font-size: 22px; margin-bottom: 10px; font-family: 'Noto Serif JP', serif; }
+  .print-cover .meta { color: #5a6378; font-size: 13px; }
+  .print-section { margin-bottom: 28px; page-break-inside: auto; }
+  .print-section h2 { color: #1a2742; font-size: 18px; border-bottom: 1px solid #d8d2c2; padding-bottom: 6px; margin: 24px 0 14px; }
+  .print-toolbar {
+    position: sticky; top: 0; z-index: 10;
+    background: #1a2742; color: #f4ead6;
+    padding: 10px 14px; margin: -24px -18px 24px;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    font-size: 13px;
+  }
+  .print-toolbar button {
+    background: #b8954a; color: #1a2742; border: none;
+    padding: 8px 16px; border-radius: 3px; font-weight: 600;
+    cursor: pointer; font-size: 13px; letter-spacing: 0.06em;
+  }
+  .print-toolbar .hint { font-size: 11px; opacity: 0.85; flex: 1; }
+  @media print {
+    .print-toolbar { display: none !important; }
+    body { padding: 0; max-width: none; }
+    .print-section { page-break-before: always; }
+    .print-section:first-child { page-break-before: auto; }
+  }
+</style>
+</head>
+<body>
+  <div class="print-toolbar no-print">
+    <span class="hint">📱 スマホは右上「共有」→「プリント」→「PDFを保存」も可</span>
+    <button onclick="window.print()">🖨 印刷</button>
+  </div>
+  <div class="print-cover">
+    <h1>${escapeForPrint(mod.title)}</h1>
+    <div class="meta">はなひろラーニング「${escapeForPrint(courseName)}」 ／ ${escapeForPrint(mod.number || '')}</div>
+  </div>
+  ${mod.lessons.map((l, i) => `
+    <section class="print-section">
+      <h2>ページ${i + 1}：${escapeForPrint(l.title)}</h2>
+      ${l.content}
+    </section>
+  `).join('')}
+</body>
+</html>`;
 
-    const cleanup = () => {
-      const el = document.getElementById('print-container');
-      if (el) el.remove();
-      window.removeEventListener('afterprint', cleanup);
-    };
-    window.addEventListener('afterprint', cleanup);
-    // 万一 afterprint が発火しないモバイルブラウザ対策
-    setTimeout(cleanup, 60000);
-
-    // iOS Safari は user gesture の同一スタックで window.print() を呼ばないと無視される
-    // setTimeout を使わず直接呼ぶ（appendChild は同期なのでDOMは反映済み）
-    try {
-      window.print();
-    } catch (e) {
-      console.error('印刷エラー:', e);
-      cleanup();
-      alert('印刷ダイアログを開けませんでした。\nブラウザのメニューから「プリント」「PDFとして保存」を選んでください。');
+    // 新規タブで開く（user gesture 同一スタック内）。Blob URL方式で document.write 非依存
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const w = window.open(url, '_blank');
+    if (!w) {
+      URL.revokeObjectURL(url);
+      alert('新しいタブを開けませんでした。ブラウザのポップアップブロック設定を確認してください。');
+      return;
     }
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
   } catch (e) {
     console.error('printModule エラー:', e);
     alert('印刷準備でエラーが発生しました: ' + e.message);
   }
+}
+
+function escapeForPrint(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 // --- 管理者ダッシュボード パスワード ---
