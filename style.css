@@ -332,8 +332,18 @@ body.is-admin .admin-only { display: inline-flex !important; }
   #print-overlay .po-section { page-break-before: always; }
   #print-overlay .po-section:first-of-type { page-break-before: auto; }
   body { background: #fff !important; padding: 0 !important; margin: 0 !important; color: #000; }
-  .diagram-box, .key-point, .example-box, .chat-bubble {
+  /* 図解・ボックス系を改ページで分断させない */
+  .diagram-box, .key-point, .example-box, .think-box, .chat-bubble,
+  .formula-box, .pyramid, .stat-row, .stat-card, .flow-row, .flow-col,
+  .flow-step, .bar-chart, .bar-row, .compare-table, .compare-table tr {
     break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* 印刷時のセクション内パディングは控えめに */
+  #print-overlay .po-section {
+    padding: 12mm 8mm !important;
+    border-top-width: 2px !important;
   }
 
   /* オーバーレイがない場合の従来挙動 */
