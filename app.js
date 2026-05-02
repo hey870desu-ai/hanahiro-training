@@ -35,20 +35,30 @@ function saveModuleProgress(moduleId, progress) {
 }
 
 // --- Firestoreに進捗を同期（バックグラウンド、失敗してもLocalStorageは残る） ---
-function syncProgressToFirestore(moduleId, moduleName, prog) {
+// kind = 'lesson': lessonsRead だけ更新（quiz系は merge で温存）
+// kind = 'quiz' (default): 全フィールド更新（テスト結果反映時）
+function syncProgressToFirestore(moduleId, moduleName, prog, kind = 'quiz') {
   if (!window.firestore || !currentUserId) return;
   const courseName = currentCourse === 'staff' ? 'みんなの学び' : 'リーダーの学び';
-  window.firestore.saveProgress(currentUserId, moduleId, {
+  const baseFields = {
     moduleName,
     course: currentCourse,
     courseName,
     userName: currentUserName,
-    lessonsRead: prog.lessonsRead || [],
-    quizScore: prog.quizScore ?? null,
-    quizPassed: !!prog.quizPassed,
-    passCount: prog.passCount || 0,
-    highestScore: prog.highestScore ?? null
-  }).catch(err => console.log('Firestore同期エラー（オフラインでも問題なし）:', err.message));
+    lessonsRead: prog.lessonsRead || []
+  };
+  // テスト結果は明示的に書き込む時だけ載せる（ページ閲覧時は既存quizPassedを上書きしない）
+  const payload = (kind === 'quiz')
+    ? {
+        ...baseFields,
+        quizScore: prog.quizScore ?? null,
+        quizPassed: !!prog.quizPassed,
+        passCount: prog.passCount || 0,
+        highestScore: prog.highestScore ?? null
+      }
+    : baseFields;
+  window.firestore.saveProgress(currentUserId, moduleId, payload)
+    .catch(err => console.log('Firestore同期エラー（オフラインでも問題なし）:', err.message));
 }
 
 // --- 画面切り替え ---
@@ -348,7 +358,7 @@ function markLessonRead(moduleId, pageIndex) {
     prog.lessonsRead.push(pageIndex);
     saveModuleProgress(moduleId, prog);
     const mod = courseData.modules.find(m => m.id === moduleId);
-    if (mod) syncProgressToFirestore(moduleId, mod.title, prog);
+    if (mod) syncProgressToFirestore(moduleId, mod.title, prog, 'lesson');
   }
 }
 function nextPage() {
