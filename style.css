@@ -236,9 +236,17 @@ body.is-admin .admin-only { display: inline-flex !important; }
 #print-overlay .po-content {
   max-width: 720px; margin: 0 auto;
   padding: 24px 18px 60px;
-  background: #fff;
+  background: var(--paper);
   color: #1a2742;
   line-height: 1.85;
+}
+#print-overlay .po-section {
+  background: #fff;
+  padding: 28px 26px;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--ink);
+  border-radius: 3px;
+  margin-bottom: 18px;
 }
 #print-overlay .po-cover {
   text-align: center; padding: 12px 0 24px;
@@ -249,7 +257,6 @@ body.is-admin .admin-only { display: inline-flex !important; }
   font-family: 'Noto Serif JP', serif; letter-spacing: 0.06em;
 }
 #print-overlay .po-meta { color: var(--ink-mute); font-size: 13px; }
-#print-overlay .po-section { margin-bottom: 28px; }
 #print-overlay .po-bottom-actions {
   margin-top: 32px; padding-top: 20px;
   border-top: 1px solid var(--line);
