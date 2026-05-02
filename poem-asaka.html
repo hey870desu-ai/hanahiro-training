@@ -604,6 +604,120 @@
       line-height: 1.85;
     }
 
+    /* 採用情報 */
+    .recruit-block {
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .recruit-head {
+      background: linear-gradient(135deg, #1f2933, #2c3742);
+      color: #fff;
+      padding: 32px 40px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .recruit-head::before {
+      content: "";
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(184,136,53,0.22), transparent 70%);
+    }
+    .recruit-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11pt;
+      letter-spacing: 0.4em;
+      color: var(--gold-soft);
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .recruit-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .recruit-lead {
+      font-size: 13px;
+      line-height: 1.85;
+      color: #d8dde4;
+      max-width: 580px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .recruit-highlights {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1px;
+      background: var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    @media (min-width: 720px) {
+      .recruit-highlights { grid-template-columns: repeat(3, 1fr); }
+    }
+    .rh-item {
+      background: #fff;
+      padding: 22px 18px;
+      text-align: center;
+    }
+    .rh-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 10pt;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .rh-value {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.04em;
+      line-height: 1.2;
+    }
+    .rh-value .rh-unit {
+      font-size: 14px;
+      color: var(--ink-soft);
+      margin-left: 4px;
+    }
+    .rh-sub {
+      font-size: 11px;
+      color: var(--ink-soft);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+    .recruit-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .recruit-table th, .recruit-table td {
+      padding: 12px 16px;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+    }
+    .recruit-table th {
+      width: 130px;
+      background: var(--paper);
+      font-family: 'Noto Serif JP', serif;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.04em;
+    }
+    .recruit-table td {
+      color: var(--ink-soft);
+      line-height: 1.85;
+    }
+    .recruit-table tr:last-child th,
+    .recruit-table tr:last-child td { border-bottom: none; }
+    .recruit-cta {
+      padding: 24px 28px 28px;
+    }
+
     /* お問い合わせ */
     .contact-block {
       background: linear-gradient(135deg, #1f2933, #2c3742);
@@ -900,6 +1014,30 @@
         font-size: 8pt;
         margin-top: 3mm;
         text-align: center;
+      }
+
+      /* 採用情報 */
+      .recruit-head { padding: 12mm 18mm 8mm; }
+      .recruit-eyebrow { font-size: 9pt; }
+      .recruit-title { font-size: 16pt; margin-bottom: 4mm; }
+      .recruit-lead { font-size: 10pt; }
+      .recruit-highlights { grid-template-columns: repeat(3, 1fr); }
+      .rh-item { padding: 6mm 4mm; }
+      .rh-label { font-size: 8.5pt; margin-bottom: 2mm; }
+      .rh-value { font-size: 18pt; }
+      .rh-sub { font-size: 8pt; }
+      .recruit-table { font-size: 9.5pt; }
+      .recruit-table th { width: 32mm; padding: 3mm 4mm; }
+      .recruit-table td { padding: 3mm 4mm; }
+      .recruit-cta { padding: 6mm 8mm; }
+      .recruit-cta .map-cta { display: none !important; }
+      .recruit-cta::before {
+        content: "応募・詳細はハローワーク郡山（求人番号 0706001223961）まで";
+        display: block;
+        text-align: center;
+        font-size: 10pt;
+        color: var(--ink);
+        letter-spacing: 0.04em;
       }
 
       /* お問い合わせ */
@@ -1383,6 +1521,77 @@
         <div class="print-only-qr">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fwww.hana-hiro.com%2Fcontact%2F" alt="QR お問い合わせフォーム">
           <div style="font-family:'Cormorant Garamond',serif;font-size:9pt;letter-spacing:0.2em;color:var(--gold-soft);margin-top:3mm">お問い合わせフォーム</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 採用情報 -->
+    <section class="block">
+      <div class="sec-head">
+        <div class="sec-num">09</div>
+        <div class="sec-title-block">
+          <div class="sec-eyebrow">Careers</div>
+          <div class="sec-title">採用情報</div>
+        </div>
+      </div>
+
+      <div class="recruit-block">
+        <div class="recruit-head">
+          <div class="recruit-eyebrow">RECRUITMENT</div>
+          <h3 class="recruit-title">理学療法士（管理者・機能訓練指導員）</h3>
+          <p class="recruit-lead">2026年6月の開設に向けて、一緒に「動くから 変わる」を届けてくれる理学療法士を募集しています。</p>
+        </div>
+
+        <div class="recruit-highlights">
+          <div class="rh-item">
+            <div class="rh-label">月給</div>
+            <div class="rh-value">275,000<span class="rh-unit">円〜</span></div>
+            <div class="rh-sub">〜300,000円</div>
+          </div>
+          <div class="rh-item">
+            <div class="rh-label">勤務時間</div>
+            <div class="rh-value">8:00<span class="rh-unit">〜</span>17:00</div>
+            <div class="rh-sub">時間外 月平均5時間</div>
+          </div>
+          <div class="rh-item">
+            <div class="rh-label">年間休日</div>
+            <div class="rh-value">108<span class="rh-unit">日</span></div>
+            <div class="rh-sub">土日・年末年始</div>
+          </div>
+        </div>
+
+        <table class="recruit-table">
+          <tr><th>雇用形態</th><td>正社員（フルタイム）／ 試用期間 3ヶ月（同条件）</td></tr>
+          <tr><th>勤務地</th><td>poem de riha 安積店（福島県郡山市安積町笹川字四角担3-1）</td></tr>
+          <tr><th>仕事内容</th><td>
+            ・半日型デイサービスの管理業務と機能訓練指導<br>
+            ・認知症予防・改善プログラムの提供<br>
+            ・送迎業務（郡山市内、AT車）<br>
+            ・他施設への応援業務あり
+          </td></tr>
+          <tr><th>必要な資格・経験</th><td>
+            ・理学療法士免許（必須）<br>
+            ・普通自動車運転免許（AT限定可）<br>
+            ・3年以上の臨床経験<br>
+            ・介護現場経験者歓迎
+          </td></tr>
+          <tr><th>諸手当</th><td>資格手当 5,000円／処遇改善手当 5,000円／通勤手当 実費（上限なし）</td></tr>
+          <tr><th>福利厚生</th><td>各種社会保険完備（雇用・労災・健康・厚生年金）／確定拠出年金／退職金（勤続2年以上）</td></tr>
+          <tr><th>応募方法</th><td>ハローワーク紹介状・履歴書・職務経歴書を郵送（事前連絡必須）／随時選考</td></tr>
+        </table>
+
+        <div class="recruit-cta">
+          <a href="https://www.hellowork.mhlw.go.jp/kensaku/GECA110020.do?screenId=GECA110020&action=dispDetailBtn&kjNo=0706001223961&jgshNo=mPgSX5hgSsRv3AQkm9mTgQ%3D%3D&kjKbn=1&fullPart=1" target="_blank" rel="noopener" class="map-cta">
+            <span class="map-cta-icon">📋</span>
+            <span class="map-cta-body">
+              <strong>ハローワークで詳細を見る</strong>
+              <em>求人番号 0706001223961 ／ 応募もこちらから</em>
+            </span>
+            <span class="map-cta-arrow">→</span>
+          </a>
+          <p style="text-align:center;font-size:13px;color:var(--ink-soft);margin-top:14px">
+            その他のご質問・見学希望は <strong>080-2848-2881（豊嶋）</strong> までお気軽にどうぞ。
+          </p>
         </div>
       </div>
     </section>
