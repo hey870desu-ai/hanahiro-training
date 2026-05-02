@@ -515,7 +515,8 @@ function loadHtml2Pdf() {
   return _html2pdfLoading;
 }
 
-// PDF保存処理（共有シート優先、ダメなら直接ダウンロード）
+// PDF生成 → 画面内ビューアで表示。
+// LINE内ブラウザでもブラウザ標準のPDFビューアが開くので、その共有ボタンから保存可。
 async function savePdfFromOverlay() {
   const btn = document.getElementById('po-pdf-btn');
   const btnBottom = document.getElementById('po-pdf-btn-bottom');
@@ -541,49 +542,37 @@ async function savePdfFromOverlay() {
       pagebreak: { mode: ['css', 'legacy'] }
     }).from(target).outputPdf('blob');
 
-    // Web Share API でファイルが共有可能ならシートを開く（iOS Safari/LINE で動く）
-    const file = new File([pdfBlob], filename, { type: 'application/pdf' });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({ files: [file], title: safeTitle });
-        setBtnText('✓ 共有しました');
-        setTimeout(() => {
-          if (btn) btn.textContent = originalTop;
-          if (btnBottom) btnBottom.textContent = originalBottom;
-          setBtnText(btn?.textContent || originalTop, false);
-        }, 2000);
-        return;
-      } catch (e) {
-        // ユーザーがキャンセルしたら何もしない
-        if (e.name === 'AbortError') {
-          if (btn) btn.textContent = originalTop;
-          if (btnBottom) btnBottom.textContent = originalBottom;
-          setBtnText(btn?.textContent || originalTop, false);
-          return;
-        }
-        // それ以外のエラーはダウンロードフォールバックへ
-        console.warn('共有失敗、ダウンロードへフォールバック:', e);
-      }
-    }
-
-    // フォールバック: 直接ダウンロード
     const url = URL.createObjectURL(pdfBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 60000);
-    setBtnText('✓ 保存しました');
-    setTimeout(() => {
-      if (btn) btn.textContent = originalTop;
-      if (btnBottom) btnBottom.textContent = originalBottom;
-      setBtnText(btn?.textContent || originalTop, false);
-    }, 2500);
+    setBtnText(originalTop || '📄 PDF保存', false);
+
+    // PDF をオーバーレイ内のビューアで表示
+    const overlay = document.getElementById('print-overlay');
+    if (!overlay) throw new Error('オーバーレイが見つかりません');
+    overlay.innerHTML = `
+      <div class="po-toolbar">
+        <button type="button" class="po-close" id="po-close-btn">&larr; 戻る</button>
+        <span class="po-hint">PDF表示中。下の案内に従って保存してください</span>
+      </div>
+      <div class="po-pdf-viewer">
+        <div class="po-pdf-help">
+          <strong>📄 PDFを保存する手順:</strong>
+          <ol>
+            <li>下のPDFを長押し → 「<strong>"ファイル"に保存</strong>」または「<strong>共有</strong>」</li>
+            <li>または下の「PDF をダウンロード」リンクをタップ → ブラウザの保存先を選択</li>
+          </ol>
+          <a href="${url}" download="${escapeForPrint(filename)}" class="po-download-link">⬇ PDF をダウンロード（${escapeForPrint(filename)}）</a>
+        </div>
+        <iframe src="${url}" class="po-pdf-frame" title="PDF プレビュー"></iframe>
+      </div>
+    `;
+    document.getElementById('po-close-btn').addEventListener('click', () => {
+      overlay.remove();
+      document.body.style.overflow = '';
+      URL.revokeObjectURL(url);
+    });
   } catch (e) {
     console.error(e);
-    alert('PDF保存に失敗しました：' + (e.message || e));
+    alert('PDF生成に失敗しました：' + (e.message || e));
     if (btn) btn.textContent = originalTop;
     if (btnBottom) btnBottom.textContent = originalBottom;
     setBtnText(btn?.textContent || originalTop, false);
