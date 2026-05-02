@@ -270,47 +270,6 @@ body {
   line-height: 1.7; padding: 0 8px;
 }
 
-#print-overlay .po-line-notice {
-  background: linear-gradient(135deg, #fef3dc, #faf2dc);
-  border: 1px solid var(--gold);
-  border-left: 3px solid var(--gold);
-  border-radius: 3px;
-  padding: 18px 20px;
-  margin-bottom: 24px;
-  color: var(--ink);
-  line-height: 1.85;
-}
-#print-overlay .po-line-title {
-  font-size: 14px; font-weight: 700; color: var(--ink);
-  margin-bottom: 8px;
-  font-family: 'Noto Serif JP', serif;
-  letter-spacing: 0.04em;
-}
-#print-overlay .po-line-notice p {
-  font-size: 13px; color: var(--ink-soft); margin-bottom: 12px;
-}
-#print-overlay .po-line-notice strong {
-  background: var(--ink); color: var(--paper);
-  padding: 1px 6px; border-radius: 2px; font-weight: 600;
-}
-#print-overlay .po-url-box {
-  display: flex; gap: 6px; margin-top: 8px;
-  background: #fff; border: 1px solid var(--line);
-  padding: 4px 4px 4px 8px; border-radius: 3px;
-}
-#print-overlay .po-url-box input {
-  flex: 1; border: none; background: transparent;
-  font-size: 12px; color: var(--ink); outline: none;
-  font-family: ui-monospace, 'SF Mono', monospace;
-  padding: 6px 4px;
-  min-width: 0;
-}
-#print-overlay .po-url-box button {
-  background: var(--ink); color: var(--paper); border: none;
-  padding: 6px 12px; border-radius: 2px; font-size: 11px;
-  font-weight: 600; cursor: pointer; flex-shrink: 0;
-}
-#print-overlay .po-url-box button:hover { background: var(--gold); color: var(--ink); }
 
 /* ===== 印刷時 ===== */
 @media print {
