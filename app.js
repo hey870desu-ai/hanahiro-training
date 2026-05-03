@@ -480,12 +480,23 @@ function renderQuiz() {
     const prog = getModuleProgress(mod.id);
     prog.quizScore = score;
     if (passed) {
+      // コース全制覇判定のため、保存前の minPass を計算
+      const oldMinPass = getCourseMinPassCount();
       prog.quizPassed = true;
       prog.passCount = (prog.passCount || 0) + 1;
       prog.highestScore = Math.max(prog.highestScore || 0, score);
+      saveModuleProgress(mod.id, prog);
+      syncProgressToFirestore(mod.id, mod.title, prog);
+      // 保存後の minPass を計算 → 全モジュール合格回数が増えたら花火
+      const newMinPass = getCourseMinPassCount();
+      if (newMinPass > oldMinPass && newMinPass >= 1) {
+        // クイズ画面の表示後に演出
+        setTimeout(() => triggerCelebration(newMinPass), 600);
+      }
+    } else {
+      saveModuleProgress(mod.id, prog);
+      syncProgressToFirestore(mod.id, mod.title, prog);
     }
-    saveModuleProgress(mod.id, prog);
-    syncProgressToFirestore(mod.id, mod.title, prog);
   }
 
   document.getElementById('quiz-body').innerHTML = html;
@@ -662,6 +673,189 @@ function escapeForPrint(s) {
   return String(s == null ? '' : s)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// --- コース全制覇判定 & お祝い演出 ---
+
+// 現在のコースで「全モジュールが通過した最小の合格回数」を返す
+function getCourseMinPassCount() {
+  if (!courseData || !courseData.modules || !courseData.modules.length) return 0;
+  return Math.min(...courseData.modules.map(m => getModuleProgress(m.id).passCount || 0));
+}
+
+// 節目に応じたメッセージ
+function getCelebrationMessage(level) {
+  const courseTitle = courseData ? courseData.title : '';
+  if (level === 1) {
+    return {
+      title: '全ステップ制覇！',
+      sub: courseTitle + ' を最後までやり遂げました',
+      body: 'まず一周。\nここからが本当のスタートです。',
+      emoji: '🌻'
+    };
+  }
+  if (level === 2) {
+    return {
+      title: '2回目も制覇',
+      sub: '復習までこなす真摯さ、頼もしい',
+      body: '一度学んだことを、もう一度。\nその積み重ねが力になります。',
+      emoji: '✨'
+    };
+  }
+  if (level === 5) {
+    return {
+      title: '5回制覇！',
+      sub: '継続は力なり、を体現しています',
+      body: 'これだけ繰り返すあなたの姿勢が\nチームの財産になります。',
+      emoji: '🏅'
+    };
+  }
+  if (level === 10) {
+    return {
+      title: '10回制覇！',
+      sub: 'はなひろの誇りです',
+      body: '学び続ける人が、\n一番遠くまで行けます。',
+      emoji: '🏆'
+    };
+  }
+  if (level >= 11) {
+    return {
+      title: `${level}回目の制覇`,
+      sub: '進化が止まらない',
+      body: '新しい気づきは、必ずある。\nまた一つ、自分を更新しましたね。',
+      emoji: '🌟'
+    };
+  }
+  // 3, 4, 6-9
+  return {
+    title: `${level}回目の制覇`,
+    sub: '習慣になっている証',
+    body: '繰り返すたびに、\n見える景色が変わっていきます。',
+    emoji: '🎉'
+  };
+}
+
+// 花火数とメッセージ表示時間
+function getCelebrationConfig(level) {
+  if (level >= 10) return { burstCount: 16, duration: 12000, intense: true };
+  if (level >= 5)  return { burstCount: 11, duration: 9000, intense: true };
+  if (level === 2) return { burstCount: 6, duration: 6500, intense: false };
+  if (level === 1) return { burstCount: 5, duration: 6000, intense: false };
+  return { burstCount: 3, duration: 4500, intense: false };
+}
+
+// メイン: お祝い演出を起動
+function triggerCelebration(level) {
+  if (document.getElementById('celebration-overlay')) return; // 二重起動防止
+  const cfg = getCelebrationConfig(level);
+  const msg = getCelebrationMessage(level);
+
+  const overlay = document.createElement('div');
+  overlay.id = 'celebration-overlay';
+  overlay.innerHTML = `
+    <canvas id="celebration-canvas"></canvas>
+    <div class="celebration-message ${cfg.intense ? 'intense' : ''}">
+      <div class="cel-emoji">${msg.emoji}</div>
+      <div class="cel-title">${msg.title}</div>
+      <div class="cel-sub">${msg.sub}</div>
+      <div class="cel-body">${msg.body.replace(/\n/g, '<br>')}</div>
+      <button type="button" class="cel-close" onclick="closeCelebration()">続ける →</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  document.body.style.overflow = 'hidden';
+
+  startFireworks(document.getElementById('celebration-canvas'), cfg.burstCount, cfg.duration);
+
+  // 自動クローズ（duration + 余裕）
+  setTimeout(() => {
+    if (document.getElementById('celebration-overlay')) closeCelebration();
+  }, cfg.duration + 2000);
+}
+
+function closeCelebration() {
+  const el = document.getElementById('celebration-overlay');
+  if (el) el.remove();
+  document.body.style.overflow = '';
+}
+
+// 花火エフェクト（軽量canvasアニメ）
+function startFireworks(canvas, totalBursts, duration) {
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const resize = () => {
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    ctx.scale(dpr, dpr);
+  };
+  resize();
+  window.addEventListener('resize', resize);
+
+  const particles = [];
+  const colors = ['#ffd966','#ffb84d','#ff7eb6','#7ddff5','#a78bff','#ffe066','#ff9d6c','#92e6a7'];
+  let burstsLeft = totalBursts;
+  const W = () => window.innerWidth;
+  const H = () => window.innerHeight;
+
+  function burst(x, y) {
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const count = 36 + Math.floor(Math.random() * 16);
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + Math.random() * 0.1;
+      const speed = 2 + Math.random() * 3.5;
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 1,
+        life: 80 + Math.random() * 40,
+        age: 0,
+        color,
+        size: 2 + Math.random() * 1.5
+      });
+    }
+  }
+
+  const startedAt = Date.now();
+  const stopAt = startedAt + duration;
+
+  // バースト発火スケジュール
+  function scheduleBurst() {
+    if (burstsLeft <= 0) return;
+    burstsLeft--;
+    const x = W() * (0.15 + Math.random() * 0.7);
+    const y = H() * (0.15 + Math.random() * 0.4);
+    burst(x, y);
+    const nextDelay = (duration / (totalBursts + 1)) * (0.6 + Math.random() * 0.8);
+    setTimeout(scheduleBurst, Math.max(220, nextDelay));
+  }
+  scheduleBurst();
+
+  function frame() {
+    ctx.fillStyle = 'rgba(10, 14, 30, 0.18)';
+    ctx.fillRect(0, 0, W(), H());
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.04; // 重力
+      p.vx *= 0.99;
+      p.age++;
+      const alpha = Math.max(0, 1 - p.age / p.life);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+      ctx.fill();
+      if (p.age >= p.life) particles.splice(i, 1);
+    }
+    if (Date.now() < stopAt + 1500 && (particles.length > 0 || burstsLeft > 0)) {
+      requestAnimationFrame(frame);
+    } else {
+      window.removeEventListener('resize', resize);
+    }
+  }
+  requestAnimationFrame(frame);
 }
 
 // --- 管理者ダッシュボード パスワード ---

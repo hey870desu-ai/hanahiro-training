@@ -698,6 +698,81 @@ body.is-admin .admin-only { display: inline-flex !important; }
 .bar-fill.yellow { background: var(--gold); }
 .bar-fill.red { background: var(--error); }
 
+/* ===== お祝い演出（コース全制覇） ===== */
+#celebration-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(10, 14, 30, 0.88);
+  display: flex; align-items: center; justify-content: center;
+  animation: celOverlayIn 0.5s ease-out;
+  -webkit-print-color-adjust: exact;
+}
+@keyframes celOverlayIn {
+  from { background: rgba(10, 14, 30, 0); }
+  to   { background: rgba(10, 14, 30, 0.88); }
+}
+#celebration-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none;
+}
+.celebration-message {
+  position: relative; z-index: 1;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08));
+  border: 1px solid rgba(212,181,115,0.4);
+  border-radius: 6px;
+  padding: 36px 32px 28px;
+  max-width: 92%; width: 380px;
+  text-align: center;
+  color: var(--paper);
+  backdrop-filter: blur(8px);
+  animation: celMsgIn 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.2) 0.4s backwards;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+@keyframes celMsgIn {
+  from { transform: translateY(20px) scale(0.92); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+.celebration-message.intense {
+  border-color: var(--gold);
+  background: linear-gradient(180deg, rgba(212,181,115,0.12), rgba(184,149,74,0.18));
+  box-shadow: 0 0 60px rgba(212,181,115,0.35), 0 20px 60px rgba(0,0,0,0.5);
+}
+.cel-emoji {
+  font-size: 56px; line-height: 1;
+  margin-bottom: 14px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  animation: celEmojiPop 0.9s ease 0.6s backwards;
+}
+@keyframes celEmojiPop {
+  0%   { transform: scale(0); }
+  60%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+.cel-title {
+  font-size: 24px; font-weight: 700;
+  letter-spacing: 0.08em; color: var(--paper);
+  margin-bottom: 6px;
+}
+.celebration-message.intense .cel-title { color: var(--gold-soft); }
+.cel-sub {
+  font-size: 13px; color: var(--gold-soft);
+  letter-spacing: 0.08em; margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(212,181,115,0.25);
+}
+.cel-body {
+  font-size: 14px; line-height: 2;
+  color: var(--paper);
+  margin-bottom: 24px;
+  letter-spacing: 0.04em;
+}
+.cel-close {
+  background: var(--gold); color: var(--ink);
+  border: none; padding: 10px 26px; border-radius: 3px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.12em;
+  cursor: pointer; transition: all 0.2s;
+}
+.cel-close:hover { background: var(--gold-soft); transform: translateY(-1px); }
+
 /* ===== レスポンシブ ===== */
 @media (max-width: 480px) {
   .logo-area h1 { font-size: 22px; }
