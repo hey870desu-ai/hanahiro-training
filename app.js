@@ -744,9 +744,30 @@ function getCelebrationConfig(level) {
   return { burstCount: 3, duration: 4500, intense: false };
 }
 
+// 全社員へのLINE通知（節目のみ）
+async function notifyLineOnCompletion(level) {
+  if (![1, 2, 5, 10].includes(level)) return;
+  if (!currentUserId || !courseData) return;
+  try {
+    await fetch('https://asia-northeast1-kintai-saas-v1.cloudfunctions.net/notifyLearningCompletion', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: currentUserId,
+        userName: currentUserName,
+        courseName: courseData.title,
+        level
+      })
+    });
+  } catch (e) {
+    console.warn('LINE通知に失敗（演出は続行）:', e);
+  }
+}
+
 // メイン: お祝い演出を起動
 function triggerCelebration(level) {
   if (document.getElementById('celebration-overlay')) return; // 二重起動防止
+  notifyLineOnCompletion(level); // バックグラウンドで全社員へ通知（節目のみ）
   const cfg = getCelebrationConfig(level);
   const msg = getCelebrationMessage(level);
 
