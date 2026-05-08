@@ -739,9 +739,9 @@ const AUTH_SESSION_KEY = 'hanahiro-shift-authed';
 const FACILITIES = [
   {
     id: 'asaka',
-    shortName: 'poem de riha 安積店',
+    shortName: 'poem de reha 安積店',
     info: {
-      name: 'poem de riha 安積店',
+      name: 'poem de reha 安積店',
       service: '地域密着型通所介護（3〜4時間）／ 介護予防・日常生活支援総合事業',
       address: '福島県郡山市安積町笹川字四角担3-1',
       openTime: '午前 9:00〜12:05 ／ 午後 13:25〜16:30',
@@ -1065,14 +1065,14 @@ async function tryMigrateLegacy() {
     }
     if (!hasData) return false;
 
-    const ok = confirm('古いバージョンのデータがブラウザに残っています。\n「poem de riha 安積店」のデータとしてクラウドに取り込みますか？\n\n（取り込み後、旧データはローカルから削除されます。\nキャンセルすると現在のクラウドデータが優先されます）');
+    const ok = confirm('古いバージョンのデータがブラウザに残っています。\n「poem de reha 安積店」のデータとしてクラウドに取り込みますか？\n\n（取り込み後、旧データはローカルから削除されます。\nキャンセルすると現在のクラウドデータが優先されます）');
     if (!ok) return false;
 
     // クラウドにアップロード
     state.facilities['asaka'] = asakaData;
     await saveFacility('asaka');
     localStorage.removeItem(LEGACY_KEY);
-    alert('旧データを「poem de riha 安積店」に取り込みました。');
+    alert('旧データを「poem de reha 安積店」に取り込みました。');
     return true;
   } catch (e) {
     console.error('legacy migration', e);
